@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard | Campus Issue Tracker</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/dashboard.css">
+    
+    <!-- Theme Script (Load early to prevent flash) -->
+    <script src="js/theme.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">
+                <i class="fas fa-cube"></i>
+            </div>
+            <div class="brand-text">
+                <h2>CAMPUS</h2>
+                <p>ISSUE TRACKER</p>
+            </div>
+            <div class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <i class="fas fa-home"></i> <span>Dashboard</span>
+            </a>
+            <a href="report-issue.html" class="nav-item">
+                <i class="fas fa-bullseye"></i> <span>Report Issue</span>
+            </a>
+            <a href="faculty-request.html" class="nav-item">
+                <i class="fas fa-clipboard-list"></i> <span>Submit Faculty Request</span>
+            </a>
+            <a href="report-history.html" class="nav-item">
+                <i class="fas fa-history"></i> <span>Report Resolved History</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="far fa-user"></i> <span>Profile</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i> <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="../index.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="icon-btn notification-btn">
+                    <i class="far fa-bell"></i>
+                    <span class="badge" id="notifBadge">0</span>
+                </button>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Faculty&background=0b132a&color=fff&rounded=true" alt="Profile" class="avatar" id="headerAvatar">
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content Container -->
+        <main class="content-container">
+            <!-- Welcome Header -->
+            <div class="welcome-section">
+                <h1>Welcome, <span id="facultyNameHeader">Faculty</span> 👋</h1>
+                <p>Here's what's happening with your assigned issues today.</p>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                
+                <div class="grid-left">
+                    <!-- Profile Card -->
+                    <div class="card profile-card">
+                        <div class="profile-basic">
+                            <img src="https://ui-avatars.com/api/?name=Faculty&background=0b132a&color=fff&size=100&rounded=true" alt="Faculty Profile" class="profile-avatar-large" id="profileAvatar">
+                            <button class="btn-primary-sm">
+                                <i class="far fa-user"></i> View Profile
+                            </button>
+                        </div>
+                        
+                        <div class="profile-details-wrapper">
+                            <div class="profile-name-row">
+                                <h3 id="profileName">Faculty Name</h3>
+                                <span class="role-badge">FACULTY</span>
+                            </div>
+                            
+                            <div class="details-grid">
+                                <div class="detail-col">
+                                    <div class="detail-row"><span class="label">Designation</span> <span class="value" id="profileDesignation">--</span></div>
+                                    <div class="detail-row"><span class="label">Employee ID</span> <span class="value" id="profileEmpId">--</span></div>
+                                    <div class="detail-row"><span class="label">Department</span> <span class="value" id="profileDept">--</span></div>
+                                    <div class="detail-row"><span class="label">Office Phone</span> <span class="value" id="profilePhone">--</span></div>
+                                </div>
+                                <div class="detail-col separator">
+
+                                    <div class="detail-row-icon">
+                                        <i class="far fa-envelope text-muted"></i>
+                                        <div class="info-group">
+                                            <span class="label">Official Email</span> 
+                                            <span class="value primary-text" id="profileEmail">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="stats-row">
+                        <div class="stat-card stat-blue">
+                            <div class="stat-header">
+                                <div class="stat-icon"><i class="fas fa-gavel"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Total Assigned</span>
+                                <span class="stat-value" id="statTotal">0</span>
+                            </div>
+                            <a href="#" class="stat-link">View all <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        
+                        <div class="stat-card stat-yellow">
+                            <div class="stat-header">
+                                <div class="stat-icon"><i class="far fa-hourglass"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Pending Resolution</span>
+                                <span class="stat-value" id="statPending">0</span>
+                            </div>
+                            <a href="#" class="stat-link">View all <i class="fas fa-arrow-right"></i></a>
+                        </div>
+
+                        <div class="stat-card stat-green">
+                            <div class="stat-header">
+                                <div class="stat-icon"><i class="fas fa-university"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">In Progress</span>
+                                <span class="stat-value" id="statInProgress">0</span>
+                            </div>
+                            <a href="#" class="stat-link">View all <i class="fas fa-arrow-right"></i></a>
+                        </div>
+
+                        <div class="stat-card stat-purple">
+                            <div class="stat-header">
+                                <div class="stat-icon"><i class="far fa-star"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Resolved</span>
+                                <span class="stat-value" id="statResolved">0</span>
+                            </div>
+                            <a href="#" class="stat-link">View all <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Recent Complaints Table -->
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <h2>Recent Assigned Issues</h2>
+                            <button class="btn-primary">Submit Faculty Request <i class="fas fa-plus ms-1"></i></button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Issue ID</th>
+                                        <th>Issue Title</th>
+                                        <th>Assignee/Source</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Date Assigned</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="issuesTableBody">
+                                    <!-- Populated dynamically -->
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; padding: 2rem;">No issues assigned yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="card-footer-center" id="viewAllIssuesContainer" style="display: none;">
+                            <a href="#" class="view-all-link">View All Issues <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-right">
+                    <!-- Notifications Card -->
+                    <div class="card notifications-card">
+                        <div class="card-header border-bottom">
+                            <h2>Notifications</h2>
+                            <a href="#" class="view-all-sm">View all</a>
+                        </div>
+                        <div class="notifications-list" id="notificationsList">
+                            <!-- Populated dynamically -->
+                            <div style="text-align: center; padding: 1rem; color: var(--text-light);">No new notifications.</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Help -->
+                    <div class="card quick-help-card">
+                        <div class="help-header">
+                            <i class="fas fa-headset"></i> 
+                            <h3>Quick Help</h3>
+                        </div>
+                        <p>Need curriculum guidance or system help? We're here to assist you.</p>
+                        <button class="btn-primary w-100">Contact Support</button>
+                    </div>
+                </div>
+
+            </div>
+            
+            <footer class="main-footer">
+                <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="js/dashboard.js"></script>
+    <script src="js/dashboard-data.js"></script>
+    <script src="js/profile-data.js"></script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Campus Issue Tracker</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/dashboard.css?v=1.1">
+    <!-- Auth Guard (redirects if no profile) -->
+    <script src="js/auth-guard.js"></script>
+    <!-- Theme JS (loads early to prevent FOUC) -->
+    <script src="js/theme.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">
+                <i class="fas fa-cube"></i>
+            </div>
+            <div class="brand-text">
+                <h2>CAMPUS</h2>
+                <p>ISSUE TRACKER</p>
+            </div>
+            <div class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <i class="fas fa-home"></i> <span>Dashboard</span>
+            </a>
+            <a href="report-issue.html" class="nav-item">
+                <i class="fas fa-plus-circle"></i> <span>Report Issue</span>
+            </a>
+            <a href="report-history.html" class="nav-item">
+                <i class="fas fa-history"></i> <span>Report History</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="far fa-user"></i> <span>Profile</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i> <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="../index.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <a href="profile.html">
+                        <img src="https://ui-avatars.com/api/?name=Student&background=0b132a&color=fff&rounded=true" alt="Profile" class="avatar" id="headerAvatar">
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content Container -->
+        <main class="content-container">
+            <!-- Welcome Header -->
+            <div class="welcome-section" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1>Welcome, <span id="studentNameHeader">Student</span> 👋</h1>
+                    <p>Here's what's happening with your reports today.</p>
+                </div>
+                <a href="report-issue.html" class="btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
+                    <i class="fas fa-plus-circle"></i> Report New Issue
+                </a>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                
+                <div class="grid-left">
+                    <!-- Profile Card -->
+                    <div class="card profile-card">
+                        <div class="profile-basic">
+                            <img src="https://ui-avatars.com/api/?name=Student&background=0b132a&color=fff&size=100&rounded=true" alt="Student Profile" class="profile-avatar-large" id="profileAvatar">
+                            <a href="profile.html" class="btn-primary-sm" style="text-decoration: none; display: inline-block;">
+                                <i class="far fa-user"></i> View Profile
+                            </a>
+                        </div>
+                        
+                        <div class="profile-details-wrapper">
+                            <div class="profile-name-row">
+                                <h3 id="profileName">Student Name</h3>
+                                <span class="role-badge">Student</span>
+                            </div>
+                            
+                            <div class="details-grid">
+                                <div class="detail-col">
+                                    <div class="detail-row"><span class="label">Roll No.</span> <span class="value" id="profileRollNo">--</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="stats-row">
+                        <div class="stat-card stat-blue">
+                            <div class="stat-header">
+                                <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Total Complaints</span>
+                                <span class="stat-value" id="statTotal">0</span>
+                            </div>
+                            <a href="#" class="stat-link">View all <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        
+                        <div class="stat-card stat-yellow">
+                            <div class="stat-header">
+                                <div class="stat-icon"><i class="far fa-clock"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Pending</span>
+                                <span class="stat-value" id="statPending">0</span>
+                            </div>
+                            <a href="#" class="stat-link">View all <i class="fas fa-arrow-right"></i></a>
+                        </div>
+
+                        <div class="stat-card stat-green">
+                            <div class="stat-header">
+                                <div class="stat-icon"><i class="far fa-check-circle"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">In Progress</span>
+                                <span class="stat-value" id="statInProgress">0</span>
+                            </div>
+                            <a href="#" class="stat-link">View all <i class="fas fa-arrow-right"></i></a>
+                        </div>
+
+                        <div class="stat-card stat-purple">
+                            <div class="stat-header">
+                                <div class="stat-icon"><i class="far fa-check-circle"></i></div>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Resolved</span>
+                                <span class="stat-value" id="statResolved">0</span>
+                            </div>
+                            <a href="#" class="stat-link">View all <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Recent Complaints Table -->
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <h2>Recent Complaints</h2>
+                            <button class="btn-primary" onclick="window.location.href='report-issue.html'">Report New Issue <i class="fas fa-plus ms-1"></i></button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="complaintsTableBody">
+                                    <!-- Populated dynamically -->
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; padding: 2rem;">No complaints reported yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="card-footer-center" id="viewAllComplaintsContainer" style="display: none;">
+                            <a href="#" class="view-all-link">View All Complaints <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-right">
+                    <!-- Notifications Card -->
+                    <div class="card notifications-card">
+                        <div class="card-header border-bottom">
+                            <h2>Notifications</h2>
+                            <a href="#" class="view-all-sm">View all</a>
+                        </div>
+                        <div class="notifications-list" id="notificationsList">
+                            <!-- Populated dynamically -->
+                            <div style="text-align: center; padding: 1rem; color: var(--text-light);">No new notifications.</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Help -->
+                    <div class="card quick-help-card">
+                        <div class="help-header">
+                            <i class="fas fa-headset"></i> 
+                            <h3>Quick Help</h3>
+                        </div>
+                        <p>Need assistance? We're here to help you with your issues.</p>
+                        <button class="btn-primary w-100">Contact Support</button>
+                    </div>
+                </div>
+
+            </div>
+            
+            <footer class="main-footer">
+                <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="js/dashboard.js"></script>
+    <script src="js/profile-data.js"></script>
+    <script src="js/complaints-data.js"></script>
+</body>
+</html>

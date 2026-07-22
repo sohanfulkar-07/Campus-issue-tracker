@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Issue | Faculty Dashboard</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/theme.js"></script>
+    <style>
+        .report-form-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            max-width: 800px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-blue);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .media-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .media-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px dashed var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .media-btn:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+        
+        .media-preview-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .media-preview-box {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .media-preview-box img, .media-preview-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .media-preview-box .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        
+        /* Camera Modal Overlay */
+        .camera-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .camera-modal.active {
+            display: flex;
+        }
+        
+        .camera-container {
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        #cameraStream {
+            width: 100%;
+            display: block;
+        }
+        
+        .camera-controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: #111;
+        }
+        
+        .capture-btn {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .record-btn {
+            background-color: #ef4444;
+            color: #fff;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .record-btn.recording {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .close-camera-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 2010;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">
+                <i class="fas fa-cube"></i>
+            </div>
+            <div class="brand-text">
+                <h2>CAMPUS</h2>
+                <p>ISSUE TRACKER</p>
+            </div>
+            <div class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-home"></i> <span>Dashboard</span>
+            </a>
+            <a href="report-issue.html" class="nav-item active">
+                <i class="fas fa-bullseye"></i> <span>Report Issue</span>
+            </a>
+            <a href="faculty-request.html" class="nav-item">
+                <i class="fas fa-clipboard-list"></i> <span>Submit Faculty Request</span>
+            </a>
+            <a href="report-history.html" class="nav-item">
+                <i class="fas fa-history"></i> <span>Report Resolved History</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="far fa-user"></i> <span>Profile</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i> <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="../index.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Faculty&background=0b132a&color=fff&rounded=true" alt="Profile" class="avatar" id="headerAvatar">
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Container -->
+        <main class="content-container">
+            <div class="welcome-section">
+                <h1>Report New Issue</h1>
+                <p>Fill out the details below to report a new issue on campus.</p>
+            </div>
+
+            <div class="report-form-card">
+                <form id="issueForm">
+                    <div class="form-group">
+                        <label for="issueTitle">Issue Subject/Title</label>
+                        <input type="text" id="issueTitle" class="form-control" required placeholder="e.g. Broken projector in Room 302">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="issueCategory">Category</label>
+                            <select id="issueCategory" class="form-control" required>
+                                <option value="">Select Category</option>
+                                <option value="IT & Infrastructure">IT & Infrastructure</option>
+                                <option value="Maintenance & Repair">Maintenance & Repair</option>
+                                <option value="Cleaning & Hygiene">Cleaning & Hygiene</option>
+                                <option value="Hostel & Accommodation">Hostel & Accommodation</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="issueLocation">Location</label>
+                            <input type="text" id="issueLocation" class="form-control" required placeholder="e.g. Main Building, 3rd Floor">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="issueDescription">Description</label>
+                        <textarea id="issueDescription" class="form-control" required placeholder="Describe the issue in detail..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Media Attachments (Optional)</label>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Add photos or videos to help us understand the issue better.</p>
+                        
+                        <div class="media-buttons">
+                            <button type="button" class="media-btn" id="btnTakePhoto">
+                                <i class="fas fa-camera"></i> Take Photo
+                            </button>
+                            <button type="button" class="media-btn" id="btnRecordVideo">
+                                <i class="fas fa-video"></i> Record Video
+                            </button>
+                            <button type="button" class="media-btn" id="btnUploadFile" onclick="document.getElementById('fileUploadInput').click()">
+                                <i class="fas fa-upload"></i> Upload File
+                            </button>
+                            <input type="file" id="fileUploadInput" accept="image/*,video/*" style="display: none;">
+                        </div>
+                        
+                        <div class="media-preview-container" id="mediaPreviewContainer">
+                            <!-- Preview thumbnails will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 2rem;">
+                        <button type="submit" class="btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem;" id="submitIssueBtn">
+                            Submit Issue Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Camera Modal -->
+    <div class="camera-modal" id="cameraModal">
+        <button class="close-camera-btn" id="closeCameraBtn"><i class="fas fa-times"></i></button>
+        <div class="camera-container">
+            <video id="cameraStream" autoplay playsinline></video>
+            <div class="camera-controls">
+                <button type="button" class="capture-btn" id="capturePhotoBtn" style="display: none;">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <button type="button" class="record-btn" id="recordVideoBtn" style="display: none;">
+                    <i class="fas fa-circle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="photoCanvas" style="display: none;"></canvas>
+
+    <!-- Custom JS -->
+    <script src="js/dashboard.js"></script> <!-- Reusing sidebar toggles -->
+    <script src="js/report-issue.js"></script>
+</body>
+</html>

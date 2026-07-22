@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report History | Campus Issue Tracker</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/dashboard.css?v=1.1">
+    <!-- Auth Guard (redirects if no profile) -->
+    <script src="js/auth-guard.js"></script>
+    <!-- Theme JS (loads early to prevent FOUC) -->
+    <script src="js/theme.js"></script>
+    <style>
+        .custom-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-family: inherit;
+            outline: none;
+        }
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">
+                <i class="fas fa-cube"></i>
+            </div>
+            <div class="brand-text">
+                <h2>CAMPUS</h2>
+                <p>ISSUE TRACKER</p>
+            </div>
+            <div class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-home"></i> <span>Dashboard</span>
+            </a>
+            <a href="report-issue.html" class="nav-item">
+                <i class="fas fa-plus-circle"></i> <span>Report Issue</span>
+            </a>
+            <a href="report-history.html" class="nav-item active">
+                <i class="fas fa-history"></i> <span>Report History</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="far fa-user"></i> <span>Profile</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i> <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="../index.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <a href="profile.html">
+                        <img src="https://ui-avatars.com/api/?name=Student&background=0b132a&color=fff&rounded=true" alt="Profile" class="avatar" id="headerAvatar">
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content Container -->
+        <main class="content-container">
+            <!-- Welcome Header -->
+            <div class="welcome-section">
+                <h1>Report History</h1>
+                <p>View and track all your past and present complaints.</p>
+            </div>
+
+            <!-- Full Width Table Card -->
+            <div class="card table-card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <h2>All Complaints</h2>
+                    <div class="header-actions">
+                        <select class="custom-select" id="filterStatus">
+                            <option value="all">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- Populated dynamically -->
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 2rem;">No complaints found in history.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <footer class="main-footer" style="margin-top: 2rem;">
+                <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="js/report-history.js"></script>
+    <script src="js/profile-data.js"></script>
+    <script src="js/complaints-data.js"></script>
+</body>
+</html>

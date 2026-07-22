@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Campus Issue Tracker</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left Side: Branding & Illustration -->
+        <div class="left-side">
+            <div class="branding-content">
+                <div class="logo">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h1 class="title">Campus Issue Tracker</h1>
+                <h2 class="subtitle">Unified Portal</h2>
+                <p class="small-text">Monitor and Resolve Campus Issues Efficiently.</p>
+                <div class="illustration-container">
+                    <!-- Abstract Illustration SVG -->
+                    <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Background Board -->
+                        <rect x="50" y="80" width="140" height="180" rx="12" fill="white" fill-opacity="0.05" stroke="white" stroke-opacity="0.1" stroke-width="2"/>
+                        <rect x="70" y="110" width="100" height="8" rx="4" fill="white" fill-opacity="0.2"/>
+                        <rect x="70" y="135" width="80" height="8" rx="4" fill="white" fill-opacity="0.2"/>
+                        <rect x="70" y="160" width="60" height="8" rx="4" fill="white" fill-opacity="0.2"/>
+                        
+                        <!-- Floating Checkmarks/Tasks -->
+                        <rect x="230" y="50" width="130" height="150" rx="12" fill="white" fill-opacity="0.05" stroke="white" stroke-opacity="0.1" stroke-width="2"/>
+                        <circle cx="260" cy="90" r="12" fill="#0EA5E9" fill-opacity="0.8"/>
+                        <path d="M255 90L259 94L266 86" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="285" y="86" width="55" height="8" rx="4" fill="white" fill-opacity="0.3"/>
+                        
+                        <circle cx="260" cy="130" r="12" fill="#0EA5E9" fill-opacity="0.8"/>
+                        <path d="M255 130L259 134L266 126" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="285" y="126" width="45" height="8" rx="4" fill="white" fill-opacity="0.3"/>
+                        
+                        <!-- Connecting elements -->
+                        <path d="M190 170 C 210 170, 210 110, 230 110" stroke="#0EA5E9" stroke-width="3" stroke-dasharray="6 6" fill="none" opacity="0.6"/>
+                        
+                        <!-- Main central node -->
+                        <circle cx="200" cy="200" r="35" fill="#0EA5E9"/>
+                        <circle cx="200" cy="200" r="45" stroke="#0EA5E9" stroke-width="2" stroke-opacity="0.3"/>
+                        <circle cx="200" cy="200" r="55" stroke="#0EA5E9" stroke-width="1" stroke-opacity="0.1"/>
+                        <path d="M185 200L195 210L215 190" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Login Form -->
+        <div class="right-side">
+            <div class="login-card">
+                
+                <div class="card-header">
+                    <h2>Welcome Back</h2>
+                    <p>Select your role and sign in to continue.</p>
+                </div>
+
+                <!-- Role Selection Tabs -->
+                <div class="role-tabs">
+                    <button class="role-tab active" data-role="student" data-icon="fa-user-graduate" data-title="Student Login" data-label="Student ID" data-redirect="student/dashboard.html">
+                        <i class="fas fa-user-graduate"></i> Student
+                    </button>
+                    <button class="role-tab" data-role="faculty" data-icon="fa-chalkboard-teacher" data-title="Faculty Login" data-label="Faculty ID" data-redirect="faculty/dashboard.html">
+                        <i class="fas fa-chalkboard-teacher"></i> Faculty
+                    </button>
+                    <button class="role-tab" data-role="other" data-icon="fa-user-shield" data-title="Admin Login" data-label="Admin ID" data-redirect="admin/dashboard.html">
+                        <i class="fas fa-user-shield"></i> Admin
+                    </button>
+                </div>
+                
+                <div class="dynamic-header">
+                    <div class="role-icon" id="dynamicRoleIcon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 id="dynamicRoleTitle">Student Login</h3>
+                </div>
+
+                <form id="unifiedLoginForm" class="login-form">
+                    <div class="input-group">
+                        <label for="userId" id="dynamicUserIdLabel">Student ID</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-badge icon"></i>
+                            <input type="text" id="userId" placeholder="Enter Student ID" autocomplete="username">
+                        </div>
+                        <span class="error-message" id="userIdError"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock icon"></i>
+                            <input type="password" id="password" placeholder="Enter Password" autocomplete="current-password">
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="fas fa-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                        <span class="error-message" id="passwordError"></span>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember Me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="loginBtn">
+                        <span class="btn-text">Login</span>
+                        <div class="spinner" id="btnSpinner"></div>
+                    </button>
+                    
+                    <div class="divider">
+                        <span>OR</span>
+                    </div>
+
+                    <button type="button" class="btn-secondary">
+                        <i class="fab fa-microsoft"></i> Login using College Email
+                    </button>
+                </form>
+
+                <div class="card-footer">
+                    <p>Don't have access? <a href="#">Contact Administrator</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Custom JS -->
+    <script src="assets/js/login.js"></script>
+</body>
+</html>

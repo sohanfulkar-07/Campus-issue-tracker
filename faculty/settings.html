@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Faculty Dashboard</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="js/theme.js"></script>
+    <style>
+        .settings-grid {
+            display: grid;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin-top: 2rem;
+        }
+        .settings-card {
+            border: 1px solid var(--border-color);
+        }
+        .settings-list {
+            padding: 1rem 1.5rem;
+        }
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .setting-item h4 {
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+        .setting-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .setting-divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+        }
+        .custom-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            font-family: inherit;
+        }
+        
+        /* Toggle Switch CSS */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--primary-blue);
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary-blue);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Modal & Form Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 14px;
+            width: 90%;
+            max-width: 440px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-header h3 {
+            font-size: 1.15rem;
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            line-height: 1;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            color: var(--danger-color);
+            background-color: var(--danger-bg);
+        }
+        .form-group {
+            margin-bottom: 1.15rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            color: var(--text-dark);
+        }
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.65rem 2.5rem 0.65rem 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+        }
+        .btn-toggle-pwd {
+            position: absolute;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-toggle-pwd:hover {
+            color: var(--primary-blue);
+        }
+        .field-error {
+            color: var(--danger-color);
+            font-size: 0.78rem;
+            margin-top: 0.35rem;
+            display: none;
+            font-weight: 500;
+        }
+        .alert-box {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 1.25rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        .alert-box.success {
+            display: flex;
+            background-color: var(--success-bg);
+            color: var(--success-color);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .alert-box.error {
+            display: flex;
+            background-color: var(--danger-bg);
+            color: var(--danger-color);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .password-strength {
+            margin-top: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .strength-meter {
+            flex: 1;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        .strength-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            min-width: 55px;
+            text-align: right;
+            font-weight: 500;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .btn-primary-sm {
+            padding: 0.55rem 1.1rem;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .btn-primary-sm:hover {
+            background-color: var(--primary-blue-hover);
+        }
+        .btn-outline-sm {
+            padding: 0.55rem 1.1rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn-outline-sm:hover {
+            background: var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">
+                <i class="fas fa-cube"></i>
+            </div>
+            <div class="brand-text">
+                <h2>CAMPUS</h2>
+                <p>ISSUE TRACKER</p>
+            </div>
+            <div class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-home"></i> <span>Dashboard</span>
+            </a>
+            <a href="report-issue.html" class="nav-item">
+                <i class="fas fa-bullseye"></i> <span>Report Issue</span>
+            </a>
+            <a href="faculty-request.html" class="nav-item">
+                <i class="fas fa-clipboard-list"></i> <span>Submit Faculty Request</span>
+            </a>
+            <a href="report-history.html" class="nav-item">
+                <i class="fas fa-history"></i> <span>Report Resolved History</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="far fa-user"></i> <span>Profile</span>
+            </a>
+            <a href="settings.html" class="nav-item active">
+                <i class="fas fa-cog"></i> <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="../index.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="main-wrapper">
+        <header class="top-header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <img src="" alt="Profile" class="avatar" id="headerAvatar">
+                </div>
+            </div>
+        </header>
+
+        <main class="content-container">
+            <div class="welcome-section">
+                <h1>Settings</h1>
+                <p>Manage your account preferences and configurations.</p>
+            </div>
+
+            <div class="settings-grid">
+                
+                <!-- Account & Identity -->
+                <div class="card settings-card">
+                    <div class="card-header border-bottom">
+                        <h2>Account & Identity</h2>
+                    </div>
+                    <div class="settings-list">
+                        <div class="setting-item">
+                            <div>
+                                <h4>Password Management</h4>
+                                <p>Change the account login password.</p>
+                            </div>
+                            <button class="btn-primary-sm" id="btnChangePassword">Change Password</button>
+                        </div>
+                        <hr class="setting-divider">
+                        <div class="setting-item">
+                            <div>
+                                <h4>Campus Details</h4>
+                                <p>View Faculty ID, Department, and Designation.</p>
+                            </div>
+                            <a href="profile.html" class="btn-outline-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Display & Interface -->
+                <div class="card settings-card">
+                    <div class="card-header border-bottom">
+                        <h2>Display & Interface</h2>
+                    </div>
+                    <div class="settings-list">
+                        <div class="setting-item">
+                            <div>
+                                <h4>Theme Selector</h4>
+                                <p>Toggle light mode, dark mode, or system default.</p>
+                            </div>
+                            <select class="custom-select" id="themeSelector">
+                                <option value="system">System Default</option>
+                                <option value="light">Light Mode</option>
+                                <option value="dark">Dark Mode</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy & Anonymity -->
+                <div class="card settings-card">
+                    <div class="card-header border-bottom">
+                        <h2>Privacy & Anonymity</h2>
+                    </div>
+                    <div class="settings-list">
+                        <div class="setting-item">
+                            <div>
+                                <h4>Public Hide</h4>
+                                <p>Toggle to mask your name on public complaint feeds.</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="togglePublicHide">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <hr class="setting-divider">
+                        <div class="setting-item">
+                            <div>
+                                <h4>Admin Visibility</h4>
+                                <p>Set which profile data campus admins can view.</p>
+                            </div>
+                            <select class="custom-select">
+                                <option>Full Profile</option>
+                                <option>Limited (Name & Dept Only)</option>
+                                <option>Strict (ID Only)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <footer class="main-footer" style="margin-top: 2rem;">
+                <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal-overlay" id="changePasswordModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fas fa-key" style="color: var(--primary-blue); margin-right: 0.5rem;"></i> Change Password</h3>
+                <button class="modal-close" id="btnClosePasswordModal" aria-label="Close modal">&times;</button>
+            </div>
+            
+            <form id="changePasswordForm" onsubmit="return false;">
+                <div id="passwordAlert" class="alert-box"></div>
+                
+                <div class="form-group">
+                    <label for="currentPasswordInput">Current Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="currentPasswordInput" class="form-control" placeholder="Enter current password" autocomplete="current-password">
+                        <button type="button" class="btn-toggle-pwd" data-target="currentPasswordInput" aria-label="Toggle password visibility">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="field-error" id="currentPasswordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="newPasswordInput">New Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="newPasswordInput" class="form-control" placeholder="Minimum 6 characters" autocomplete="new-password">
+                        <button type="button" class="btn-toggle-pwd" data-target="newPasswordInput" aria-label="Toggle password visibility">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength" style="display: none;">
+                        <div class="strength-meter"><div class="strength-bar" id="strengthBar"></div></div>
+                        <span class="strength-text" id="strengthText"></span>
+                    </div>
+                    <div class="field-error" id="newPasswordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPasswordInput">Confirm New Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="confirmPasswordInput" class="form-control" placeholder="Re-enter new password" autocomplete="new-password">
+                        <button type="button" class="btn-toggle-pwd" data-target="confirmPasswordInput" aria-label="Toggle password visibility">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="field-error" id="confirmPasswordError"></div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-outline-sm" id="btnCancelPasswordModal" style="flex: 1; padding: 0.7rem;">Cancel</button>
+                    <button type="submit" class="btn-primary-sm" id="btnSavePassword" style="flex: 1; padding: 0.7rem;">Update Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="js/dashboard.js"></script>
+    <script src="js/profile-data.js"></script> <!-- To load header avatar -->
+    <script src="js/settings.js"></script>
+</body>
+</html>

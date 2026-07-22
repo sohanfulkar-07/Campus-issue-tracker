@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Setup | Campus Issue Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; color: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; }
+        .onboarding-card { background: #fff; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); width: 100%; max-width: 600px; }
+        .text-center { text-align: center; margin-bottom: 2rem; }
+        .text-center i { font-size: 3rem; color: #0d6efd; margin-bottom: 1rem; }
+        h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        p { color: #64748b; font-size: 0.9rem; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; }
+        .form-control { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-family: inherit; font-size: 0.9rem; }
+        .form-control:focus { outline: none; border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1); }
+        
+        .btn-primary { width: 100%; padding: 0.8rem; background: #0d6efd; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s; margin-top: 1rem; }
+        .btn-primary:hover { background: #0b5ed7; }
+        
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="onboarding-card">
+        <div class="text-center">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <h1>Confirm Profile Information</h1>
+            <p>Please review and confirm your profile details before proceeding.</p>
+        </div>
+
+        <form id="facultySetupForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="facName">Full Name</label>
+                    <input type="text" id="facName" class="form-control" required placeholder="Dr. Jane Doe">
+                </div>
+                <div class="form-group">
+                    <label for="facDesignation">Designation</label>
+                    <input type="text" id="facDesignation" class="form-control" required placeholder="Professor">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="facEmpId">Employee ID</label>
+                    <input type="text" id="facEmpId" class="form-control" required placeholder="EMP-1024">
+                </div>
+                <div class="form-group">
+                    <label for="facDept">Department</label>
+                    <select id="facDept" class="form-control" required>
+                        <option value="">Select Department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Electrical Engineering">Electrical Engineering</option>
+                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                        <option value="Business Administration">Business Administration</option>
+                        <option value="Arts & Humanities">Arts & Humanities</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="facPhone">Office Phone</label>
+                    <input type="tel" id="facPhone" class="form-control" required placeholder="+1 234 567 8900">
+                </div>
+                <div class="form-group">
+                    <label for="facEmail">Official Email</label>
+                    <input type="email" id="facEmail" class="form-control" required placeholder="faculty@university.edu">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Complete Setup & Continue <i class="fas fa-arrow-right ms-2"></i></button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const existingProfile = localStorage.getItem('facultyProfile');
+            if (existingProfile) {
+                const p = JSON.parse(existingProfile);
+                document.getElementById('facName').value = p.name || '';
+                document.getElementById('facDesignation').value = p.designation || '';
+                document.getElementById('facEmpId').value = p.empId || '';
+                document.getElementById('facDept').value = p.department || '';
+                document.getElementById('facPhone').value = p.phone || '';
+                document.getElementById('facEmail').value = p.email || '';
+            }
+        });
+
+        document.getElementById('facultySetupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const profile = {
+                name: document.getElementById('facName').value,
+                designation: document.getElementById('facDesignation').value,
+                empId: document.getElementById('facEmpId').value,
+                department: document.getElementById('facDept').value,
+                phone: document.getElementById('facPhone').value,
+                email: document.getElementById('facEmail').value
+            };
+            
+            localStorage.setItem('facultyProfile', JSON.stringify(profile));
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>

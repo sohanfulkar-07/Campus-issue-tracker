@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Profile | Campus Issue Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/dashboard.css?v=1.1">
+    <script src="js/theme.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 2rem;
+        }
+        .onboarding-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 800px;
+            padding: 2.5rem;
+        }
+        .onboarding-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .onboarding-header h1 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        .onboarding-header p {
+            color: var(--text-muted);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        .form-group input, .form-group select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary-blue);
+        }
+        .submit-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        .submit-btn:hover {
+            background-color: var(--primary-blue-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="onboarding-card">
+        <div class="onboarding-header">
+            <h1>Confirm Your Profile</h1>
+            <p>Please review and confirm your profile details.</p>
+        </div>
+        
+        <form id="onboardingForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="obName" required placeholder="e.g. John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Roll No.</label>
+                    <input type="text" id="obRollNo" required placeholder="e.g. CS2023-045">
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <select id="obDept" required>
+                        <option value="">Select Department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                        <option value="Electrical Engineering">Electrical Engineering</option>
+                        <option value="Business Administration">Business Administration</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Semester</label>
+                    <select id="obSem" required>
+                        <option value="">Select Semester</option>
+                        <option value="Semester 1">Semester 1</option>
+                        <option value="Semester 2">Semester 2</option>
+                        <option value="Semester 3">Semester 3</option>
+                        <option value="Semester 4">Semester 4</option>
+                        <option value="Semester 5">Semester 5</option>
+                        <option value="Semester 6">Semester 6</option>
+                        <option value="Semester 7">Semester 7</option>
+                        <option value="Semester 8">Semester 8</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="obEmail" required placeholder="john.doe@university.edu">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="obPhone" required placeholder="+1 234 567 8900">
+                </div>
+                <div class="form-group">
+                    <label>Registration No.</label>
+                    <input type="text" id="obRegNo" required placeholder="e.g. REG-987654321">
+                </div>
+                <div class="form-group">
+                    <label>Join Date</label>
+                    <input type="date" id="obJoinDate" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Set New Password</label>
+                    <input type="password" id="obPassword" required minlength="6" placeholder="Must be at least 6 characters">
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">Complete Setup</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const existingProfile = localStorage.getItem('studentProfile');
+            if (existingProfile) {
+                const p = JSON.parse(existingProfile);
+                document.getElementById('obName').value = p.name || '';
+                document.getElementById('obRollNo').value = p.rollNo || '';
+                document.getElementById('obDept').value = p.dept || '';
+                document.getElementById('obSem').value = p.sem || '';
+                document.getElementById('obEmail').value = p.email || '';
+                document.getElementById('obPhone').value = p.phone || '';
+                document.getElementById('obRegNo').value = p.regNo || '';
+                document.getElementById('obJoinDate').value = p.joinDate || '';
+                document.getElementById('obPassword').value = p.password || '';
+            }
+        });
+
+        document.getElementById('onboardingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const profileData = {
+                name: document.getElementById('obName').value,
+                rollNo: document.getElementById('obRollNo').value,
+                dept: document.getElementById('obDept').value,
+                sem: document.getElementById('obSem').value,
+                email: document.getElementById('obEmail').value,
+                phone: document.getElementById('obPhone').value,
+                regNo: document.getElementById('obRegNo').value,
+                joinDate: document.getElementById('obJoinDate').value,
+                // In a real app, never store passwords in plaintext localStorage. 
+                // This is strictly for the frontend mock prototype.
+                password: document.getElementById('obPassword').value 
+            };
+            
+            localStorage.setItem('studentProfile', JSON.stringify(profileData));
+            
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>
