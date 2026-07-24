@@ -172,3 +172,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- PDF Export Functionality ---
+document.addEventListener('DOMContentLoaded', () => {
+    const exportBtn = document.querySelector('.export-btn');
+    const mainWrapper = document.querySelector('.main-wrapper');
+    const sidebar = document.getElementById('sidebar');
+    
+    if (exportBtn && mainWrapper) {
+        exportBtn.addEventListener('click', () => {
+            // Store original styles to restore them after PDF generation
+            const originalMargin = mainWrapper.style.marginLeft;
+            const originalWidth = mainWrapper.style.width;
+            
+            // Hide sidebar and reset wrapper margin for a clean PDF layout
+            if(sidebar) sidebar.style.display = 'none';
+            mainWrapper.style.marginLeft = '0';
+            mainWrapper.style.width = '100%';
+            
+            // Visual feedback on button
+            const originalBtnHtml = exportBtn.innerHTML;
+            exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+            exportBtn.disabled = true;
+            
+            const opt = {
+                margin:       10,
+                filename:     'Campus_Executive_Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            };
+            
+            // Generate PDF
+            html2pdf().set(opt).from(mainWrapper).save().then(() => {
+                // Restore original layout
+                if(sidebar) sidebar.style.display = '';
+                mainWrapper.style.marginLeft = originalMargin;
+                mainWrapper.style.width = originalWidth;
+                
+                // Restore button
+                exportBtn.innerHTML = originalBtnHtml;
+                exportBtn.disabled = false;
+            }).catch(err => {
+                console.error('PDF generation failed', err);
+                if(sidebar) sidebar.style.display = '';
+                mainWrapper.style.marginLeft = originalMargin;
+                mainWrapper.style.width = originalWidth;
+                exportBtn.innerHTML = originalBtnHtml;
+                exportBtn.disabled = false;
+            });
+        });
+    }
+});
