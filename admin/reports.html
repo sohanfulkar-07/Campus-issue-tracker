@@ -91,9 +91,112 @@
         <main class="content-container">
             
             <div id="reports-view" class="dashboard-view active">
-                <div class="card" style="padding: 3rem; text-align: center;">
-                    <h2>Reports</h2>
-                    <p style="color: var(--text-light); margin-top: 1rem;">Generate and export historical data reports.</p>
+                <div class="reports-header" style="margin-bottom: 1.5rem;">
+                    <h2 class="card-title" style="margin-bottom: 0.5rem; font-size: 1.5rem;">Analytical Reports Generator</h2>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">
+                        Generate and export historical performance data.
+                    </div>
+                </div>
+
+                <!-- Control Panel -->
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Start Date</label>
+                            <input type="date" id="reportStartDate" style="width: 100%; padding: 0.65rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none; background-color: #f8fafc;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">End Date</label>
+                            <input type="date" id="reportEndDate" style="width: 100%; padding: 0.65rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none; background-color: #f8fafc;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Department</label>
+                            <select id="reportDept" class="custom-select" style="width: 100%;">
+                                <option value="All Departments">All Departments</option>
+                                <option value="IT Support">IT Support</option>
+                                <option value="Hostel Maintenance">Hostel Maintenance</option>
+                                <option value="Academic Operations">Academic Operations</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Format</label>
+                            <select id="reportFormat" class="custom-select" style="width: 100%;">
+                                <option value="summary">Summary Dashboard View</option>
+                                <option value="csv">Tabular Detailed CSV Export</option>
+                                <option value="pdf">Print-Ready PDF Report</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button id="generateReportBtn" class="btn-primary" style="width: 100%; background-color: var(--primary-blue); color: white; border: none; padding: 0.65rem 1.25rem; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: background 0.2s;">
+                                <i class="fas fa-chart-line"></i> Generate Report
+                            </button>
+                        </div>
+                    </div>
+                    <div id="reportError" style="display: none; color: #ef4444; font-size: 0.85rem; margin-top: 1rem; font-weight: 500;"></div>
+                </div>
+
+                <!-- Report Viewport Container -->
+                <div id="reportPlaceholder" class="card" style="padding: 4rem 2rem; text-align: center; border: 2px dashed var(--border-color); background-color: transparent; color: var(--text-light);">
+                    <i class="fas fa-file-invoice" style="font-size: 3rem; margin-bottom: 1rem; color: #cbd5e1;"></i>
+                    <h3 style="font-size: 1.2rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-muted);">No Report Generated</h3>
+                    <p style="font-size: 0.9rem;">Select parameters and click "Generate Report" to view analytics.</p>
+                </div>
+
+                <div id="reportViewport" style="display: none;">
+                    <div class="card print-hide" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-dark);" id="reportTitle">Report Results</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);" id="reportSubtitle">Showing data for selected parameters.</p>
+                        </div>
+                        <button id="downloadReportBtn" style="background-color: #10b981; color: white; border: none; padding: 0.65rem 1.25rem; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s;">
+                            <i class="fas fa-download"></i> Download Generated Report
+                        </button>
+                    </div>
+
+                    <div class="kpi-row" style="margin-bottom: 1.5rem;">
+                        <!-- Card 1: Performance Summary Metrics -->
+                        <div class="card stat-card" style="flex: 1;">
+                            <div class="stat-icon" style="background-color: #eff6ff; color: #3b82f6;">
+                                <i class="fas fa-stopwatch"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3>Average Resolution Time</h3>
+                                <p class="stat-number" id="valAvgRes">0 hrs</p>
+                                <span class="stat-change positive" style="font-size: 0.8rem; display: block; margin-top: 0.5rem;">Based on closed tickets</span>
+                            </div>
+                        </div>
+
+                        <div class="card stat-card" style="flex: 1;">
+                            <div class="stat-icon" style="background-color: #fce7f3; color: #ec4899;">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <div class="stat-details">
+                                <h3>Closed vs Open Ratio</h3>
+                                <p class="stat-number" id="valRatio">0 / 0</p>
+                                <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 0.5rem;" id="valRatioText">0% closure rate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Clean Data Summary Grid -->
+                    <div class="card" style="padding: 0; overflow: hidden;">
+                        <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
+                            <h3 style="font-size: 1.1rem; font-weight: 600; color: var(--text-dark);">Resolved Count by Category</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="scorecard-table" style="width: 100%; border-collapse: collapse;">
+                                <thead style="background-color: #f8fafc;">
+                                    <tr>
+                                        <th style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Issue Category</th>
+                                        <th style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); text-align: right; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Total Resolved</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categoryTableBody">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -105,6 +208,7 @@
 
     <!-- Custom JS -->
     <script src="js/nav-active.js"></script>
+    <script src="js/reports.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>

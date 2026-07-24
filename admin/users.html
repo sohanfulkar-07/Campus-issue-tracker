@@ -91,10 +91,64 @@
         <main class="content-container">
             
             <div id="users-view" class="dashboard-view active">
-                <div class="card" style="padding: 3rem; text-align: center;">
-                    <h2>User Management</h2>
-                    <p style="color: var(--text-light); margin-top: 1rem;">Manage student and faculty accounts here.</p>
+                <!-- Header section for users -->
+                <div class="users-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <h2 class="card-title" style="margin-bottom: 0.5rem; font-size: 1.5rem;">User Management Panel</h2>
+                        <div class="user-stats" style="font-size: 0.85rem; color: var(--text-muted);">
+                            Manage system access and roles across the campus network.
+                        </div>
+                    </div>
+                    <button id="addUserBtn" class="btn-primary" style="background-color: var(--primary-blue); color: white; border: none; padding: 0.65rem 1.25rem; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s;">
+                        <i class="fas fa-plus"></i> Add New User
+                    </button>
                 </div>
+
+                <!-- Filters Bar -->
+                <div class="filters-bar card">
+                    <div class="filters-group" style="width: 100%;">
+                        <div class="filter-item" style="flex: 1; min-width: 250px;">
+                            <label>SEARCH USERS</label>
+                            <div style="position: relative;">
+                                <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                                <input type="text" id="searchUsers" placeholder="Search by name or email..." style="width: 100%; padding: 0.5rem 1rem 0.5rem 2.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none; background-color: #f8fafc;">
+                            </div>
+                        </div>
+                        <div class="filter-item">
+                            <label>FILTER BY ROLE</label>
+                            <select id="filterRole" class="custom-select">
+                                <option value="All">All Roles</option>
+                                <option value="Student">Student</option>
+                                <option value="Faculty">Faculty</option>
+                                <option value="Department Admin">Department Admin</option>
+                                <option value="Super Admin">Super Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="card scorecard-card" style="padding: 0; overflow: hidden;">
+                    <div class="table-responsive">
+                        <table class="scorecard-table" style="width: 100%; min-width: 800px; border-collapse: collapse;">
+                            <thead style="background-color: #f8fafc;">
+                                <tr>
+                                    <th style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); width: 60px;">User</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Name</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Email</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Role</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Department</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Status</th>
+                                    <th style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); text-align: center; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Rows injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
             
             <footer class="main-footer">
@@ -103,8 +157,61 @@
         </main>
     </div>
 
+    <!-- User Modal (Add/Edit) -->
+    <div id="userModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 19, 42, 0.6); z-index: 1050; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div style="background: var(--card-bg); width: 90%; max-width: 500px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; max-height: 90vh;">
+            
+            <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="modalUserTitle" style="font-size: 1.25rem; font-weight: 600; color: var(--text-dark);">Add New User</h2>
+                <button id="closeUserModalBtn" style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div style="padding: 1.5rem; overflow-y: auto; flex: 1;">
+                <form id="userForm">
+                    <div style="margin-bottom: 1.25rem;">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Full Name</label>
+                        <input type="text" id="modalUserName" required style="width: 100%; padding: 0.65rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.25rem;">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Email Address</label>
+                        <input type="email" id="modalUserEmail" required style="width: 100%; padding: 0.65rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none;">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Role</label>
+                            <select id="modalUserRole" class="custom-select" style="width: 100%;">
+                                <option value="Student">Student</option>
+                                <option value="Faculty">Faculty</option>
+                                <option value="Department Admin">Department Admin</option>
+                                <option value="Super Admin">Super Admin</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Department</label>
+                            <select id="modalUserDept" class="custom-select" style="width: 100%;" disabled>
+                                <option value="None">None</option>
+                                <option value="IT">IT</option>
+                                <option value="Hostel">Hostel</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Academic">Academic</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div style="padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; background-color: #f8fafc; border-radius: 0 0 12px 12px;">
+                <button id="cancelUserModalBtn" style="padding: 0.65rem 1.25rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-weight: 500; color: var(--text-dark);">Cancel</button>
+                <button id="saveUserModalBtn" type="button" style="padding: 0.65rem 1.25rem; background: var(--primary-blue); border: none; border-radius: 6px; cursor: pointer; font-weight: 500; color: white;">Save User</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Custom JS -->
     <script src="js/nav-active.js"></script>
+    <script src="js/users.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>
