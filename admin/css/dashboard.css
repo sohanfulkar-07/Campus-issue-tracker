@@ -467,3 +467,11 @@ ul { list-style: none; }
     .kpi-row { grid-template-columns: 1fr; }
     .donut-container { flex-direction: column; align-items: flex-start; gap: 2rem; }
 }
+
+/* View Routing Styles */
+.dashboard-view { display: none; animation: fadeIn 0.3s ease-in-out; }
+.dashboard-view.active { display: block; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
