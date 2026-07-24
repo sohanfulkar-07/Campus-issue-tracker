@@ -645,3 +645,18 @@ ul { list-style: none; }
         display: none !important;
     }
 }
+
+:root[data-theme="dark"] {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-dark: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-light: #64748b;
+    --border-color: #334155;
+    --sidebar-bg: #020617;
+    --danger-bg: rgba(239, 68, 68, 0.1);
+    --warning-bg: rgba(245, 158, 11, 0.1);
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --info-bg: rgba(14, 165, 233, 0.1);
+    --purple-bg: rgba(139, 92, 246, 0.1);
+}
