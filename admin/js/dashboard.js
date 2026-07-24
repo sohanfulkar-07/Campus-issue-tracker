@@ -1,143 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- UI Interactions ---
+
+    // --- 1. Sidebar Navigation Engine & UI Setup ---
     const sidebar = document.getElementById('sidebar');
     const menuToggle = document.getElementById('menuToggle');
     const closeSidebar = document.getElementById('closeSidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-    menuToggle.addEventListener('click', () => {
-        sidebar.classList.add('active');
-        sidebarOverlay.classList.add('active');
-    });
+    if(menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            if(sidebarOverlay) sidebarOverlay.classList.add('active');
+        });
+    }
 
     const closeMenu = () => {
-        sidebar.classList.remove('active');
-        sidebarOverlay.classList.remove('active');
+        if(sidebar) sidebar.classList.remove('active');
+        if(sidebarOverlay) sidebarOverlay.classList.remove('active');
     };
 
-    closeSidebar.addEventListener('click', closeMenu);
-    sidebarOverlay.addEventListener('click', closeMenu);
+    if(closeSidebar) closeSidebar.addEventListener('click', closeMenu);
+    if(sidebarOverlay) sidebarOverlay.addEventListener('click', closeMenu);
 
-
-    // --- Chart.js Implementations ---
-    
-    // Bar Chart Data (Department Efficiency)
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    new Chart(barCtx, {
-        type: 'bar',
-        data: {
-            labels: [], // Populated dynamically
-            datasets: [{
-                label: 'Hours Elapsed',
-                data: [], // Populated dynamically
-                backgroundColor: [
-                    '#3b82f6', '#ef4444', '#10b981', '#f59e0b'
-                ],
-                borderRadius: 2,
-                barThickness: 45
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: (context) => `${context.raw} Hours`
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 60,
-                    ticks: {
-                        stepSize: 10,
-                        font: { size: 10, family: "'Poppins', sans-serif" },
-                        color: '#94a3b8'
-                    },
-                    grid: {
-                        color: '#f1f5f9',
-                        drawBorder: false
-                    },
-                    title: {
-                        display: true,
-                        text: 'Hours Elapsed',
-                        font: { size: 10, family: "'Poppins', sans-serif" },
-                        color: '#94a3b8'
-                    }
-                },
-                x: {
-                    grid: { display: false, drawBorder: false },
-                    ticks: {
-                        font: { size: 10, family: "'Poppins', sans-serif" },
-                        color: '#64748b'
-                    }
-                }
-            }
-        }
-    });
-
-    // Donut Chart Data (Active Ticket Volume By Category)
-    const donutCtx = document.getElementById('donutChart').getContext('2d');
-    
-    const donutData = {
-        labels: [], // Populated dynamically
-        data: [], // Populated dynamically
-        colors: ['#3b82f6', '#1d4ed8', '#10b981', '#ef4444', '#f59e0b']
-    };
-
-    new Chart(donutCtx, {
-        type: 'doughnut',
-        data: {
-            labels: donutData.labels,
-            datasets: [{
-                data: donutData.data,
-                backgroundColor: donutData.colors,
-                borderWidth: 2,
-                borderColor: '#ffffff',
-                hoverOffset: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '50%',
-            plugins: {
-                legend: { display: false } // We use custom HTML legend
-            }
-        }
-    });
-
-    // Render Custom Donut Legend
-    const legendContainer = document.getElementById('donutLegend');
-    let legendHtml = '';
-    donutData.labels.forEach((label, index) => {
-        legendHtml += `
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: ${donutData.colors[index]}"></div>
-                <span>${label}</span>
-            </div>
-        `;
-    });
-    legendContainer.innerHTML = legendHtml;
-});
-
-document.addEventListener('DOMContentLoaded', () => {
+    // Logout handling
     const logoutLinks = document.querySelectorAll('.logout');
     if (logoutLinks.length > 0) {
         const modalHtml = `
             <div id="logoutConfirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
-                <div style="background: var(--bg-color, #ffffff); padding: 2rem; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; border: 1px solid var(--border-color, #e2e8f0);">
-                    <div style="width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; margin: 0 auto 1rem auto;">
+                <div style="background: var(--card-bg, #ffffff); padding: 2rem; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; border: 1px solid var(--border-color, #e2e8f0);">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--danger-bg); color: var(--danger-color); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; margin: 0 auto 1rem auto;">
                         <i class="fas fa-sign-out-alt"></i>
                     </div>
-                    <h3 style="margin: 0 0 0.5rem 0; color: var(--text-color, #1e293b); font-size: 1.25rem;">Confirm Logout</h3>
-                    <p style="margin: 0 0 1.5rem 0; color: var(--text-light, #64748b);">Are you sure you want to log out of your account?</p>
+                    <h3 style="margin: 0 0 0.5rem 0; color: var(--text-dark); font-size: 1.25rem;">Confirm Logout</h3>
+                    <p style="margin: 0 0 1.5rem 0; color: var(--text-light);">Are you sure you want to log out of your account?</p>
                     <div style="display: flex; justify-content: center; gap: 1rem;">
-                        <button id="cancelLogoutBtn" style="padding: 0.75rem 1.5rem; border: 1px solid var(--border-color, #cbd5e1); background: transparent; border-radius: 8px; cursor: pointer; color: var(--text-color, #334155); font-weight: 500; flex: 1; transition: all 0.2s;">Cancel</button>
-                        <button id="proceedLogoutBtn" style="padding: 0.75rem 1.5rem; border: none; background: #ef4444; color: white; border-radius: 8px; cursor: pointer; font-weight: 500; flex: 1; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);">Proceed</button>
+                        <button id="cancelLogoutBtn" style="padding: 0.75rem 1.5rem; border: 1px solid var(--border-color); background: transparent; border-radius: 8px; cursor: pointer; color: var(--text-dark); font-weight: 500; flex: 1; transition: all 0.2s;">Cancel</button>
+                        <button id="proceedLogoutBtn" style="padding: 0.75rem 1.5rem; border: none; background: var(--danger-color); color: white; border-radius: 8px; cursor: pointer; font-weight: 500; flex: 1; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);">Proceed</button>
                     </div>
                 </div>
             </div>
@@ -162,35 +59,262 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         proceedBtn.addEventListener('click', () => {
+            // Clean function that completely purges localStorage and sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
             window.location.href = logoutTarget;
         });
         
         logoutModal.addEventListener('click', (e) => {
-            if(e.target === logoutModal) {
-                logoutModal.style.display = 'none';
-            }
+            if(e.target === logoutModal) logoutModal.style.display = 'none';
         });
     }
-});
 
-// --- PDF Export Functionality ---
-document.addEventListener('DOMContentLoaded', () => {
+    // --- 2. Operational Dataset (Empty Slate) ---
+    const rawDataset = [];
+
+    let currentDataset = [...rawDataset];
+
+    // --- 3. Dynamic KPI Calculator ---
+    const SLA_TARGET_HOURS = 24;
+
+    function recalculateKPIs() {
+        const totalActive = currentDataset.filter(t => t.status !== 'Resolved').length;
+        
+        const resolvedTickets = currentDataset.filter(t => t.status === 'Resolved');
+        let avgResolution = 0;
+        let slaComplianceRate = 0;
+
+        if(resolvedTickets.length > 0) {
+            const totalHours = resolvedTickets.reduce((sum, t) => sum + t.resolutionHours, 0);
+            avgResolution = (totalHours / resolvedTickets.length).toFixed(1);
+
+            const compliantTickets = resolvedTickets.filter(t => t.resolutionHours <= SLA_TARGET_HOURS).length;
+            slaComplianceRate = ((compliantTickets / resolvedTickets.length) * 100).toFixed(1);
+        }
+
+        const criticalTickets = currentDataset.filter(t => t.priority === 'Critical' && t.status !== 'Resolved').length;
+
+        // Inject into DOM
+        const kpiTotalComplaints = document.getElementById('kpiTotalComplaints');
+        const kpiAvgResolution = document.getElementById('kpiAvgResolution');
+        const kpiSlaCompliance = document.getElementById('kpiSlaCompliance');
+        const kpiCritical = document.getElementById('kpiCritical');
+
+        if(kpiTotalComplaints) kpiTotalComplaints.innerText = totalActive;
+        if(kpiAvgResolution) kpiAvgResolution.innerText = resolvedTickets.length > 0 ? `${avgResolution} hrs` : '--';
+        if(kpiSlaCompliance) kpiSlaCompliance.innerText = resolvedTickets.length > 0 ? `${slaComplianceRate}%` : '--';
+        if(kpiCritical) kpiCritical.innerText = criticalTickets;
+    }
+
+    // --- 4. Live Chart Generation ---
+    let barChartInst = null;
+    let donutChartInst = null;
+
+    function renderCharts() {
+        const barCtx = document.getElementById('barChart');
+        const donutCtx = document.getElementById('donutChart');
+
+        // Prepare Data for Bar Chart
+        const deptMap = {};
+        const resolvedTickets = currentDataset.filter(t => t.status === 'Resolved');
+        
+        resolvedTickets.forEach(t => {
+            if(!deptMap[t.department]) deptMap[t.department] = { sum: 0, count: 0 };
+            deptMap[t.department].sum += t.resolutionHours;
+            deptMap[t.department].count += 1;
+        });
+
+        const barLabels = Object.keys(deptMap);
+        const barData = barLabels.map(dept => (deptMap[dept].sum / deptMap[dept].count).toFixed(1));
+
+        if(barCtx) {
+            if(barChartInst) barChartInst.destroy();
+            barChartInst = new Chart(barCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: barLabels.length > 0 ? barLabels : ['No Data'],
+                    datasets: [{
+                        label: 'Hours Elapsed',
+                        data: barData.length > 0 ? barData : [0],
+                        backgroundColor: ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6'],
+                        borderRadius: 2,
+                        barThickness: 45
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: (context) => `${context.raw} Hours` } }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { font: { size: 10, family: "'Poppins', sans-serif" }, color: '#94a3b8' },
+                            grid: { color: '#f1f5f9', drawBorder: false },
+                            title: { display: true, text: 'Hours Elapsed', font: { size: 10, family: "'Poppins', sans-serif" }, color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: { font: { size: 10, family: "'Poppins', sans-serif" }, color: '#64748b' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Prepare Data for Donut Chart
+        const catMap = {};
+        const activeTickets = currentDataset.filter(t => t.status !== 'Resolved');
+        activeTickets.forEach(t => {
+            catMap[t.category] = (catMap[t.category] || 0) + 1;
+        });
+
+        const donutLabels = Object.keys(catMap);
+        const dData = donutLabels.map(cat => catMap[cat]);
+        const dColors = ['#3b82f6', '#1d4ed8', '#10b981', '#ef4444', '#f59e0b'];
+
+        if(donutCtx) {
+            if(donutChartInst) donutChartInst.destroy();
+            donutChartInst = new Chart(donutCtx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: donutLabels.length > 0 ? donutLabels : ['No Active Tickets'],
+                    datasets: [{
+                        data: dData.length > 0 ? dData : [1],
+                        backgroundColor: dData.length > 0 ? dColors.slice(0, donutLabels.length) : ['#e2e8f0'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '50%',
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Render Custom Legend
+            const legendContainer = document.getElementById('donutLegend');
+            if(legendContainer) {
+                if(donutLabels.length === 0) {
+                    legendContainer.innerHTML = '<div style="color: var(--text-light); text-align: center;">No active workload</div>';
+                } else {
+                    let legendHtml = '';
+                    donutLabels.forEach((label, index) => {
+                        legendHtml += `
+                            <div class="legend-item" style="display: flex; align-items: center; margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                                <div class="legend-color" style="width: 12px; height: 12px; border-radius: 50%; background-color: ${dColors[index]}; margin-right: 0.5rem;"></div>
+                                <span>${label}</span>
+                            </div>
+                        `;
+                    });
+                    legendContainer.innerHTML = legendHtml;
+                }
+            }
+        }
+    }
+
+    // --- 5. Live Department Scorecard Table ---
+    function renderScorecard() {
+        const tableBody = document.getElementById('scorecardTableBody');
+        if(!tableBody) return;
+
+        const depts = [...new Set(currentDataset.map(t => t.department))];
+        
+        if(depts.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-light);">No scorecard data available.</td></tr>`;
+            return;
+        }
+
+        let rowsHtml = '';
+        depts.forEach(dept => {
+            const deptTickets = currentDataset.filter(t => t.department === dept);
+            const openLoad = deptTickets.filter(t => t.status !== 'Resolved').length;
+            
+            const ackTimes = deptTickets.map(t => t.ackHours).filter(h => h !== null);
+            const avgAck = ackTimes.length > 0 ? (ackTimes.reduce((a,b)=>a+b, 0) / ackTimes.length).toFixed(1) : 0;
+            
+            const satisfactions = deptTickets.map(t => t.satisfaction).filter(s => s !== null);
+            const avgSat = satisfactions.length > 0 ? (satisfactions.reduce((a,b)=>a+b, 0) / satisfactions.length).toFixed(0) : 0;
+            
+            // Map satisfaction to color
+            let barColor = '#10b981'; // Green
+            if(avgSat < 75) barColor = '#ef4444'; // Red
+            else if(avgSat < 90) barColor = '#f59e0b'; // Yellow
+
+            rowsHtml += `
+                <tr>
+                    <td style="font-weight: 500;">${dept}</td>
+                    <td>${openLoad}</td>
+                    <td>${avgAck} hrs</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="flex: 1; height: 6px; background-color: var(--border-color); border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; width: ${avgSat}%; background-color: ${barColor};"></div>
+                            </div>
+                            <span style="font-size: 0.8rem; font-weight: 600;">${avgSat}%</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tableBody.innerHTML = rowsHtml;
+    }
+
+    // --- 6. Global Filtering Interceptor ---
+    const filterZone = document.getElementById('filterZone');
+    const filterBranch = document.getElementById('filterBranch');
+    const filterLayer = document.getElementById('filterLayer');
+    const filterSemester = document.getElementById('filterSemester');
+
+    function applyFilters() {
+        const valZone = filterZone ? filterZone.value : 'All Zones (Global View)';
+        const valBranch = filterBranch ? filterBranch.value : 'All Institutional Branches';
+        const valLayer = filterLayer ? filterLayer.value : 'All Infrastructure Layers';
+        const valSemester = filterSemester ? filterSemester.value : 'Current Semester';
+
+        currentDataset = rawDataset.filter(t => {
+            let match = true;
+            if(valZone !== 'All Zones (Global View)' && t.zone !== valZone && t.zone !== 'All Zones (Global View)') match = false;
+            if(valBranch !== 'All Institutional Branches' && t.branch !== valBranch && t.branch !== 'All Institutional Branches') match = false;
+            if(valLayer !== 'All Infrastructure Layers' && t.category !== valLayer) match = false;
+            if(valSemester !== 'Full Year' && t.semester !== valSemester) match = false;
+            return match;
+        });
+
+        recalculateKPIs();
+        renderCharts();
+        renderScorecard();
+    }
+
+    [filterZone, filterBranch, filterLayer, filterSemester].forEach(el => {
+        if(el) el.addEventListener('change', applyFilters);
+    });
+
+    // Initial Render
+    recalculateKPIs();
+    renderCharts();
+    renderScorecard();
+
+    // --- 7. PDF Export Functionality ---
     const exportBtn = document.querySelector('.export-btn');
     const mainWrapper = document.querySelector('.main-wrapper');
-    const sidebar = document.getElementById('sidebar');
     
     if (exportBtn && mainWrapper) {
         exportBtn.addEventListener('click', () => {
-            // Store original styles to restore them after PDF generation
             const originalMargin = mainWrapper.style.marginLeft;
             const originalWidth = mainWrapper.style.width;
             
-            // Hide sidebar and reset wrapper margin for a clean PDF layout
             if(sidebar) sidebar.style.display = 'none';
             mainWrapper.style.marginLeft = '0';
             mainWrapper.style.width = '100%';
             
-            // Visual feedback on button
             const originalBtnHtml = exportBtn.innerHTML;
             exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
             exportBtn.disabled = true;
@@ -203,14 +327,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
             };
             
-            // Generate PDF
             html2pdf().set(opt).from(mainWrapper).save().then(() => {
-                // Restore original layout
                 if(sidebar) sidebar.style.display = '';
                 mainWrapper.style.marginLeft = originalMargin;
                 mainWrapper.style.width = originalWidth;
-                
-                // Restore button
                 exportBtn.innerHTML = originalBtnHtml;
                 exportBtn.disabled = false;
             }).catch(err => {
@@ -223,4 +343,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
 });
