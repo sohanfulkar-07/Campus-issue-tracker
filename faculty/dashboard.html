@@ -98,7 +98,7 @@
                     <div class="card profile-card">
                         <div class="profile-basic">
                             <img src="https://ui-avatars.com/api/?name=Faculty&background=0b132a&color=fff&size=100&rounded=true" alt="Faculty Profile" class="profile-avatar-large" id="profileAvatar">
-                            <button class="btn-primary-sm">
+                            <button class="btn-primary-sm" id="viewProfileBtn" type="button">
                                 <i class="far fa-user"></i> View Profile
                             </button>
                         </div>
@@ -242,6 +242,27 @@
                 <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
             </footer>
         </main>
+    </div>
+
+    <div class="profile-modal-backdrop" id="profileModal" aria-hidden="true">
+        <div class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+            <div class="profile-modal-header">
+                <div>
+                    <p class="profile-modal-eyebrow">Faculty Profile</p>
+                    <h3 id="profileModalTitle">Profile Details</h3>
+                </div>
+                <button class="profile-modal-close" id="closeProfileModal" type="button" aria-label="Close profile details">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="profile-modal-body">
+                <div class="profile-modal-detail"><span class="label">Designation</span><span class="value" id="modalDesignation">--</span></div>
+                <div class="profile-modal-detail"><span class="label">Employee ID</span><span class="value" id="modalEmpId">--</span></div>
+                <div class="profile-modal-detail"><span class="label">Department</span><span class="value" id="modalDept">--</span></div>
+                <div class="profile-modal-detail"><span class="label">Office Phone</span><span class="value" id="modalPhone">--</span></div>
+                <div class="profile-modal-detail"><span class="label">Official Email</span><span class="value" id="modalEmail">--</span></div>
+            </div>
+        </div>
     </div>
 
     <!-- Custom JS -->
