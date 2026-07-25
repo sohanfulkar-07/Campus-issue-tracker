@@ -565,27 +565,49 @@
             const previewContainer = overlay.querySelector('#pwUploadPreviewContainer');
             const previewImg = overlay.querySelector('#pwUploadPreviewImg');
 
-            // Handle Custom File Upload
+            // Handle Custom File Upload with Canvas Compression (to fit localStorage 5MB quota)
             if (fileInput) {
                 fileInput.addEventListener('change', (e) => {
                     const file = e.target.files[0];
                     if (file) {
-                        if (file.size > 3 * 1024 * 1024) {
-                            alert('Image size is too large. Please select a photo under 3MB.');
-                            return;
-                        }
-
                         const reader = new FileReader();
                         reader.onload = function(evt) {
-                            selectedAvatarUrl = evt.target.result; // Base64 Data URL
-                            if (hiddenAvatarInput) hiddenAvatarInput.value = selectedAvatarUrl;
+                            const img = new Image();
+                            img.onload = function() {
+                                // Canvas compress & resize to max 256x256 pixels (~15KB JPEG)
+                                const canvas = document.createElement('canvas');
+                                const maxDim = 256;
+                                let width = img.width;
+                                let height = img.height;
 
-                            // Show live custom photo preview
-                            if (previewImg) previewImg.src = selectedAvatarUrl;
-                            if (previewContainer) previewContainer.style.display = 'flex';
+                                if (width > height) {
+                                    if (width > maxDim) {
+                                        height = Math.round((height * maxDim) / width);
+                                        width = maxDim;
+                                    }
+                                } else {
+                                    if (height > maxDim) {
+                                        width = Math.round((width * maxDim) / height);
+                                        height = maxDim;
+                                    }
+                                }
 
-                            // Deselect all preset grid items
-                            avatarGridItems.forEach(el => el.classList.remove('selected'));
+                                canvas.width = width;
+                                canvas.height = height;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, width, height);
+
+                                selectedAvatarUrl = canvas.toDataURL('image/jpeg', 0.85); // Efficient compressed data URL
+                                if (hiddenAvatarInput) hiddenAvatarInput.value = selectedAvatarUrl;
+
+                                // Show live custom photo preview
+                                if (previewImg) previewImg.src = selectedAvatarUrl;
+                                if (previewContainer) previewContainer.style.display = 'flex';
+
+                                // Deselect all preset grid items
+                                avatarGridItems.forEach(el => el.classList.remove('selected'));
+                            };
+                            img.src = evt.target.result;
                         };
                         reader.readAsDataURL(file);
                     }
@@ -636,12 +658,16 @@
                     profileData.designation = this.role === 'admin' ? 'System Administrator' : 'Faculty Member';
                 }
 
-                // Save to localStorage under dynamic user storage key & fallback keys
-                localStorage.setItem(this.storageKey, JSON.stringify(profileData));
-                if (isStudent) {
-                    localStorage.setItem('studentProfile', JSON.stringify(profileData));
-                } else if (this.role === 'faculty') {
-                    localStorage.setItem('facultyProfile', JSON.stringify(profileData));
+                // Safe localStorage write with QuotaExceeded error handling
+                try {
+                    localStorage.setItem(this.storageKey, JSON.stringify(profileData));
+                    if (isStudent) {
+                        localStorage.setItem('studentProfile', JSON.stringify(profileData));
+                    } else if (this.role === 'faculty') {
+                        localStorage.setItem('facultyProfile', JSON.stringify(profileData));
+                    }
+                } catch (err) {
+                    console.error('LocalStorage write failed:', err);
                 }
 
                 // Instant DOM Sync across navbar, sidebar, header, & profile cards
