@@ -129,16 +129,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const barData = barLabels.map(dept => (deptMap[dept].sum / deptMap[dept].count).toFixed(1));
 
         if(barCtx) {
+            const barCtx2d = barCtx.getContext('2d');
+            const barGradient = barCtx2d.createLinearGradient(0, 0, 0, 400);
+            barGradient.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
+            barGradient.addColorStop(1, 'rgba(59, 130, 246, 0.1)');
+
             if(barChartInst) barChartInst.destroy();
-            barChartInst = new Chart(barCtx.getContext('2d'), {
+            barChartInst = new Chart(barCtx2d, {
                 type: 'bar',
                 data: {
                     labels: barLabels.length > 0 ? barLabels : ['No Data'],
                     datasets: [{
                         label: 'Hours Elapsed',
                         data: barData.length > 0 ? barData : [0],
-                        backgroundColor: ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6'],
-                        borderRadius: 2,
+                        backgroundColor: barLabels.length > 0 ? barGradient : '#1e293b',
+                        borderColor: '#3b82f6',
+                        borderWidth: 1,
+                        borderRadius: 4,
                         barThickness: 45
                     }]
                 },
@@ -147,18 +154,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: { callbacks: { label: (context) => `${context.raw} Hours` } }
+                        tooltip: {
+                            backgroundColor: 'rgba(11, 15, 25, 0.9)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            padding: 10,
+                            callbacks: { label: (context) => `${context.raw} Hours` }
+                        }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { font: { size: 10, family: "'Poppins', sans-serif" }, color: '#94a3b8' },
-                            grid: { color: '#f1f5f9', drawBorder: false },
-                            title: { display: true, text: 'Hours Elapsed', font: { size: 10, family: "'Poppins', sans-serif" }, color: '#94a3b8' }
+                            ticks: { font: { size: 10, family: "'Inter', sans-serif" }, color: '#94a3b8' },
+                            grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+                            title: { display: true, text: 'Hours Elapsed', font: { size: 10, family: "'Inter', sans-serif" }, color: '#94a3b8' }
                         },
                         x: {
                             grid: { display: false, drawBorder: false },
-                            ticks: { font: { size: 10, family: "'Poppins', sans-serif" }, color: '#64748b' }
+                            ticks: { font: { size: 10, family: "'Inter', sans-serif" }, color: '#94a3b8' }
                         }
                     }
                 }
@@ -181,20 +196,30 @@ document.addEventListener('DOMContentLoaded', () => {
             donutChartInst = new Chart(donutCtx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: donutLabels.length > 0 ? donutLabels : ['No Active Tickets'],
+                    labels: donutLabels.length > 0 ? donutLabels : ['Empty', 'Empty', 'Empty'],
                     datasets: [{
-                        data: dData.length > 0 ? dData : [1],
-                        backgroundColor: dData.length > 0 ? dColors.slice(0, donutLabels.length) : ['#e2e8f0'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff',
+                        data: dData.length > 0 ? dData : [1, 1, 1],
+                        backgroundColor: dData.length > 0 ? dColors.slice(0, donutLabels.length) : ['#1e293b', '#334155', '#475569'],
+                        borderWidth: dData.length > 0 ? 2 : 1,
+                        borderColor: dData.length > 0 ? '#0B0F19' : 'rgba(255,255,255,0.05)',
                         hoverOffset: 4
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '50%',
-                    plugins: { legend: { display: false } }
+                    cutout: '60%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(11, 15, 25, 0.9)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            padding: 10
+                        }
+                    }
                 }
             });
 
