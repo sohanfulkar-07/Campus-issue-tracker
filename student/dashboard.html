@@ -210,9 +210,12 @@
                             <h2>Notifications</h2>
                             <a href="#" class="view-all-sm">View all</a>
                         </div>
-                        <div class="notifications-list" id="notificationsList">
-                            <!-- Populated dynamically -->
-                            <div style="text-align: center; padding: 1rem; color: var(--text-light);">No new notifications.</div>
+                        <div class="notifications-list" id="notificationList">
+                            <!-- Populated dynamically by Notifications Engine -->
+                            <div class="no-notif-placeholder">
+                                <i class="far fa-bell-slash"></i>
+                                <p>No new updates on your issues.</p>
+                            </div>
                         </div>
                     </div>
 
@@ -239,5 +242,7 @@
     <script src="js/dashboard.js"></script>
     <script src="js/profile-data.js"></script>
     <script src="js/complaints-data.js"></script>
+    <!-- Multi-Status Notification Engine -->
+    <script src="js/notifications-engine.js"></script>
 </body>
 </html>
