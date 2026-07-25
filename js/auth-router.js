@@ -25,6 +25,34 @@
         }
     }
 
+    // Data Migration: Ensure old mock data doesn't crash the new unified dashboard logic
+    try {
+        let master = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
+        let updated = false;
+        master = master.map(ticket => {
+            if (ticket.status && typeof ticket.status === 'object') {
+                let state = ticket.status.state || 'New / Unassigned';
+                if(state === 'Open') state = 'New / Unassigned';
+                ticket.status = state;
+                updated = true;
+            }
+            if (ticket.priority && typeof ticket.priority === 'object') {
+                ticket.priority = ticket.priority.level || 'Medium';
+                updated = true;
+            }
+            if (ticket.category && typeof ticket.category === 'object') {
+                ticket.category = ticket.category.name || 'Other';
+                updated = true;
+            }
+            return ticket;
+        });
+        if (updated) {
+            localStorage.setItem('campus_tickets_master', JSON.stringify(master));
+        }
+    } catch (e) {
+        console.error("Data migration failed", e);
+    }
+
     // Expose global logout function
     window.unifiedLogout = function(e) {
         if(e) e.preventDefault();

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Get complaints from local storage
-    const complaintsStr = localStorage.getItem('studentComplaints');
+    const complaintsStr = localStorage.getItem('campus_tickets_master');
     const complaints = complaintsStr ? JSON.parse(complaintsStr) : [];
 
     // Sort newest first
@@ -8,10 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Helper to get status badge class
     const getStatusBadgeClass = (status) => {
-        switch (status.toLowerCase()) {
-            case 'pending': return 'status-pending';
-            case 'in progress': return 'status-progress';
-            case 'resolved': return 'status-resolved';
+        switch (status) {
+            case 'New / Unassigned': return 'status-pending';
+            case 'In Progress': return 'status-progress';
+            case 'Resolved': return 'status-resolved';
             default: return 'status-pending';
         }
     };
@@ -24,9 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (statTotal) {
         statTotal.textContent = complaints.length;
-        statPending.textContent = complaints.filter(c => c.status === 'pending').length;
-        statInProgress.textContent = complaints.filter(c => c.status === 'in progress').length;
-        statResolved.textContent = complaints.filter(c => c.status === 'resolved').length;
+        statPending.textContent = complaints.filter(c => c.status === 'New / Unassigned').length;
+        statInProgress.textContent = complaints.filter(c => c.status === 'In Progress').length;
+        statResolved.textContent = complaints.filter(c => c.status === 'Resolved').length;
 
         // Link stat cards to report history with filters
         const statCards = document.querySelectorAll('.stat-card');
@@ -34,11 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.cursor = 'pointer';
             card.addEventListener('click', () => {
                 let filter = 'all';
-                if (card.classList.contains('stat-yellow')) filter = 'pending';
-                if (card.classList.contains('stat-green')) filter = 'progress'; // using 'progress' to match select value
-                if (card.classList.contains('stat-purple')) filter = 'resolved';
+                if (card.classList.contains('stat-yellow')) filter = 'New / Unassigned';
+                if (card.classList.contains('stat-green')) filter = 'In Progress';
+                if (card.classList.contains('stat-purple')) filter = 'Resolved';
 
-                window.location.href = `report-history.html?filter=${filter}`;
+                window.location.href = `report-history.html?filter=${encodeURIComponent(filter)}`;
             });
         });
     }
@@ -53,10 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <tr>
                 <td><strong>${c.id}</strong></td>
                 <td>${c.title}</td>
-                <td>${c.category}</td>
-                <td><span class="badge ${c.category.includes('Emergency') ? 'badge-danger' : 'badge-primary'}">Normal</span></td>
+                <td>${c.department || c.category}</td>
+                <td><span class="badge ${c.priority === 'High' || c.priority === 'Critical' ? 'badge-danger' : 'badge-primary'}">${c.priority}</span></td>
                 <td><span class="status-badge ${getStatusBadgeClass(c.status)}">${c.status.toUpperCase()}</span></td>
-                <td>${new Date(c.date).toLocaleDateString()}</td>
+                <td>${c.date}</td>
                 <td>
                     <button class="btn-outline-sm"><i class="far fa-eye"></i> View</button>
                 </td>
@@ -94,9 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let filteredData = complaints;
 
             if (filterValue !== 'all') {
-                // map "progress" back to "in progress"
-                const mappedStatus = filterValue === 'progress' ? 'in progress' : filterValue;
-                filteredData = complaints.filter(c => c.status === mappedStatus);
+                filteredData = complaints.filter(c => c.status === filterValue);
             }
 
             historyTable.innerHTML = renderRows(filteredData, 0);
