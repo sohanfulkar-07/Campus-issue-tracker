@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Mock Data Rendering for Faculty ---
     
-    // Assigned Issues Data
-    const issuesData = [];
+    // Assigned Issues Data from Master Array
+    const issuesData = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
 
     // Render Issues Table
     const tableBody = document.getElementById('issuesTableBody');
@@ -36,17 +36,24 @@ document.addEventListener('DOMContentLoaded', () => {
             let html = '';
             const displayIssues = issuesData.slice(0, 5);
             displayIssues.forEach(issue => {
+                // Map flat properties to UI styles
+                let priorityClass = issue.priority === 'High' ? 'priority-high' : (issue.priority === 'Critical' ? 'priority-high' : 'priority-medium');
+                let statusClass = 'status-pending';
+                if(issue.status === 'Resolved') statusClass = 'status-resolved';
+                if(issue.status === 'In Progress') statusClass = 'status-in-progress';
+                if(issue.status === 'New / Unassigned') statusClass = 'status-pending';
+
                 html += `
                     <tr>
                         <td class="td-id">${issue.id}</td>
                         <td><strong>${issue.title}</strong></td>
                         <td>
                             <div class="user-cell">
-                                <i class="far fa-user"></i> ${issue.assignee}
+                                <i class="far fa-user"></i> ${issue.user || 'Unknown User'}
                             </div>
                         </td>
-                        <td><span class="badge-priority ${issue.priority.class}">${issue.priority.level}</span></td>
-                        <td><span class="badge-status ${issue.status.class}">${issue.status.state}</span></td>
+                        <td><span class="badge-priority ${priorityClass}">${issue.priority}</span></td>
+                        <td><span class="badge-status ${statusClass}">${issue.status}</span></td>
                         <td>${issue.date}</td>
                         <td>
                             <div class="action-links">

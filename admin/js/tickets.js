@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Dummy Data Array
-    let tickets = [];
+    // 1. Unified Master Data Array
+    let tickets = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
 
     // 2. DOM Elements
     const tableBody = document.getElementById('ticketsTableBody');
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update Stats
         statTotal.textContent = filtered.length;
-        statOpen.textContent = filtered.filter(t => t.status === 'Open').length;
+        statOpen.textContent = filtered.filter(t => t.status === 'New / Unassigned').length;
         statResolved.textContent = filtered.filter(t => t.status === 'Resolved').length;
 
         // Render HTML
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Status Badge
             let statusHtml = '';
-            if(t.status === 'Open') statusHtml = `<span style="background: #fee2e2; color: #ef4444; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #fecaca;"><i class="fas fa-exclamation-circle" style="margin-right:4px;"></i>Open</span>`;
+            if(t.status === 'New / Unassigned') statusHtml = `<span style="background: #fee2e2; color: #ef4444; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #fecaca;"><i class="fas fa-exclamation-circle" style="margin-right:4px;"></i>New</span>`;
             else if(t.status === 'In Progress') statusHtml = `<span style="background: #fffbeb; color: #d97706; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #fde68a;"><i class="fas fa-spinner fa-spin" style="margin-right:4px;"></i>In Progress</span>`;
             else statusHtml = `<span style="background: #d1fae5; color: #059669; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #a7f3d0;"><i class="fas fa-check-circle" style="margin-right:4px;"></i>Resolved</span>`;
 
@@ -151,6 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 setTimeout(() => {
                     tickets[ticketIndex].status = modalStatus.value;
+                    // Save back to master
+                    localStorage.setItem('campus_tickets_master', JSON.stringify(tickets));
+                    
                     renderTable();
                     closeModal();
                     

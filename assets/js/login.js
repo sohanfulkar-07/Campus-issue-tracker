@@ -94,6 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (userId && password.length >= 6) {
                     showToast('Success', 'Login successful. Redirecting...', 'success');
                     
+                    let role = 'student';
+                    if (currentRedirect.includes('faculty')) role = 'faculty';
+                    if (currentRedirect.includes('admin')) role = 'admin';
+                    
+                    localStorage.setItem('currentUserRole', role);
+                    
                     // Save password for faculty edit profile feature
                     if (currentRedirect.includes('faculty')) {
                         localStorage.setItem('facultyPassword', password);

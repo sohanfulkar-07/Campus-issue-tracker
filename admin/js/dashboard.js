@@ -59,10 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         proceedBtn.addEventListener('click', () => {
-            // Clean function that completely purges localStorage and sessionStorage
-            localStorage.clear();
-            sessionStorage.clear();
-            window.location.href = logoutTarget;
+            // Use unified logout that preserves master tickets
+            if (window.unifiedLogout) {
+                window.unifiedLogout();
+            } else {
+                localStorage.removeItem('currentUserRole');
+                sessionStorage.clear();
+                window.location.href = logoutTarget;
+            }
         });
         
         logoutModal.addEventListener('click', (e) => {
@@ -70,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. Operational Dataset (Empty Slate) ---
-    const rawDataset = [];
+    // --- 2. Operational Dataset (Live from Storage) ---
+    const rawDataset = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
 
     let currentDataset = [...rawDataset];
 
