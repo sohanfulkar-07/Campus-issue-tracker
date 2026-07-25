@@ -99,6 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentRedirect.includes('admin')) role = 'admin';
                     
                     localStorage.setItem('currentUserRole', role);
+                    localStorage.setItem('currentUserId', userId);
+                    localStorage.setItem('currentUserPassword', password);
                     
                     // Save password for faculty edit profile feature
                     if (currentRedirect.includes('faculty')) {

@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="css/dashboard.css?v=1.1">
     <!-- Auth Router -->
     <script src="../js/auth-router.js"></script>
+    <!-- Profile Wizard (Onboarding, Edit & Persistence) -->
+    <script src="../js/profile-wizard.js"></script>
     <!-- Theme JS (loads early to prevent FOUC) -->
     <script src="js/theme.js"></script>
 </head>
@@ -90,9 +92,14 @@
                 </div>
                 
                 <div class="profile-details-wrapper">
-                    <div class="profile-name-row">
-                        <h3 id="profileName">Student Name</h3>
-                        <span class="role-badge">Student</span>
+                    <div class="profile-name-row" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                        <div>
+                            <h3 id="profileName" style="display: inline-block; margin-right: 0.5rem;">Student Name</h3>
+                            <span class="role-badge">Student</span>
+                        </div>
+                        <button id="editProfileBtn" class="btn-edit-profile" title="Edit Profile">
+                            <i class="fas fa-pen"></i> Edit Profile
+                        </button>
                     </div>
                     
                     <div class="details-grid">
