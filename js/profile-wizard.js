@@ -180,6 +180,63 @@
                 .pw-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
                 @media (max-width: 520px) { .pw-row { grid-template-columns: 1fr; } }
 
+                /* Custom Photo Upload Styling */
+                .pw-custom-upload-box {
+                    background: rgba(241, 245, 249, 0.7);
+                    border: 2px dashed #cbd5e1;
+                    border-radius: 12px;
+                    padding: 0.85rem 1rem;
+                    text-align: center;
+                    margin-top: 0.5rem;
+                    margin-bottom: 0.75rem;
+                    transition: border-color 0.2s ease, background-color 0.2s ease;
+                }
+                [data-theme="dark"] .pw-custom-upload-box,
+                body.dark-theme .pw-custom-upload-box {
+                    background: rgba(30, 41, 59, 0.7);
+                    border-color: #475569;
+                }
+                .pw-custom-upload-box:hover {
+                    border-color: #3B82F6;
+                    background: rgba(59, 130, 246, 0.05);
+                }
+                .pw-file-upload-label {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    background: #2563eb;
+                    color: #ffffff;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background 0.2s ease;
+                }
+                .pw-file-upload-label:hover {
+                    background: #1d4ed8;
+                }
+                .pw-divider-text {
+                    display: flex;
+                    align-items: center;
+                    text-align: center;
+                    color: #94a3b8;
+                    font-size: 0.775rem;
+                    font-weight: 600;
+                    margin: 0.75rem 0;
+                }
+                .pw-divider-text::before, .pw-divider-text::after {
+                    content: '';
+                    flex: 1;
+                    border-bottom: 1px solid #e2e8f0;
+                }
+                .pw-divider-text::before { margin-right: .5em; }
+                .pw-divider-text::after { margin-left: .5em; }
+                [data-theme="dark"] .pw-divider-text::before,
+                [data-theme="dark"] .pw-divider-text::after {
+                    border-color: #334155;
+                }
+
                 .pw-avatar-help {
                     font-size: 0.775rem;
                     color: #64748b;
@@ -364,7 +421,7 @@
         }
 
         /**
-         * 3. Unlock and Render Profile Setup/Edit Form with Visual Avatar Selection Grid
+         * 3. Unlock and Render Profile Setup/Edit Form with Visual Avatar Selection Grid & Custom Photo Upload
          */
         renderOnboardingModal(isEditMode = false, prefillData = null) {
             this.injectModalStyles();
@@ -394,6 +451,7 @@
             ];
 
             const currentAvatar = (prefillData && prefillData.avatar) ? prefillData.avatar : avatars[0];
+            const isCustomAvatar = currentAvatar.startsWith('data:image');
 
             overlay.innerHTML = `
                 <div class="profile-wizard-modal" role="dialog" aria-modal="true">
@@ -454,13 +512,29 @@
                                 </div>
                             `}
 
-                            <!-- 1. Visual Avatar Grid Component -->
+                            <!-- Profile Picture Option: Upload Custom Photo OR Choose Preset Avatar -->
                             <div class="pw-form-group">
-                                <label>Select Your Profile Avatar</label>
-                                <span class="pw-avatar-help">Click an avatar below to personalize your profile appearance</span>
+                                <label>Profile Picture Option</label>
+                                
+                                <!-- Custom File Upload Box -->
+                                <div class="pw-custom-upload-box">
+                                    <label for="pwFileInput" class="pw-file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt"></i> Upload Custom Photo
+                                    </label>
+                                    <input type="file" id="pwFileInput" accept="image/*" style="display: none;" />
+                                    
+                                    <div id="pwUploadPreviewContainer" style="display: ${isCustomAvatar ? 'flex' : 'none'}; align-items: center; justify-content: center; gap: 0.75rem; margin-top: 0.75rem;">
+                                        <img id="pwUploadPreviewImg" src="${isCustomAvatar ? currentAvatar : ''}" alt="Uploaded Avatar Preview" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981;" />
+                                        <span style="font-size: 0.8rem; color: #10b981; font-weight: 600;"><i class="fas fa-check-circle"></i> Custom photo selected</span>
+                                    </div>
+                                </div>
+
+                                <div class="pw-divider-text">OR CHOOSE PRESET AVATAR</div>
+
+                                <!-- Preset Avatar Grid -->
                                 <div class="pw-avatar-grid" id="pwAvatarGrid">
                                     ${avatars.map((url, idx) => `
-                                        <div class="pw-avatar-item ${url === currentAvatar || (idx === 0 && !prefillData) ? 'selected' : ''}" data-avatar="${url}">
+                                        <div class="pw-avatar-item ${!isCustomAvatar && (url === currentAvatar || (idx === 0 && !prefillData)) ? 'selected' : ''}" data-avatar="${url}">
                                             <img src="${url}" alt="Avatar Option ${idx + 1}" />
                                         </div>
                                     `).join('')}
@@ -482,11 +556,43 @@
                 if (closeBtn) closeBtn.addEventListener('click', () => overlay.remove());
             }
 
-            // 2. Interactive Selection State Handler
+            // Interactive Selection State Handler
             let selectedAvatarUrl = currentAvatar;
             const hiddenAvatarInput = overlay.querySelector('#selectedAvatarInput');
             const avatarGridItems = overlay.querySelectorAll('.pw-avatar-item');
+            
+            const fileInput = overlay.querySelector('#pwFileInput');
+            const previewContainer = overlay.querySelector('#pwUploadPreviewContainer');
+            const previewImg = overlay.querySelector('#pwUploadPreviewImg');
 
+            // Handle Custom File Upload
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        if (file.size > 3 * 1024 * 1024) {
+                            alert('Image size is too large. Please select a photo under 3MB.');
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            selectedAvatarUrl = evt.target.result; // Base64 Data URL
+                            if (hiddenAvatarInput) hiddenAvatarInput.value = selectedAvatarUrl;
+
+                            // Show live custom photo preview
+                            if (previewImg) previewImg.src = selectedAvatarUrl;
+                            if (previewContainer) previewContainer.style.display = 'flex';
+
+                            // Deselect all preset grid items
+                            avatarGridItems.forEach(el => el.classList.remove('selected'));
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Handle Preset Avatar Grid Clicks
             avatarGridItems.forEach(item => {
                 item.addEventListener('click', () => {
                     avatarGridItems.forEach(el => el.classList.remove('selected'));
@@ -494,6 +600,10 @@
                     
                     selectedAvatarUrl = item.getAttribute('data-avatar');
                     if (hiddenAvatarInput) hiddenAvatarInput.value = selectedAvatarUrl;
+
+                    // Hide custom upload preview when preset is chosen
+                    if (previewContainer) previewContainer.style.display = 'none';
+                    if (fileInput) fileInput.value = '';
                 });
             });
 
