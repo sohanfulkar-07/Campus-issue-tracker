@@ -252,10 +252,11 @@
                 }
                 .pw-submit-btn:hover { background: #1d4ed8; }
 
-                .btn-edit-profile, .edit-profile-btn {
-                    background: #10b981;
-                    color: #ffffff;
-                    border: 1px solid #059669;
+                #editProfileBtn, .btn-edit-profile, .edit-profile-btn {
+                    background-color: #10b981 !important;
+                    background: #10b981 !important;
+                    color: #ffffff !important;
+                    border: 1px solid #059669 !important;
                     padding: 0.45rem 0.9rem;
                     border-radius: 8px;
                     font-size: 0.85rem;
@@ -265,14 +266,17 @@
                     align-items: center;
                     gap: 0.4rem;
                     transition: all 0.2s ease;
-                    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+                    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.25);
                     margin-left: 0.5rem;
                 }
-                .btn-edit-profile:hover, .edit-profile-btn:hover {
-                    background: #059669;
-                    color: #ffffff;
+                #editProfileBtn:hover, #editProfileBtn:active, #editProfileBtn:focus,
+                .btn-edit-profile:hover, .btn-edit-profile:active, .btn-edit-profile:focus,
+                .edit-profile-btn:hover, .edit-profile-btn:active, .edit-profile-btn:focus {
+                    background-color: #059669 !important;
+                    background: #059669 !important;
+                    color: #ffffff !important;
                     transform: translateY(-1px);
-                    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+                    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.35);
                 }
 
                 @keyframes pwFadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
