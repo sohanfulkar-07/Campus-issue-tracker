@@ -469,6 +469,17 @@
                                 <input type="text" id="pwFullName" required value="${(prefillData && prefillData.name) || ''}" placeholder="e.g. Alex Johnson" />
                             </div>
 
+                            <div class="pw-row">
+                                <div class="pw-form-group">
+                                    <label for="pwEmail">Official Email *</label>
+                                    <input type="email" id="pwEmail" required value="${(prefillData && prefillData.email) || ''}" placeholder="e.g. alex.j@university.edu" />
+                                </div>
+                                <div class="pw-form-group">
+                                    <label for="pwPhone">Phone Number *</label>
+                                    <input type="tel" id="pwPhone" required value="${(prefillData && prefillData.phone) || ''}" placeholder="e.g. +1 555-0199" />
+                                </div>
+                            </div>
+
                             ${isStudent ? `
                                 <div class="pw-row">
                                     <div class="pw-form-group">
@@ -636,12 +647,16 @@
 
                 const fullName = document.getElementById('pwFullName').value.trim();
                 const department = document.getElementById('pwDepartment').value;
+                const emailInput = document.getElementById('pwEmail');
+                const phoneInput = document.getElementById('pwPhone');
                 const finalAvatar = hiddenAvatarInput ? hiddenAvatarInput.value : selectedAvatarUrl;
                 
                 const profileData = {
                     id: this.userId,
                     role: this.role,
                     name: fullName,
+                    email: emailInput ? emailInput.value.trim() : '',
+                    phone: phoneInput ? phoneInput.value.trim() : '',
                     department: department,
                     avatar: finalAvatar,
                     updatedAt: new Date().toISOString()
@@ -715,6 +730,8 @@
             if (profile.rollNo) updateText(['#profileRollNo', '#navUserRole', '#sidebarUserRole'], profile.rollNo);
             if (profile.employeeId || profile.empId) updateText(['#profileEmpId', '#modalEmpId', '#sidebarUserRole'], profile.employeeId || profile.empId);
             if (profile.semester || profile.sem) updateText(['#profileSem', '#profileSemIcon'], profile.semester || profile.sem);
+            if (profile.email) updateText(['#profileEmail', '#modalEmail'], profile.email);
+            if (profile.phone) updateText(['#profilePhone', '#modalPhone'], profile.phone);
 
             updateImage(['#navUserAvatar', '#headerAvatar', '#sidebarAvatar', '#profileAvatar', '.user-avatar', '.profile-avatar-img'], avatarUrl);
         }
