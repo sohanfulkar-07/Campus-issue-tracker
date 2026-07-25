@@ -98,34 +98,42 @@
                 <div class="filters-bar card">
                 <div class="filters-group">
                     <div class="filter-item">
-                        <label>CAMPUS ZONE</label>
-                        <select class="custom-select" id="filterZone">
-                            <option value="All Zones (Global View)">All Zones (Global View)</option>
-                            <option value="North Campus">North Campus</option>
-                            <option value="South Campus">South Campus</option>
+                        <label>Ticket Status</label>
+                        <select class="custom-select" id="filterStatus">
+                            <option value="All Statuses">All Statuses</option>
+                            <option value="New / Unassigned">New / Unassigned</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Overdue">Overdue</option>
+                            <option value="Resolved">Resolved</option>
                         </select>
                     </div>
                     <div class="filter-item">
-                        <label>COLLEGE BRANCH</label>
-                        <select class="custom-select" id="filterBranch">
-                            <option value="All Institutional Branches">All Institutional Branches</option>
-                            <option value="School of Engineering">School of Engineering</option>
-                            <option value="School of Business">School of Business</option>
+                        <label>Priority Level</label>
+                        <select class="custom-select" id="filterPriority">
+                            <option value="All Priorities">All Priorities</option>
+                            <option value="Critical / Emergency">Critical / Emergency</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
                         </select>
                     </div>
                     <div class="filter-item">
-                        <label>SYSTEM LAYER</label>
-                        <select class="custom-select" id="filterLayer">
-                            <option value="All Infrastructure Layers">All Infrastructure Layers</option>
-                            <option value="Physical Assets">Physical Assets</option>
-                            <option value="Digital Services">Digital Services</option>
+                        <label>Assigned Department</label>
+                        <select class="custom-select" id="filterDepartment">
+                            <option value="All Departments">All Departments</option>
+                            <option value="IT Support">IT Support</option>
+                            <option value="Hostel Maintenance">Hostel Maintenance</option>
+                            <option value="Academic Operations">Academic Operations</option>
+                            <option value="Facilities & Security">Facilities & Security</option>
                         </select>
                     </div>
-                    <div class="filter-item no-label">
-                        <select class="custom-select" id="filterSemester">
+                    <div class="filter-item">
+                        <label>Timeframe</label>
+                        <select class="custom-select" id="filterTimeframe">
+                            <option value="Today (Last 24h)">Today (Last 24h)</option>
+                            <option value="This Week">This Week</option>
+                            <option value="This Month">This Month</option>
                             <option value="Current Semester">Current Semester</option>
-                            <option value="Last Semester">Last Semester</option>
-                            <option value="Full Year">Full Year</option>
                         </select>
                     </div>
                 </div>
