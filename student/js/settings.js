@@ -287,4 +287,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1400);
         });
     }
+
+    // --- Campus Details Panel Logic ---
+    const btnViewCampusDetails = document.getElementById('btnViewCampusDetails');
+    const campusDetailsPanel = document.getElementById('campusDetailsPanel');
+    const campusStudentId = document.getElementById('campusStudentId');
+    const campusHostelRoom = document.getElementById('campusHostelRoom');
+    const campusDepartment = document.getElementById('campusDepartment');
+    const campusAcademicYear = document.getElementById('campusAcademicYear');
+
+    function renderCampusDetails() {
+        if (!campusDetailsPanel) return;
+
+        const studentId = 'STU-' + Math.floor(100000 + Math.random() * 900000);
+        const roomNumber = 'H-' + Math.floor(101 + Math.random() * 80);
+        const departments = ['Computer Science', 'Mechanical', 'Electrical', 'Civil', 'Architecture', 'Business'];
+        const years = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
+
+        const randomDepartment = departments[Math.floor(Math.random() * departments.length)];
+        const randomYear = years[Math.floor(Math.random() * years.length)];
+
+        if (campusStudentId) campusStudentId.textContent = studentId;
+        if (campusHostelRoom) campusHostelRoom.textContent = roomNumber;
+        if (campusDepartment) campusDepartment.textContent = randomDepartment;
+        if (campusAcademicYear) campusAcademicYear.textContent = randomYear;
+
+        campusDetailsPanel.classList.add('active');
+    }
+
+    if (btnViewCampusDetails) {
+        btnViewCampusDetails.addEventListener('click', renderCampusDetails);
+    }
 });
