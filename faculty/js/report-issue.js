@@ -165,25 +165,30 @@ document.addEventListener('DOMContentLoaded', () => {
     issueForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
+        const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         const newComplaint = {
             id: 'FAC-ISSUE-' + Math.floor(Math.random() * 1000000),
             title: document.getElementById('issueTitle').value,
             category: document.getElementById('issueCategory').value,
+            department: document.getElementById('issueCategory').value,
             location: document.getElementById('issueLocation').value,
             description: document.getElementById('issueDescription').value,
-            status: 'pending', // default status
-            date: new Date().toISOString(),
+            status: 'New / Unassigned',
+            priority: 'Medium',
+            user: 'Faculty Member',
+            date: dateStr,
+            fullDate: new Date().toISOString(),
             media: mediaAttachments // Base64 data urls
         };
         
-        let complaints = JSON.parse(localStorage.getItem('facultyComplaints') || '[]');
+        let complaints = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
         complaints.push(newComplaint);
         
         submitBtn.textContent = 'Saving...';
         submitBtn.disabled = true;
         
         try {
-            localStorage.setItem('facultyComplaints', JSON.stringify(complaints));
+            localStorage.setItem('campus_tickets_master', JSON.stringify(complaints));
             
             // Redirect to dashboard
             setTimeout(() => {

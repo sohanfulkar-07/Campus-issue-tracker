@@ -172,25 +172,36 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Due to localStorage limits, we can't save huge videos.
         // We will try our best, but alert the user if quota exceeds.
+        // Format date for dashboard
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        
         const newComplaint = {
             id: 'ISSUE-' + Math.floor(Math.random() * 1000000),
             title: document.getElementById('issueTitle').value,
             category: document.getElementById('issueCategory').value,
+            department: document.getElementById('issueCategory').value, // Use category as department
             location: document.getElementById('issueLocation').value,
             description: document.getElementById('issueDescription').value,
-            status: 'pending', // default status
-            date: new Date().toISOString(),
+            status: 'New / Unassigned', // Standardized status
+            priority: 'Medium', // Default priority
+            user: 'Current Student', // Would normally pull from auth profile
+            date: dateStr,
+            fullDate: now.toISOString(),
+            resolutionHours: 0,
+            ackHours: 0,
+            satisfaction: null,
             media: mediaAttachments // Base64 data urls
         };
         
-        let complaints = JSON.parse(localStorage.getItem('studentComplaints') || '[]');
-        complaints.push(newComplaint);
+        let masterTickets = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
+        masterTickets.push(newComplaint);
         
         submitBtn.textContent = 'Saving...';
         submitBtn.disabled = true;
         
         try {
-            localStorage.setItem('studentComplaints', JSON.stringify(complaints));
+            localStorage.setItem('campus_tickets_master', JSON.stringify(masterTickets));
             
             // Redirect to dashboard
             setTimeout(() => {
@@ -204,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = false;
             
             // Remove the failing complaint
-            complaints.pop();
+            masterTickets.pop();
         }
     });
 });

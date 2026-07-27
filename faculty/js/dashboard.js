@@ -24,51 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Mock Data Rendering for Faculty ---
     
-    // Assigned Issues Data
-    const issuesData = [];
-
-    // Render Issues Table
-    const tableBody = document.getElementById('issuesTableBody');
-    if (tableBody) {
-        if (issuesData.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem;">No issues assigned yet.</td></tr>`;
-        } else {
-            let html = '';
-            const displayIssues = issuesData.slice(0, 5);
-            displayIssues.forEach(issue => {
-                html += `
-                    <tr>
-                        <td class="td-id">${issue.id}</td>
-                        <td><strong>${issue.title}</strong></td>
-                        <td>
-                            <div class="user-cell">
-                                <i class="far fa-user"></i> ${issue.assignee}
-                            </div>
-                        </td>
-                        <td><span class="badge-priority ${issue.priority.class}">${issue.priority.level}</span></td>
-                        <td><span class="badge-status ${issue.status.class}">${issue.status.state}</span></td>
-                        <td>${issue.date}</td>
-                        <td>
-                            <div class="action-links">
-                                <a href="#" class="action-link">View</a>
-                                <a href="#" class="action-link">Update</a>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-            tableBody.innerHTML = html;
-            
-            const viewAllBtn = document.getElementById('viewAllIssuesContainer');
-            if (viewAllBtn) {
-                if (issuesData.length > 5) {
-                    viewAllBtn.style.display = 'block';
-                } else {
-                    viewAllBtn.style.display = 'none';
-                }
-            }
-        }
-    }
+    // (Table rendering is handled by dashboard-data.js)
 
     // Notifications Data for Faculty
     const notificationsData = [];

@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Mock Data Rendering ---
     
-    // Complaints Data
-    const complaintsData = [];
+    // Complaints Data from Master Array
+    const complaintsData = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
 
     // Render Complaints Table
     const tableBody = document.getElementById('complaintsTableBody');
@@ -36,18 +36,24 @@ document.addEventListener('DOMContentLoaded', () => {
             let html = '';
             const displayComplaints = complaintsData.slice(0, 5);
             displayComplaints.forEach(complaint => {
+                // Map flat properties to UI styles
+                let priorityClass = complaint.priority === 'High' ? 'priority-high' : (complaint.priority === 'Critical' ? 'priority-high' : 'priority-medium');
+                let statusClass = 'status-pending';
+                if(complaint.status === 'Resolved') statusClass = 'status-resolved';
+                if(complaint.status === 'In Progress') statusClass = 'status-in-progress';
+
                 html += `
                     <tr>
                         <td class="td-id">${complaint.id}</td>
                         <td><strong>${complaint.title}</strong></td>
                         <td>
                             <div class="category-cell">
-                                <i class="${complaint.category.icon}" style="color: ${complaint.category.color}"></i> 
-                                ${complaint.category.name}
+                                <i class="fas fa-tag" style="color: #64748b"></i> 
+                                ${complaint.department || complaint.category}
                             </div>
                         </td>
-                        <td><span class="badge-priority ${complaint.priority.class}">${complaint.priority.level}</span></td>
-                        <td><span class="badge-status ${complaint.status.class}">${complaint.status.state}</span></td>
+                        <td><span class="badge-priority ${priorityClass}">${complaint.priority}</span></td>
+                        <td><span class="badge-status ${statusClass}">${complaint.status}</span></td>
                         <td>${complaint.date}</td>
                         <td>
                             <a href="#" class="action-view"><i class="far fa-eye"></i> View</a>

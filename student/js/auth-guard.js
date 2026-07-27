@@ -1,7 +1,7 @@
 (function() {
-    const profile = localStorage.getItem('studentProfile');
-    // Ensure we are not already on the onboarding page
-    if (!profile && !window.location.href.includes('onboarding.html')) {
-        window.location.replace('onboarding.html');
+    // Auth Guard now defers first-time onboarding to ProfileWizard overlay on dashboard load
+    const role = localStorage.getItem('currentUserRole');
+    if (!role && !window.location.href.includes('index.html')) {
+        window.location.href = '../index.html';
     }
 })();

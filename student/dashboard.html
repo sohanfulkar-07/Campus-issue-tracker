@@ -10,7 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/dashboard.css?v=1.1">
-    <!-- Auth Guard (redirects if no profile) -->
+    <!-- Auth Router -->
+    <script src="../js/auth-router.js"></script>
+    <!-- Profile Wizard (Onboarding & Data Persistence) -->
+    <script src="../js/profile-wizard.js"></script>
+    <!-- Auth Guard -->
     <script src="js/auth-guard.js"></script>
     <!-- Theme JS (loads early to prevent FOUC) -->
     <script src="js/theme.js"></script>
@@ -96,9 +100,14 @@
                         </div>
                         
                         <div class="profile-details-wrapper">
-                            <div class="profile-name-row">
-                                <h3 id="profileName">Student Name</h3>
-                                <span class="role-badge">Student</span>
+                            <div class="profile-name-row" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                                <div>
+                                    <h3 id="profileName" style="display: inline-block; margin-right: 0.5rem;">Student Name</h3>
+                                    <span class="role-badge">Student</span>
+                                </div>
+                                <button id="editProfileBtn" class="btn-edit-profile" title="Edit Profile" style="background-color: #10b981 !important; color: #ffffff !important; border: 1px solid #059669 !important; padding: 0.45rem 0.9rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.25);">
+                                    <i class="fas fa-pen"></i> Edit Profile
+                                </button>
                             </div>
                             
                             <div class="details-grid">
@@ -198,9 +207,12 @@
                             <h2>Notifications</h2>
                             <a href="#" class="view-all-sm">View all</a>
                         </div>
-                        <div class="notifications-list" id="notificationsList">
-                            <!-- Populated dynamically -->
-                            <div style="text-align: center; padding: 1rem; color: var(--text-light);">No new notifications.</div>
+                        <div class="notifications-list" id="notificationList">
+                            <!-- Populated dynamically by Notifications Engine -->
+                            <div class="no-notif-placeholder">
+                                <i class="far fa-bell-slash"></i>
+                                <p>No new updates on your issues.</p>
+                            </div>
                         </div>
                     </div>
 
@@ -227,5 +239,7 @@
     <script src="js/dashboard.js"></script>
     <script src="js/profile-data.js"></script>
     <script src="js/complaints-data.js"></script>
+    <!-- Multi-Status Notification Engine -->
+    <script src="js/notifications-engine.js"></script>
 </body>
 </html>

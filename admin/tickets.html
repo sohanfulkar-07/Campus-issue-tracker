@@ -14,6 +14,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Auth Router -->
+    <script src="../js/auth-router.js"></script>
+    <!-- Theme JS (loads early to prevent FOUC) -->
+    <script src="js/theme.js"></script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -91,10 +95,83 @@
         <main class="content-container">
             
             <div id="tickets-view" class="dashboard-view active">
-                <div class="card" style="padding: 3rem; text-align: center;">
-                    <h2>All Tickets</h2>
-                    <p style="color: var(--text-light); margin-top: 1rem;">This view will contain the global tickets table.</p>
+                
+                <!-- Header section for tickets -->
+                <div class="tickets-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <h2 class="card-title" style="margin-bottom: 0.5rem; font-size: 1.5rem;">Ticket Management Hub</h2>
+                        <div class="ticket-stats" style="font-size: 0.85rem; color: var(--text-muted);">
+                            Total: <span id="statTotal" style="font-weight: 600; color: var(--text-dark);">0</span> | 
+                            New/Open: <span id="statOpen" style="font-weight: 600; color: var(--danger-color);">0</span> | 
+                            Resolved: <span id="statResolved" style="font-weight: 600; color: var(--success-color);">0</span>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Filters Bar -->
+                <div class="filters-bar card">
+                    <div class="filters-group" style="width: 100%;">
+                        <div class="filter-item" style="flex: 1; min-width: 250px;">
+                            <label>SEARCH TICKETS</label>
+                            <div style="position: relative;">
+                                <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                                <input type="text" id="searchTickets" placeholder="Search by ID, Title, or User..." style="width: 100%; padding: 0.5rem 1rem 0.5rem 2.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none; background-color: #f8fafc;">
+                            </div>
+                        </div>
+                        <div class="filter-item">
+                            <label>STATUS</label>
+                            <select id="filterStatus" class="custom-select">
+                                <option value="All">All Statuses</option>
+                                <option value="New / Unassigned">New / Unassigned</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label>PRIORITY</label>
+                            <select id="filterPriority" class="custom-select">
+                                <option value="All">All Priorities</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label>DEPARTMENT</label>
+                            <select id="filterDept" class="custom-select">
+                                <option value="All">All Departments</option>
+                                <option value="IT">IT</option>
+                                <option value="Hostel">Hostel</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Academic">Academic</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tickets Table -->
+                <div class="card scorecard-card" style="padding: 0; overflow: hidden;">
+                    <div class="table-responsive">
+                        <table class="scorecard-table" style="width: 100%; min-width: 800px; border-collapse: collapse;">
+                            <thead style="background-color: #f8fafc;">
+                                <tr>
+                                    <th style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Ticket ID</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Title</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Department</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Filed By</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Priority</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Status</th>
+                                    <th style="padding: 1rem; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Date Created</th>
+                                    <th style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); text-align: center; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ticketsTableBody">
+                                <!-- Rows injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
             
             <footer class="main-footer">
@@ -103,8 +180,60 @@
         </main>
     </div>
 
+    <!-- Ticket Detail Modal -->
+    <div id="ticketModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 19, 42, 0.6); z-index: 1050; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div style="background: var(--card-bg); width: 90%; max-width: 600px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; max-height: 90vh;">
+            
+            <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 id="modalTicketTitle" style="font-size: 1.25rem; font-weight: 600; color: var(--text-dark);">Ticket Title</h2>
+                    <span id="modalTicketId" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">#TKT-0000</span>
+                </div>
+                <button id="closeModalBtn" style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div style="padding: 1.5rem; overflow-y: auto; flex: 1;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <p style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem;">Filed By</p>
+                        <p id="modalTicketUser" style="font-size: 0.9rem; font-weight: 500; color: var(--text-dark);">User Name</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem;">Department</p>
+                        <p id="modalTicketDept" style="font-size: 0.9rem; font-weight: 500; color: var(--text-dark);">Department Name</p>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Description</p>
+                    <p id="modalTicketDesc" style="font-size: 0.85rem; color: var(--text-dark); line-height: 1.5; background: #f8fafc; padding: 1rem; border-radius: 6px; border: 1px solid var(--border-color);">Full description goes here...</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">System Layer Details</p>
+                    <p id="modalTicketLayer" style="font-size: 0.85rem; color: var(--text-dark); font-weight: 500;">Physical Assets -> Building C</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Update Status</p>
+                    <select id="modalStatusSelect" class="custom-select" style="width: 100%;">
+                        <option value="New / Unassigned">New / Unassigned</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; background-color: #f8fafc; border-radius: 0 0 12px 12px;">
+                <button id="cancelModalBtn" style="padding: 0.65rem 1.25rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-weight: 500; color: var(--text-dark);">Cancel</button>
+                <button id="saveModalBtn" style="padding: 0.65rem 1.25rem; background: var(--primary-blue); border: none; border-radius: 6px; cursor: pointer; font-weight: 500; color: white;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Custom JS -->
     <script src="js/nav-active.js"></script>
+    <script src="js/tickets.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>

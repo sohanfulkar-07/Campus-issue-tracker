@@ -14,6 +14,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Theme JS (loads early to prevent FOUC) -->
+    <script src="js/theme.js"></script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -91,9 +93,32 @@
         <main class="content-container">
             
             <div id="departments-view" class="dashboard-view active">
-                <div class="card" style="padding: 3rem; text-align: center;">
-                    <h2>Departments</h2>
-                    <p style="color: var(--text-light); margin-top: 1rem;">Configure institutional departments and staff.</p>
+                <!-- Header section -->
+                <div class="dept-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <h2 class="card-title" style="margin-bottom: 0.5rem; font-size: 1.5rem;">Departments & Routing</h2>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">
+                            Manage departments and automated ticket routing rules.
+                        </div>
+                    </div>
+                    <button id="addDeptBtn" class="btn-primary" style="background-color: var(--primary-blue); color: white; border: none; padding: 0.65rem 1.25rem; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s;">
+                        <i class="fas fa-plus"></i> Add New Department
+                    </button>
+                </div>
+
+                <!-- Filters Bar -->
+                <div class="filters-bar card" style="padding: 1rem 1.5rem;">
+                    <div class="filter-item" style="width: 100%; max-width: 500px;">
+                        <div style="position: relative;">
+                            <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                            <input type="text" id="searchDepts" placeholder="Search Departments by name or manager..." style="width: 100%; padding: 0.65rem 1rem 0.65rem 2.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.9rem; outline: none; background-color: #f8fafc;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Departments Grid -->
+                <div id="departmentsGrid" class="departments-grid">
+                    <!-- Cards injected via JS -->
                 </div>
             </div>
             
@@ -103,8 +128,60 @@
         </main>
     </div>
 
+    <!-- Department Modal -->
+    <div id="deptModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 19, 42, 0.6); z-index: 1050; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div style="background: var(--card-bg); width: 90%; max-width: 600px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; max-height: 90vh;">
+            
+            <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="modalDeptTitle" style="font-size: 1.25rem; font-weight: 600; color: var(--text-dark);">Add New Department</h2>
+                <button id="closeDeptModalBtn" style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div style="padding: 1.5rem; overflow-y: auto; flex: 1;">
+                <form id="deptForm">
+                    <div style="margin-bottom: 1.25rem;">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Department Name</label>
+                        <input type="text" id="modalDeptName" required style="width: 100%; padding: 0.65rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none;">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Lead Manager Name/Email</label>
+                            <input type="text" id="modalDeptManager" required style="width: 100%; padding: 0.65rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">SLA Target (Hours)</label>
+                            <input type="number" id="modalDeptSla" min="1" required style="width: 100%; padding: 0.65rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none;">
+                        </div>
+                    </div>
+
+                    <!-- Routing Rules Sub-panel -->
+                    <div style="margin-top: 2rem; border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem; background-color: #f8fafc;">
+                        <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.5rem;">Automated Routing Rules</h3>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">Tickets matching these categories will be automatically routed here.</p>
+                        
+                        <div id="modalCategoryTags" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                            <!-- Category tags injected here -->
+                        </div>
+
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="newCategoryInput" placeholder="e.g. Wi-Fi Issue" style="flex: 1; padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; outline: none;">
+                            <button type="button" id="addCategoryBtn" style="padding: 0.5rem 1rem; background: #e2e8f0; color: var(--text-dark); border: none; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 0.85rem;">Add Rule</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div style="padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; background-color: #f8fafc; border-radius: 0 0 12px 12px;">
+                <button id="cancelDeptModalBtn" style="padding: 0.65rem 1.25rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-weight: 500; color: var(--text-dark);">Cancel</button>
+                <button id="saveDeptModalBtn" type="button" style="padding: 0.65rem 1.25rem; background: var(--primary-blue); border: none; border-radius: 6px; cursor: pointer; font-weight: 500; color: white;">Save Department</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Custom JS -->
     <script src="js/nav-active.js"></script>
+    <script src="js/departments.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>

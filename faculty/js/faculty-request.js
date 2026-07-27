@@ -18,24 +18,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const profileStr = localStorage.getItem('facultyProfile');
             const facultyName = profileStr ? JSON.parse(profileStr).name : 'Unknown Faculty';
             
-            // Create request object
+            const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            // Create request object mapped to master schema
             const newRequest = {
                 id: 'REQ-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0'),
-                facultyName: facultyName,
-                category: requestType,
-                urgency: urgency,
                 title: title,
-                quantity: quantity,
-                description: desc,
-                status: 'pending',
-                date: new Date().toISOString()
+                category: requestType,
+                department: requestType, // Map to department
+                location: 'Faculty Office', // Mock
+                description: `Quantity: ${quantity}. ${desc}`,
+                status: 'New / Unassigned',
+                priority: urgency === 'Urgent' ? 'High' : 'Medium',
+                user: facultyName,
+                date: dateStr,
+                fullDate: new Date().toISOString()
             };
             
             // Save to localStorage
-            const existingRequestsStr = localStorage.getItem('facultyRequests');
+            const existingRequestsStr = localStorage.getItem('campus_tickets_master');
             const requests = existingRequestsStr ? JSON.parse(existingRequestsStr) : [];
             requests.push(newRequest);
-            localStorage.setItem('facultyRequests', JSON.stringify(requests));
+            localStorage.setItem('campus_tickets_master', JSON.stringify(requests));
             
             // Show success UI
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
