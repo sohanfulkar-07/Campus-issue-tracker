@@ -470,15 +470,16 @@
 
     </main>
 
-    <!-- VIEWPORT TRANSITION LAYER (RIPPLE EXPANSION & ROLE PORTAL OVERLAY) -->
-    <div id="role-portal-overlay" class="fixed inset-0 z-[100] pointer-events-none hidden items-center justify-center bg-[#030712]/90 backdrop-blur-2xl opacity-0 transition-opacity duration-300">
-        <!-- Concentrated Ripple Ring -->
-        <div id="portal-ripple-ring" class="absolute rounded-full bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 opacity-0 pointer-events-none transform -translate-x-1/2 -translate-y-1/2 will-change-transform z-0" style="width: 10px; height: 10px;"></div>
+    <!-- VIEWPORT TRANSITION LAYER (EXPLOSION SPHERE & ROLE PORTAL VORTEX OVERLAY) -->
+    <div id="portal-overlay" class="fixed inset-0 z-[100] pointer-events-none hidden items-center justify-center bg-[#030712]/90 backdrop-blur-2xl opacity-0 transition-opacity duration-300">
+        
+        <!-- Catastrophic Explosion Energy Sphere -->
+        <div id="explosion-sphere" class="absolute rounded-full opacity-0 pointer-events-none transform -translate-x-1/2 -translate-y-1/2 will-change-transform z-0" style="width: 10px; height: 10px; background: radial-gradient(circle, #6366f1 0%, #3b82f6 35%, #030712 70%); border: 1px solid rgba(59, 130, 246, 0.4); box-shadow: 0 0 100px 30px rgba(99, 102, 241, 0.5); transform: translate3d(0,0,0) scale(1); transform-origin: center center;"></div>
         
         <!-- Role Portal Cards Grid -->
-        <div id="portal-cards-grid" class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full px-6 opacity-0 transform scale-90 will-change-all">
+        <div id="portal-cards-grid" class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full px-6 opacity-0 transform scale-0 -rotate-180 will-change-all" style="-webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; transform: translate3d(0, 0, 0); transform-style: preserve-3d; backface-visibility: hidden;">
             
-            <!-- Student Portal -->
+            <!-- Student Portal Card -->
             <a href="login-selection.html" class="glass-card bg-[#0d1527]/80 border border-indigo-500/30 p-8 rounded-2xl shadow-2xl backdrop-blur-md hover:border-indigo-400 hover:shadow-indigo-500/20 transition-all duration-300 group cursor-pointer text-center text-decoration-none hover:-translate-y-2">
                 <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all text-2xl shadow-inner">
                     <i class="fas fa-user-graduate"></i>
@@ -491,7 +492,7 @@
                 </span>
             </a>
             
-            <!-- Faculty Command -->
+            <!-- Faculty Command Card -->
             <a href="login-selection.html" class="glass-card bg-[#0d1527]/80 border border-purple-500/30 p-8 rounded-2xl shadow-2xl backdrop-blur-md hover:border-purple-400 hover:shadow-purple-500/20 transition-all duration-300 group cursor-pointer text-center text-decoration-none hover:-translate-y-2">
                 <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-all text-2xl shadow-inner">
                     <i class="fas fa-chalkboard-teacher"></i>
@@ -504,7 +505,7 @@
                 </span>
             </a>
 
-            <!-- System Administrator -->
+            <!-- System Administrator Card -->
             <a href="login-selection.html" class="glass-card bg-[#0d1527]/80 border border-blue-500/30 p-8 rounded-2xl shadow-2xl backdrop-blur-md hover:border-blue-400 hover:shadow-blue-500/20 transition-all duration-300 group cursor-pointer text-center text-decoration-none hover:-translate-y-2">
                 <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all text-2xl shadow-inner">
                     <i class="fas fa-user-shield"></i>
@@ -596,8 +597,8 @@
             // Initialize Video Stream Controller Engine
             initVideoStreamController();
 
-            // Initialize Command Hub Portal Transition
-            initCommandHubPortalTransition();
+            // Initialize Vortex Animation Transition Engine
+            initVortexPortalTransition();
         });
 
         /* LOCAL & REMOTE VIDEO STREAM CONTROLLER ENGINE */
@@ -686,80 +687,103 @@
             }
         }
 
-        /* COMMAND HUB INTERACTIVE RIPPLE & ROLE PORTAL TRANSITION ENGINE */
-        function initCommandHubPortalTransition() {
-            const commandHubBtn = document.querySelector('#get-started-command-hub a');
-            const portalOverlay = document.getElementById('role-portal-overlay');
-            const rippleRing = document.getElementById('portal-ripple-ring');
-            const portalCardsGrid = document.getElementById('portal-cards-grid');
+        /* COMMAND HUB SEQUENTIAL ANIMATION VORTEX ENGINE */
+        function initVortexPortalTransition() {
+            const centerHub = document.getElementById('get-started-command-hub');
+            const centerHubBtn = document.querySelector('#get-started-command-hub a');
+            const overlay = document.getElementById('portal-overlay');
+            const explosion = document.getElementById('explosion-sphere');
+            const cards = document.getElementById('portal-cards-grid');
+            const telemetryCards = document.querySelectorAll('.glass-card');
             const closeOverlayBtn = document.getElementById('close-portal-overlay-btn');
 
-            if (!commandHubBtn || !portalOverlay || !rippleRing || !portalCardsGrid) return;
+            if (!centerHub || !overlay || !explosion || !cards) return;
 
-            commandHubBtn.addEventListener('click', (e) => {
+            const triggerElement = centerHubBtn || centerHub;
+
+            triggerElement.addEventListener('click', (e) => {
                 e.preventDefault();
 
-                const clickX = e.clientX;
-                const clickY = e.clientY;
+                // Coordinate Lock: Ensure expansion from center origin of button or click
+                const rect = centerHub.getBoundingClientRect();
+                const clickX = e.clientX || (rect.left + rect.width / 2);
+                const clickY = e.clientY || (rect.top + rect.height / 2);
 
-                // Position ripple ring at exact click coordinates
-                gsap.set(rippleRing, {
+                gsap.set(explosion, {
                     left: clickX + 'px',
                     top: clickY + 'px',
                     scale: 1,
-                    opacity: 0.8
+                    opacity: 0.9
                 });
 
-                // Show overlay container
-                portalOverlay.classList.remove('hidden');
-                portalOverlay.classList.add('flex');
-                portalOverlay.style.pointerEvents = 'auto';
-
-                // GSAP Micro-Interaction Sequence
-                const transitionTl = gsap.timeline();
-
-                transitionTl.to(portalOverlay, {
-                    opacity: 1,
-                    duration: 0.2
+                // Reset cards initial 3D transform matrix
+                gsap.set(cards, {
+                    opacity: 0,
+                    scale: 0,
+                    rotation: -180
                 });
 
-                // Phase 1: Ripple expansion from click point
-                transitionTl.to(rippleRing, {
-                    scale: 300,
-                    opacity: 1,
-                    duration: 0.6,
-                    ease: 'power2.inOut'
-                }, 0);
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
 
-                // Phase 2: Role Portal cards reveal
-                transitionTl.to(portalCardsGrid, {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.45,
-                    ease: 'back.out(1.2)'
-                }, 0.35);
+                const tl_portal = gsap.timeline({ defaults: { ease: "expo.out", duration: 1 } });
+
+                tl_portal
+                    // Phase 1: Catastrophic Expansion Sphere burst
+                    .to(explosion, {
+                        scale: 400,
+                        opacity: 1,
+                        duration: 0.8,
+                        ease: "power4.inOut"
+                    })
+                    // Phase 2: Fade out current content & Bring up new overlay canvas
+                    .to(overlay, {
+                        opacity: 1,
+                        duration: 0.3,
+                        pointerEvents: "auto"
+                    }, "<")
+                    .to(telemetryCards, {
+                        opacity: 0,
+                        duration: 0.2
+                    }, "<")
+                    // Phase 3 & 4: Role Matrix Reveal & Simultaneous Single 360 Sweep Rotation
+                    .to(cards, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 1.2,
+                        ease: "circ.out",
+                        rotation: 360
+                    }, "-=0.2")
+                    // Phase 4 Settle: Gentle background sphere fade down
+                    .to(explosion, {
+                        opacity: 0,
+                        duration: 1,
+                        delay: 0.5
+                    });
             });
 
             if (closeOverlayBtn) {
                 closeOverlayBtn.addEventListener('click', () => {
                     const closeTl = gsap.timeline({
                         onComplete: () => {
-                            portalOverlay.classList.add('hidden');
-                            portalOverlay.classList.remove('flex');
-                            portalOverlay.style.pointerEvents = 'none';
+                            overlay.classList.add('hidden');
+                            overlay.classList.remove('flex');
+                            overlay.style.pointerEvents = 'none';
+                            gsap.set(telemetryCards, { opacity: 1 });
                         }
                     });
 
-                    closeTl.to(portalCardsGrid, {
+                    closeTl.to(cards, {
                         opacity: 0,
-                        scale: 0.9,
-                        duration: 0.25,
+                        scale: 0.5,
+                        rotation: 0,
+                        duration: 0.3,
                         ease: 'power2.in'
                     });
 
-                    closeTl.to(portalOverlay, {
+                    closeTl.to(overlay, {
                         opacity: 0,
-                        duration: 0.25
+                        duration: 0.3
                     }, 0.1);
                 });
             }
