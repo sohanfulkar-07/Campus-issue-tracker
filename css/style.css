@@ -1,0 +1,61 @@
+/* SUPER LUXURY SAPPHIRE DESIGN SYSTEM TOKEN DEFINITIONS */
+:root {
+    /* 1. Base Background Layers (Obsidian Blue) */
+    --color-bg-base: #050A19;
+    --color-bg-radial: radial-gradient(circle at center, #09122B 0%, #050A19 100%);
+    
+    /* 2. Primary Core Text */
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #A0A9BF;
+    --color-text-muted: #64748B;
+    
+    /* 3. Component Containers (Dark Navy Glassmorphism) */
+    --color-bg-container: rgba(10, 20, 40, 0.7);
+    --color-bg-container-hover: rgba(15, 28, 56, 0.8);
+    --color-border: rgba(255, 255, 255, 0.05);
+    
+    /* 4. Luxury Accents (Champagne Gold & Soft Neon Blue) */
+    --color-accent-gold: #D4AF37;
+    --color-accent-gold-glow: rgba(212, 175, 55, 0.25);
+    --color-accent-glow: #3B82F6;
+    --color-accent-purple: #8B5CF6;
+    --color-accent-cyan: #06B6D4;
+}
+
+/* Global Reset & Base Palette Enforcement */
+body {
+    background-color: var(--color-bg-base);
+    background-image: var(--color-bg-radial);
+    background-attachment: fixed;
+    color: var(--color-text-primary);
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+}
+
+/* Luxury Glassmorphism Component Container Utility */
+.glass-container, .glass-card {
+    background: var(--color-bg-container);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.glass-container:hover, .glass-card:hover {
+    background: var(--color-bg-container-hover);
+}
+
+/* Luxury Accent Underline & Icon Highlights */
+.gold-accent-line {
+    border-bottom: 2px solid var(--color-accent-gold);
+    box-shadow: 0 2px 10px var(--color-accent-gold-glow);
+}
+
+.gold-icon {
+    color: var(--color-accent-gold);
+    filter: drop-shadow(0 0 8px var(--color-accent-gold-glow));
+}
+
+.neon-blue-glow {
+    border-color: var(--color-accent-glow);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
+}

@@ -6,21 +6,39 @@
 }
 
 :root {
-    --primary-dark: #0F172A;
-    --primary-blue: #1E4D8C;
-    --primary-blue-hover: #153A63;
-    --accent-gold: #C8A24A;
-    --bg-color: #F8FAFC;
-    --text-dark: #1E293B;
-    --text-muted: #64748B;
-    --card-bg: #FFFFFF;
+    /* Super Luxury Sapphire Design Tokens */
+    --color-bg-base: #050A19;
+    --color-bg-radial: radial-gradient(circle at center, #09122B 0%, #050A19 100%);
+    
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #A0A9BF;
+    --color-text-muted: #64748B;
+    
+    --color-bg-container: rgba(10, 20, 40, 0.7);
+    --color-bg-container-hover: rgba(15, 28, 56, 0.8);
+    --color-border: rgba(255, 255, 255, 0.05);
+    
+    --color-accent-gold: #D4AF37;
+    --color-accent-gold-glow: rgba(212, 175, 55, 0.25);
+    --color-accent-glow: #3B82F6;
+    --color-accent-purple: #8B5CF6;
+
+    /* Legacy Aliases */
+    --primary-dark: #050A19;
+    --primary-blue: #3B82F6;
+    --primary-blue-hover: #2563EB;
+    --accent-gold: #D4AF37;
+    --bg-color: #050A19;
+    --text-dark: #FFFFFF;
+    --text-muted: #A0A9BF;
+    --card-bg: rgba(10, 20, 40, 0.7);
     --border-radius: 14px;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 10px 20px rgba(15, 23, 42, 0.12);
-    --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.16);
+    --shadow-md: 0 10px 20px rgba(5, 10, 25, 0.4);
+    --shadow-lg: 0 18px 40px rgba(5, 10, 25, 0.6);
     --transition: all 0.3s ease;
     --error-color: #EF4444;
-    --error-bg: #FEE2E2;
+    --error-bg: rgba(239, 68, 68, 0.15);
 }
 
 body {

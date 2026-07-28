@@ -1,0 +1,72 @@
+{
+  "name": "Super Luxury Sapphire Design System",
+  "version": "2.0.0",
+  "tokens": {
+    "color": {
+      "bg": {
+        "base": {
+          "value": "#050A19",
+          "description": "Deep Obsidian Blue base background"
+        },
+        "radialGradient": {
+          "value": "radial-gradient(circle at center, #09122B 0%, #050A19 100%)",
+          "description": "Subtle radial gradient for luxury depth"
+        },
+        "container": {
+          "value": "rgba(10, 20, 40, 0.7)",
+          "description": "Dark Navy Glassmorphism container layer"
+        },
+        "containerHover": {
+          "value": "rgba(15, 28, 56, 0.8)",
+          "description": "Elevated Dark Navy Glassmorphism hover container"
+        }
+      },
+      "text": {
+        "primary": {
+          "value": "#FFFFFF",
+          "description": "Pure White for maximum luxury contrast"
+        },
+        "secondary": {
+          "value": "#A0A9BF",
+          "description": "Sapphire Cool Grey for body text & subtitles"
+        },
+        "muted": {
+          "value": "#64748B",
+          "description": "Muted Slate Grey for timestamps and meta info"
+        }
+      },
+      "border": {
+        "subtle": {
+          "value": "rgba(255, 255, 255, 0.05)",
+          "description": "Subtle ultra-luxury border stroke"
+        },
+        "accent": {
+          "value": "rgba(212, 175, 55, 0.3)",
+          "description": "Champagne Gold stroke"
+        },
+        "glow": {
+          "value": "rgba(59, 130, 246, 0.4)",
+          "description": "Soft Neon Blue glowing stroke"
+        }
+      },
+      "accent": {
+        "gold": {
+          "value": "#D4AF37",
+          "description": "Luxury Champagne Gold sparingly for icons, highlights, and underlines"
+        },
+        "goldGlow": {
+          "value": "rgba(212, 175, 55, 0.25)",
+          "description": "Champagne Gold glow shadow"
+        },
+        "glow": {
+          "value": "#3B82F6",
+          "description": "Soft Neon Blue for active states and notifications"
+        },
+        "purple": {
+          "value": "#8B5CF6",
+          "description": "Electric Royal Purple accent"
+        }
+      }
+    }
+  }
+}

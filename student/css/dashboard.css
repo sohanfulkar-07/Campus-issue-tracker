@@ -6,36 +6,51 @@
 }
 
 :root {
-    --sidebar-bg: #0f172a;
+    /* Super Luxury Sapphire Design Tokens */
+    --color-bg-base: #050A19;
+    --color-bg-radial: radial-gradient(circle at center, #09122B 0%, #050A19 100%);
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #A0A9BF;
+    --color-text-muted: #64748B;
+    --color-bg-container: rgba(10, 20, 40, 0.7);
+    --color-bg-container-hover: rgba(15, 28, 56, 0.8);
+    --color-border: rgba(255, 255, 255, 0.05);
+    --color-accent-gold: #D4AF37;
+    --color-accent-gold-glow: rgba(212, 175, 55, 0.25);
+    --color-accent-glow: #3B82F6;
+    --color-accent-purple: #8B5CF6;
+
+    /* Legacy Theme Variables */
+    --sidebar-bg: #070D1E;
     --sidebar-hover: rgba(255, 255, 255, 0.08);
-    --primary-blue: #1e4d8c;
-    --primary-blue-hover: #153a63;
-    --accent-gold: #c8a24a;
-    --bg-color: #f8fafc;
-    --card-bg: #ffffff;
+    --primary-blue: #3B82F6;
+    --primary-blue-hover: #2563EB;
+    --accent-gold: #D4AF37;
+    --bg-color: #050A19;
+    --card-bg: rgba(10, 20, 40, 0.7);
     
-    --text-dark: #1e293b;
-    --text-muted: #64748b;
-    --text-light: #94a3b8;
+    --text-dark: #FFFFFF;
+    --text-muted: #A0A9BF;
+    --text-light: #64748B;
     
-    --border-color: #e2e8f0;
+    --border-color: rgba(255, 255, 255, 0.05);
     --border-radius: 12px;
     --border-radius-lg: 16px;
     
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 15px rgba(5, 10, 25, 0.4);
     
     /* Semantic Colors */
     --danger-color: #ef4444;
-    --danger-bg: #fef2f2;
+    --danger-bg: rgba(239, 68, 68, 0.15);
     --warning-color: #f59e0b;
-    --warning-bg: #fffbeb;
+    --warning-bg: rgba(245, 158, 11, 0.15);
     --success-color: #10b981;
-    --success-bg: #ecfdf5;
+    --success-bg: rgba(16, 185, 129, 0.15);
     --info-color: #0ea5e9;
-    --info-bg: #f0f9ff;
+    --info-bg: rgba(14, 165, 233, 0.15);
     --purple-color: #8b5cf6;
-    --purple-bg: #f5f3ff;
+    --purple-bg: rgba(139, 92, 246, 0.15);
     
     --transition: all 0.2s ease-in-out;
 }
