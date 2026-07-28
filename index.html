@@ -471,7 +471,7 @@
     </main>
 
     <!-- VIEWPORT TRANSITION LAYER (EXPLOSION SPHERE & ROLE PORTAL VORTEX OVERLAY) -->
-    <div id="portal-overlay" class="fixed inset-0 z-[100] pointer-events-none hidden items-center justify-center bg-[#030712]/90 backdrop-blur-2xl opacity-0 transition-opacity duration-300">
+    <div id="portal-overlay" class="fixed inset-0 z-[999] flex items-center justify-center bg-[#030712]/90 backdrop-blur-2xl opacity-0 pointer-events-none" style="display: none;">
         
         <!-- Catastrophic Explosion Energy Sphere -->
         <div id="explosion-sphere" class="absolute rounded-full opacity-0 pointer-events-none transform -translate-x-1/2 -translate-y-1/2 will-change-transform z-0" style="width: 10px; height: 10px; background: radial-gradient(circle, #6366f1 0%, #3b82f6 35%, #030712 70%); border: 1px solid rgba(59, 130, 246, 0.4); box-shadow: 0 0 100px 30px rgba(99, 102, 241, 0.5); transform: translate3d(0,0,0) scale(1); transform-origin: center center;"></div>
@@ -709,6 +709,13 @@
                 const clickX = e.clientX || (rect.left + rect.width / 2);
                 const clickY = e.clientY || (rect.top + rect.height / 2);
 
+                // Set GSAP 100% control over render state
+                gsap.set(overlay, {
+                    display: "flex",
+                    opacity: 0,
+                    pointerEvents: "auto"
+                });
+
                 gsap.set(explosion, {
                     left: clickX + 'px',
                     top: clickY + 'px',
@@ -723,9 +730,6 @@
                     rotation: -180
                 });
 
-                overlay.classList.remove('hidden');
-                overlay.classList.add('flex');
-
                 const tl_portal = gsap.timeline({ defaults: { ease: "expo.out", duration: 1 } });
 
                 tl_portal
@@ -739,8 +743,7 @@
                     // Phase 2: Fade out current content & Bring up new overlay canvas
                     .to(overlay, {
                         opacity: 1,
-                        duration: 0.3,
-                        pointerEvents: "auto"
+                        duration: 0.3
                     }, "<")
                     .to(telemetryCards, {
                         opacity: 0,
@@ -766,9 +769,10 @@
                 closeOverlayBtn.addEventListener('click', () => {
                     const closeTl = gsap.timeline({
                         onComplete: () => {
-                            overlay.classList.add('hidden');
-                            overlay.classList.remove('flex');
-                            overlay.style.pointerEvents = 'none';
+                            gsap.set(overlay, {
+                                display: "none",
+                                pointerEvents: "none"
+                            });
                             gsap.set(telemetryCards, { opacity: 1 });
                         }
                     });
