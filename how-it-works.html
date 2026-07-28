@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works | CampusTracker End-to-End Workflow</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0A0E1A',
+                        'obsidian-card': '#121829',
+                        'obsidian-border': '#1E293B',
+                        'electric-blue': '#3B82F6',
+                        'electric-purple': '#8B5CF6',
+                        'cyan-glow': '#06B6D4'
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS Base Reset & Explicit Layout Architecture -->
+    <link rel="stylesheet" href="assets/css/login.css">
+    <style>
+        html, body {
+            width: 100vw;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            background-color: #0A0E1A;
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            box-sizing: border-box;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* FIXED HORIZONTAL STICKY NAVBAR LAYOUT */
+        .navbar-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 5%;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links-menu {
+            display: flex;
+            gap: 2.5rem;
+            justify-content: center;
+            align-items: center;
+            width: auto;
+            font-size: 0.95rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .nav-link-item {
+            color: #94A3B8;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .nav-link-item:hover {
+            color: #3B82F6;
+        }
+        .nav-link-item.active {
+            color: #3B82F6;
+            font-weight: 700;
+            border-bottom: 2px solid #3B82F6;
+            padding-bottom: 0.25rem;
+            text-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+        }
+
+        /* GLASSMORPHISM & UTILITIES */
+        .glass-card {
+            background: rgba(18, 24, 41, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #7C3AED 100%);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 50%, #6D28D9 100%);
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .step-number-badge {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60A5FA;
+        }
+
+        .footer-section {
+            width: 100%;
+            margin-top: auto;
+            display: block;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 3rem 5% 2rem 5%;
+            box-sizing: border-box;
+            background-color: #060911;
+        }
+    </style>
+</head>
+<body class="bg-obsidian text-slate-100 antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen">
+
+    <!-- Ambient Mesh Glow Background -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/3 -right-40 w-[30rem] h-[30rem] bg-purple-600/15 rounded-full blur-[140px]"></div>
+        <div class="absolute -bottom-40 left-1/3 w-[32rem] h-[32rem] bg-cyan-500/10 rounded-full blur-[150px]"></div>
+    </div>
+
+    <!-- NAVBAR HEADER -->
+    <header class="navbar-header relative z-40">
+        <a href="index.html" class="flex items-center gap-3 group text-decoration-none">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-transform">
+                <i class="fas fa-cube text-xl"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    Campus<span class="text-blue-500">Tracker</span>
+                </span>
+                <span class="text-[10px] font-semibold tracking-widest text-slate-400 uppercase">Academic Operations</span>
+            </div>
+        </a>
+
+        <ul class="nav-links-menu hidden md:flex">
+            <li><a href="index.html" class="nav-link-item">Home</a></li>
+            <li><a href="about.html" class="nav-link-item">About</a></li>
+            <li><a href="login-selection.html" class="nav-link-item">Role Portals</a></li>
+            <li><a href="how-it-works.html" class="nav-link-item active">How It Works</a></li>
+            <li><a href="#contact" class="nav-link-item">Contact</a></li>
+        </ul>
+
+        <div>
+            <a href="login-selection.html" class="btn-gradient px-6 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 text-decoration-none">
+                <i class="fas fa-sign-in-alt text-xs"></i>
+                <span>Login</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT FLOW -->
+    <main class="relative z-10 flex-1 py-12 px-[5%] space-y-20">
+        
+        <!-- HERO SECTION -->
+        <section class="max-w-5xl mx-auto text-center space-y-6 pt-6">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-wider uppercase">
+                END-TO-END WORKFLOW PIPELINE
+            </div>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
+                How CampusTracker <span class="text-gradient">Resolves Issues</span>
+            </h1>
+            <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+                Explore our transparent 4-stage operational workflow designed for seamless incident submission, automated SLA department routing, live technician tracking, and verified resolution.
+            </p>
+        </section>
+
+        <!-- 4-STAGE WORKFLOW TIMELINE GRID -->
+        <section class="max-w-7xl mx-auto space-y-16">
+            
+            <!-- STAGE 01 -->
+            <div class="glass-card rounded-3xl p-8 sm:p-10 border border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center hover:border-blue-500/40 transition-colors">
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="px-3.5 py-1.5 rounded-xl step-number-badge font-extrabold text-sm tracking-wider">STAGE 01</span>
+                        <div class="h-px bg-slate-800 flex-1"></div>
+                    </div>
+                    <div class="space-y-3">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+                            <i class="fas fa-paper-plane text-blue-400"></i>
+                            <span>60-Second Incident Filing</span>
+                        </h2>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Students and faculty members can submit maintenance, IT infrastructure, or administrative tickets in under a minute.
+                        </p>
+                    </div>
+                    <ul class="space-y-3 text-xs text-slate-300">
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-blue-400 text-sm"></i>
+                            <span>Instant QR-Code Room & Location Tagging</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-blue-400 text-sm"></i>
+                            <span>Photo & Video Evidence Attachment</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-blue-400 text-sm"></i>
+                            <span>Smart Category & Priority Auto-Selection</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-6">
+                    <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 shadow-xl">
+                        <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
+                            <span class="font-bold text-blue-400 uppercase">Interactive Reporter View</span>
+                            <span class="text-slate-500">Form Step 1 of 2</span>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-slate-300">
+                                <span>Location: Science Building Lab 302</span>
+                                <i class="fas fa-qrcode text-blue-400"></i>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300">
+                                Category: Projector & AV Equipment Failure
+                            </div>
+                            <div class="p-3 rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-300 font-medium text-center">
+                                <i class="fas fa-check text-xs mr-1.5"></i> Ticket TICK-8412 Generated
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAGE 02 -->
+            <div class="glass-card rounded-3xl p-8 sm:p-10 border border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center hover:border-purple-500/40 transition-colors">
+                <div class="lg:col-span-6 order-2 lg:order-1">
+                    <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 shadow-xl">
+                        <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
+                            <span class="font-bold text-purple-400 uppercase">Automated Dispatch Engine</span>
+                            <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px] font-bold">Auto-Routed</span>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
+                                <div>
+                                    <div class="font-bold text-white">Target Department: IT Infrastructure</div>
+                                    <div class="text-[11px] text-slate-400">Assigned Technician: Alex Vance (Senior Engineer)</div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold border border-amber-500/20">High SLA</span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                                <span class="text-slate-400">Target Response SLA:</span>
+                                <span class="font-mono text-purple-400 font-bold">&lt; 1h 45m Remaining</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 space-y-6 order-1 lg:order-2">
+                    <div class="flex items-center gap-3">
+                        <span class="px-3.5 py-1.5 rounded-xl step-number-badge font-extrabold text-sm tracking-wider border-purple-500/30 text-purple-400">STAGE 02</span>
+                        <div class="h-px bg-slate-800 flex-1"></div>
+                    </div>
+                    <div class="space-y-3">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+                            <i class="fas fa-route text-purple-400"></i>
+                            <span>Automated SLA Routing & Dispatch</span>
+                        </h2>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            No manual triage delays. The system automatically categorizes tickets and dispatches push alerts directly to the relevant department queues.
+                        </p>
+                    </div>
+                    <ul class="space-y-3 text-xs text-slate-300">
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-purple-400 text-sm"></i>
+                            <span>Department Task Queue Auto-Sorting</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-purple-400 text-sm"></i>
+                            <span>Automated Priority Level Calculation</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-purple-400 text-sm"></i>
+                            <span>Instant Push Notifications to On-Duty Technicians</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- STAGE 03 -->
+            <div class="glass-card rounded-3xl p-8 sm:p-10 border border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center hover:border-cyan-500/40 transition-colors">
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="px-3.5 py-1.5 rounded-xl step-number-badge font-extrabold text-sm tracking-wider border-cyan-500/30 text-cyan-400">STAGE 03</span>
+                        <div class="h-px bg-slate-800 flex-1"></div>
+                    </div>
+                    <div class="space-y-3">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+                            <i class="fas fa-comments text-cyan-400"></i>
+                            <span>Live Tracking & Communication</span>
+                        </h2>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Complete transparency. Users receive real-time status updates and can communicate directly with assigned technicians through in-app messaging.
+                        </p>
+                    </div>
+                    <ul class="space-y-3 text-xs text-slate-300">
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
+                            <span>Real-Time Status Milestones (In Queue &rarr; Dispatched &rarr; In Progress)</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
+                            <span>Direct Reporter-Technician In-App Messaging</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
+                            <span>Complete Audit-Ready Ticket Activity Log</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-6">
+                    <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 shadow-xl">
+                        <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
+                            <span class="font-bold text-cyan-400 uppercase">Live Activity Feed</span>
+                            <span class="text-slate-500">Updated 2m ago</span>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
+                                <div class="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 text-xs">
+                                    <i class="fas fa-wrench"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-white">Technician En Route</div>
+                                    <div class="text-[11px] text-slate-400">Replacement lamp fetched from central storage. Arriving in 10 mins.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAGE 04 -->
+            <div class="glass-card rounded-3xl p-8 sm:p-10 border border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center hover:border-emerald-500/40 transition-colors">
+                <div class="lg:col-span-6 order-2 lg:order-1">
+                    <div class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 shadow-xl">
+                        <div class="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
+                            <span class="font-bold text-emerald-400 uppercase">Ticket Verification Sign-Off</span>
+                            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">Closed & Approved</span>
+                        </div>
+                        <div class="space-y-3 text-xs text-center p-4 bg-slate-950 rounded-xl border border-slate-800">
+                            <div class="text-emerald-400 font-bold text-sm mb-1">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="text-white font-semibold">User Rating: 5.0 / 5.0</div>
+                            <div class="text-[11px] text-slate-400 italic">"Extremely quick response time! Projector lamp replaced before lecture."</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 space-y-6 order-1 lg:order-2">
+                    <div class="flex items-center gap-3">
+                        <span class="px-3.5 py-1.5 rounded-xl step-number-badge font-extrabold text-sm tracking-wider border-emerald-500/30 text-emerald-400">STAGE 04</span>
+                        <div class="h-px bg-slate-800 flex-1"></div>
+                    </div>
+                    <div class="space-y-3">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+                            <i class="fas fa-check-double text-emerald-400"></i>
+                            <span>Verified Resolution & Rating</span>
+                        </h2>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            No closed tickets without proof. Technicians upload resolution evidence photos, and reporters provide mandatory rating feedback to maintain quality standards.
+                        </p>
+                    </div>
+                    <ul class="space-y-3 text-xs text-slate-300">
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-emerald-400 text-sm"></i>
+                            <span>Resolution Evidence Photo Sign-Off</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-emerald-400 text-sm"></i>
+                            <span>Reporter 5-Star Satisfaction & SLA Feedback</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-emerald-400 text-sm"></i>
+                            <span>Audit-Ready Analytics Log Archival</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- CTA GATEWAY -->
+        <section class="max-w-5xl mx-auto glass-card rounded-3xl p-10 sm:p-12 border border-slate-800 text-center space-y-6">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Ready to Experience <span class="text-gradient">Smart Campus Operations?</span>
+            </h2>
+            <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+                Log into your dedicated role portal or explore the platform capabilities.
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+                <a href="login-selection.html" class="btn-gradient px-8 py-3.5 rounded-xl text-sm font-bold text-white flex items-center gap-2 text-decoration-none">
+                    <i class="fas fa-sign-in-alt text-xs"></i>
+                    <span>Select Role Portal</span>
+                </a>
+                <a href="about.html" class="px-7 py-3.5 rounded-xl text-sm font-semibold text-slate-200 glass-card border border-slate-700 hover:border-slate-500 hover:bg-slate-800/50 transition-all text-decoration-none">
+                    <span>Learn About Platform</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="footer-section">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-md bg-blue-600 flex items-center justify-center text-white font-bold text-[10px]">CT</div>
+                <span>&copy; 2026 CampusTracker. All rights reserved.</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="hover:text-slate-300 transition-colors">Home</a>
+                <a href="about.html" class="hover:text-slate-300 transition-colors">About</a>
+                <a href="login-selection.html" class="hover:text-slate-300 transition-colors">Role Portals</a>
+                <a href="how-it-works.html" class="hover:text-slate-300 transition-colors">How It Works</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
