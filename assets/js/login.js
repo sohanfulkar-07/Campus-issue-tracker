@@ -108,13 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     
                     setTimeout(() => {
-                        if (currentRedirect.includes('student')) {
-                            window.location.href = 'student/onboarding.html';
-                            return;
-                        } else if (currentRedirect.includes('faculty')) {
-                            window.location.href = 'faculty/onboarding.html';
-                            return;
-                        }
                         window.location.href = currentRedirect;
                     }, 1500);
                 } else {
