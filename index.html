@@ -265,6 +265,90 @@
                 opacity: 0.6;
             }
         }
+
+        /* 6. ORBITAL 3D SLIDER PORTAL SYSTEM */
+        #portalOrbitStage {
+            perspective: 1200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            min-height: 520px;
+            overflow: visible;
+            padding: 1rem 0;
+        }
+
+        .orbit-portal-card {
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.35, 1), opacity 0.7s ease, filter 0.7s ease, box-shadow 0.7s ease, border-color 0.7s ease;
+            will-change: transform, opacity, filter;
+            position: absolute;
+            width: 100%;
+            max-width: 385px;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+
+        /* The Three Positional 3D Orbital States */
+        .orbit-portal-card.state-center {
+            transform: translate3d(0, 0, 100px) rotateY(0deg);
+            z-index: 30;
+            opacity: 1;
+            filter: blur(0);
+            pointer-events: auto;
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .orbit-portal-card.state-left {
+            transform: translate3d(-320px, 0, -150px) rotateY(25deg);
+            z-index: 10;
+            opacity: 0.45;
+            filter: blur(2.5px);
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .orbit-portal-card.state-right {
+            transform: translate3d(320px, 0, -150px) rotateY(-25deg);
+            z-index: 10;
+            opacity: 0.45;
+            filter: blur(2.5px);
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .orbit-portal-card.state-left:hover,
+        .orbit-portal-card.state-right:hover {
+            opacity: 0.75;
+            filter: blur(0.5px);
+        }
+
+        @media (max-width: 992px) {
+            .orbit-portal-card.state-left {
+                transform: translate3d(-200px, 0, -120px) rotateY(20deg);
+            }
+            .orbit-portal-card.state-right {
+                transform: translate3d(200px, 0, -120px) rotateY(-20deg);
+            }
+        }
+
+        @media (max-width: 640px) {
+            #portalOrbitStage {
+                min-height: 480px;
+            }
+            .orbit-portal-card.state-center {
+                transform: translate3d(0, 0, 30px);
+            }
+            .orbit-portal-card.state-left {
+                transform: translate3d(-110px, 0, -100px) scale(0.85) rotateY(15deg);
+                opacity: 0.3;
+            }
+            .orbit-portal-card.state-right {
+                transform: translate3d(110px, 0, -100px) scale(0.85) rotateY(-15deg);
+                opacity: 0.3;
+            }
+        }
     </style>
 </head>
 <body class="bg-obsidian text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
@@ -302,7 +386,7 @@
 
         <!-- Right Prominent Gradient Login Button -->
         <div>
-            <button onclick="openLoginModal('student')" class="btn-gradient px-6 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2">
+            <button onclick="scrollToPortals('student')" class="btn-gradient px-6 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2">
                 <i class="fas fa-sign-in-alt text-xs"></i>
                 <span>Login</span>
             </button>
@@ -337,11 +421,11 @@
 
                 <!-- Dual Action Buttons -->
                 <div class="flex flex-wrap items-center gap-4 pt-2">
-                    <button onclick="openLoginModal('student')" class="btn-gradient px-8 py-4 rounded-xl text-sm font-bold text-white flex items-center gap-3">
+                    <button onclick="scrollToPortals('student')" class="btn-gradient px-8 py-4 rounded-xl text-sm font-bold text-white flex items-center gap-3">
                         <span>Get Started Now</span>
                         <i class="fas fa-arrow-right text-xs"></i>
                     </button>
-                    <button onclick="openLoginModal('student')" class="px-7 py-4 rounded-xl text-sm font-semibold text-slate-200 glass-card border border-slate-700 hover:border-slate-500 hover:bg-slate-800/50 transition-all flex items-center gap-2">
+                    <button onclick="scrollToPortals('student')" class="px-7 py-4 rounded-xl text-sm font-semibold text-slate-200 glass-card border border-slate-700 hover:border-slate-500 hover:bg-slate-800/50 transition-all flex items-center gap-2">
                         <i class="fas fa-lock text-xs text-blue-400"></i>
                         <span>Portal Login</span>
                     </button>
@@ -540,98 +624,117 @@
                     </p>
                 </div>
 
-                <!-- 3-Column Grid -->
-                <div class="grid md:grid-cols-3 gap-8 interactive-shift-grid card-interactive-container group/grid">
-                    <!-- Student Portal -->
-                    <div class="glass-card framework-card card-1 card-glow-blue rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
-                        <div class="space-y-6">
-                            <div class="w-14 h-14 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20 text-2xl">
-                                <i class="fas fa-user-graduate"></i>
+                <!-- 3D Orbital Slider Portal Stage Container -->
+                <div class="relative w-full flex flex-col items-center">
+                    <div id="portalOrbitStage">
+                        
+                        <!-- Card 0: Student Portal -->
+                        <div class="glass-card orbit-portal-card card-glow-blue rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6 state-center" data-orbit-index="0">
+                            <div class="space-y-6">
+                                <div class="w-14 h-14 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20 text-2xl neon-glow-blue">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white">Student Portal</h3>
+                                    <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Seamless incident reporting and resolution updates at your fingertips.</p>
+                                </div>
+                                <ul class="space-y-3 text-xs text-slate-300">
+                                    <li class="flex items-center gap-2.5">
+                                        <i class="fas fa-check-circle text-blue-400 text-sm"></i>
+                                        <span>Quick 1-Minute Reporting</span>
+                                    </li>
+                                    <li class="flex items-center gap-2.5">
+                                        <i class="fas fa-check-circle text-blue-400 text-sm"></i>
+                                        <span>Live Ticket Status & SLA Alerts</span>
+                                    </li>
+                                    <li class="flex items-center gap-2.5">
+                                        <i class="fas fa-check-circle text-blue-400 text-sm"></i>
+                                        <span>Ratings & Feedback</span>
+                                    </li>
+                                </ul>
                             </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-white">Student Portal</h3>
-                                <p class="text-xs text-slate-400 mt-1">Seamless incident reporting and resolution updates at your fingertips.</p>
-                            </div>
-                            <ul class="space-y-3 text-xs text-slate-300">
-                                <li class="flex items-center gap-2.5">
-                                    <i class="fas fa-check-circle text-blue-400 text-sm"></i>
-                                    <span>Quick 1-Minute Reporting</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <i class="fas fa-check-circle text-blue-400 text-sm"></i>
-                                    <span>Live Status Notifications</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <i class="fas fa-check-circle text-blue-400 text-sm"></i>
-                                    <span>Ratings & Feedback</span>
-                                </li>
-                            </ul>
+                            <button onclick="openLoginModal('student')" class="w-full py-3.5 rounded-xl btn-gradient text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 hover:scale-[1.02] transition-transform">
+                                <span>Enter Student Portal</span>
+                                <i class="fas fa-arrow-right text-[10px]"></i>
+                            </button>
                         </div>
-                        <button onclick="openLoginModal('student')" class="w-full py-3 rounded-xl bg-blue-600/15 hover:bg-blue-600 text-blue-400 hover:text-white font-semibold text-xs transition-all border border-blue-500/30 flex items-center justify-center gap-2">
-                            <span>Launch Student Portal</span>
-                            <i class="fas fa-chevron-right text-[10px]"></i>
-                        </button>
+
+                        <!-- Card 1: Faculty Portal -->
+                        <div class="glass-card orbit-portal-card card-glow-purple rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6 state-right" data-orbit-index="1">
+                            <div class="space-y-6">
+                                <div class="w-14 h-14 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20 text-2xl neon-glow-purple">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white">Faculty & Staff Portal</h3>
+                                    <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Manage maintenance tasks, department queues, and student requests.</p>
+                                </div>
+                                <ul class="space-y-3 text-xs text-slate-300">
+                                    <li class="flex items-center gap-2.5">
+                                        <i class="fas fa-check-circle text-purple-400 text-sm"></i>
+                                        <span>Auto-Forwarded Task Queue</span>
+                                    </li>
+                                    <li class="flex items-center gap-2.5">
+                                        <i class="fas fa-check-circle text-purple-400 text-sm"></i>
+                                        <span>One-Click Status Updates</span>
+                                    </li>
+                                    <li class="flex items-center gap-2.5">
+                                        <i class="fas fa-check-circle text-purple-400 text-sm"></i>
+                                        <span>Direct Student Communication</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <button onclick="openLoginModal('faculty')" class="w-full py-3.5 rounded-xl btn-gradient text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25 hover:scale-[1.02] transition-transform">
+                                <span>Enter Faculty Portal</span>
+                                <i class="fas fa-arrow-right text-[10px]"></i>
+                            </button>
+                        </div>
+
+                        <!-- Card 2: Executive Admin Portal -->
+                        <div class="glass-card orbit-portal-card card-glow-cyan rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6 state-left" data-orbit-index="2">
+                            <div class="space-y-6">
+                                <div class="w-14 h-14 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20 text-2xl neon-glow-cyan">
+                                    <i class="fas fa-user-shield"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white">Executive Admin Portal</h3>
+                                    <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Full control over operations, user roles, analytics, and department SLA metrics.</p>
+                                </div>
+                                <ul class="space-y-3 text-xs text-slate-300">
+                                    <li class="flex items-center gap-2.5">
+                                        <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
+                                        <span>User & System Role Management</span>
+                                    </li>
+                                    <li class="flex items-center gap-2.5">
+                                        <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
+                                        <span>Manual Override & Queue Dispatch</span>
+                                    </li>
+                                    <li class="flex items-center gap-2.5">
+                                        <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
+                                        <span>Analytics Time & Resolution Reports</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <button onclick="openLoginModal('other')" class="w-full py-3.5 rounded-xl btn-gradient text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/25 hover:scale-[1.02] transition-transform">
+                                <span>Enter Admin Portal</span>
+                                <i class="fas fa-arrow-right text-[10px]"></i>
+                            </button>
+                        </div>
+
                     </div>
 
-                    <!-- Faculty Portal -->
-                    <div class="glass-card framework-card card-2 card-glow-purple rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
-                        <div class="space-y-6">
-                            <div class="w-14 h-14 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20 text-2xl">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-white">Faculty & Staff Portal</h3>
-                                <p class="text-xs text-slate-400 mt-1">Manage maintenance tasks, department queues, and student requests.</p>
-                            </div>
-                            <ul class="space-y-3 text-xs text-slate-300">
-                                <li class="flex items-center gap-2.5">
-                                    <i class="fas fa-check-circle text-purple-400 text-sm"></i>
-                                    <span>Auto-Forwarded Task Queue</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <i class="fas fa-check-circle text-purple-400 text-sm"></i>
-                                    <span>One-Click Status Updates</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <i class="fas fa-check-circle text-purple-400 text-sm"></i>
-                                    <span>Direct Messaging</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <button onclick="openLoginModal('faculty')" class="w-full py-3 rounded-xl bg-purple-600/15 hover:bg-purple-600 text-purple-400 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
-                            <span>Launch Faculty Portal</span>
-                            <i class="fas fa-chevron-right text-[10px]"></i>
+                    <!-- Orbit Navigation Controls -->
+                    <div class="flex items-center gap-6 mt-8 z-30">
+                        <button onclick="rotateOrbit('prev')" class="w-11 h-11 rounded-full glass-card border border-slate-700 text-slate-300 hover:text-white hover:border-blue-500 flex items-center justify-center transition-all hover:scale-110">
+                            <i class="fas fa-chevron-left text-sm"></i>
                         </button>
-                    </div>
-
-                    <!-- Executive Admin Portal -->
-                    <div class="glass-card framework-card card-3 card-glow-cyan rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
-                        <div class="space-y-6">
-                            <div class="w-14 h-14 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20 text-2xl">
-                                <i class="fas fa-user-shield"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-white">Executive Admin Portal</h3>
-                                <p class="text-xs text-slate-400 mt-1">Full control over operations, user roles, analytics, and department SLA metrics.</p>
-                            </div>
-                            <ul class="space-y-3 text-xs text-slate-300">
-                                <li class="flex items-center gap-2.5">
-                                    <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
-                                    <span>User & System Role Management</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
-                                    <span>Manual Override Assignments</span>
-                                </li>
-                                <li class="flex items-center gap-2.5">
-                                    <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
-                                    <span>Analytics Time Reports</span>
-                                </li>
-                            </ul>
+                        <div class="flex items-center gap-2">
+                            <button onclick="setOrbitIndex(0)" class="orbit-dot h-2.5 rounded-full transition-all duration-300 bg-blue-500 w-8"></button>
+                            <button onclick="setOrbitIndex(1)" class="orbit-dot h-2.5 rounded-full transition-all duration-300 bg-slate-700 w-2.5"></button>
+                            <button onclick="setOrbitIndex(2)" class="orbit-dot h-2.5 rounded-full transition-all duration-300 bg-slate-700 w-2.5"></button>
                         </div>
-                        <button onclick="openLoginModal('other')" class="w-full py-3 rounded-xl bg-cyan-600/15 hover:bg-cyan-600 text-cyan-400 hover:text-white font-semibold text-xs transition-all border border-cyan-500/30 flex items-center justify-center gap-2">
-                            <span>Launch Admin Portal</span>
-                            <i class="fas fa-chevron-right text-[10px]"></i>
+                        <button onclick="rotateOrbit('next')" class="w-11 h-11 rounded-full glass-card border border-slate-700 text-slate-300 hover:text-white hover:border-blue-500 flex items-center justify-center transition-all hover:scale-110">
+                            <i class="fas fa-chevron-right text-sm"></i>
                         </button>
                     </div>
                 </div>
@@ -1010,6 +1113,80 @@
             alert('Thank you! Your message has been transmitted to Campus Support.');
             e.target.reset();
         }
+
+        /* ORBITAL 3D SLIDER PORTAL ENGINE */
+        let orbitCurrentIndex = 0;
+
+        function updateOrbitStates() {
+            const cards = Array.from(document.querySelectorAll('.orbit-portal-card'));
+            if (!cards.length) return;
+
+            cards.forEach((card, i) => {
+                card.classList.remove('state-center', 'state-left', 'state-right');
+                
+                const diff = (i - orbitCurrentIndex + cards.length) % cards.length;
+                if (diff === 0) {
+                    card.classList.add('state-center');
+                } else if (diff === 1) {
+                    card.classList.add('state-right');
+                } else {
+                    card.classList.add('state-left');
+                }
+            });
+
+            document.querySelectorAll('.orbit-dot').forEach((dot, idx) => {
+                if (idx === orbitCurrentIndex) {
+                    dot.classList.add('bg-blue-500', 'w-8');
+                    dot.classList.remove('bg-slate-700', 'w-2.5');
+                } else {
+                    dot.classList.remove('bg-blue-500', 'w-8');
+                    dot.classList.add('bg-slate-700', 'w-2.5');
+                }
+            });
+        }
+
+        function rotateOrbit(direction) {
+            const cards = document.querySelectorAll('.orbit-portal-card');
+            if (!cards.length) return;
+
+            if (direction === 'next') {
+                orbitCurrentIndex = (orbitCurrentIndex + 1) % cards.length;
+            } else if (direction === 'prev') {
+                orbitCurrentIndex = (orbitCurrentIndex - 1 + cards.length) % cards.length;
+            }
+            updateOrbitStates();
+        }
+
+        function setOrbitIndex(index) {
+            orbitCurrentIndex = index;
+            updateOrbitStates();
+        }
+
+        function scrollToPortals(targetRole = null) {
+            const featuresSection = document.getElementById('features');
+            if (featuresSection) {
+                featuresSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            if (targetRole) {
+                const roleMap = { 'student': 0, 'faculty': 1, 'other': 2, 'admin': 2 };
+                if (roleMap[targetRole] !== undefined) {
+                    setOrbitIndex(roleMap[targetRole]);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.orbit-portal-card');
+            cards.forEach((card, index) => {
+                card.addEventListener('click', (e) => {
+                    if (!card.classList.contains('state-center')) {
+                        e.preventDefault();
+                        setOrbitIndex(index);
+                    }
+                });
+            });
+            updateOrbitStates();
+        });
 
         document.getElementById('loginModalOverlay')?.addEventListener('click', (e) => {
             if (e.target.id === 'loginModalOverlay') {
