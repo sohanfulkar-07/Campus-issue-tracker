@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | CampusTracker Academic Operations</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0A0E1A',
+                        'obsidian-card': '#121829',
+                        'obsidian-border': '#1E293B',
+                        'electric-blue': '#3B82F6',
+                        'electric-purple': '#8B5CF6',
+                        'cyan-glow': '#06B6D4'
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS Base Reset & Explicit Layout Architecture -->
+    <link rel="stylesheet" href="assets/css/login.css">
+    <style>
+        /* 1. RESET DOCUMENT AND BODY WIDTH FLOW */
+        html, body {
+            width: 100vw;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            background-color: #0A0E1A;
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            box-sizing: border-box;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* 2. FIXED HORIZONTAL STICKY NAVBAR LAYOUT */
+        .navbar-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 5%;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links-menu {
+            display: flex;
+            gap: 2.5rem;
+            justify-content: center;
+            align-items: center;
+            width: auto;
+            font-size: 0.95rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .nav-link-item {
+            color: #94A3B8;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .nav-link-item:hover {
+            color: #3B82F6;
+        }
+        .nav-link-item.active {
+            color: #3B82F6;
+            font-weight: 700;
+            border-bottom: 2px solid #3B82F6;
+            padding-bottom: 0.25rem;
+            text-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+        }
+
+        /* 3. MISSION 2-COLUMN SPLIT GRID */
+        .mission-section {
+            width: 100%;
+            padding: 6rem 5% 4rem 5%;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .mission-section {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding-top: 4rem;
+            }
+            .nav-links-menu {
+                display: none;
+            }
+        }
+
+        /* 4. ISOLATED FOOTER AT BASE */
+        .footer-section {
+            width: 100%;
+            margin-top: auto;
+            display: block;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 4rem 5% 2rem 5%;
+            box-sizing: border-box;
+            background-color: #060911;
+            clear: both;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        @media (max-width: 992px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 576px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* UTILITY CLASSES & GLASSMORPHISM */
+        .glass-card {
+            background: rgba(20, 27, 45, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .glass-card-hover {
+            transition: all 0.3s ease;
+        }
+        .glass-card-hover:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px rgba(37, 99, 235, 0.2);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #7C3AED 100%);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 50%, #6D28D9 100%);
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Neon Glow Accents */
+        .neon-glow-blue {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
+        }
+        .neon-glow-purple {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+        }
+        .neon-glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+        }
+    </style>
+</head>
+<body class="bg-obsidian text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
+
+    <!-- Ambient Mesh Glow Background -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/3 -right-40 w-[30rem] h-[30rem] bg-purple-600/15 rounded-full blur-[140px]"></div>
+        <div class="absolute -bottom-40 left-1/3 w-[32rem] h-[32rem] bg-cyan-500/10 rounded-full blur-[150px]"></div>
+    </div>
+
+    <!-- 1. IDENTICAL GLOBAL FRAMEWORK (HEADER) -->
+    <header class="navbar-header">
+        <!-- Brand Logo Slot -->
+        <a href="index.html" class="flex items-center gap-3 group text-decoration-none">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-transform">
+                <i class="fas fa-cube text-xl"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    Campus<span class="text-blue-500">Tracker</span>
+                </span>
+                <span class="text-[10px] font-semibold tracking-widest text-slate-400 uppercase">Academic Operations</span>
+            </div>
+        </a>
+
+        <!-- Center Links Menu -->
+        <ul class="nav-links-menu">
+            <li><a href="index.html" class="nav-link-item">Home</a></li>
+            <li><a href="about.html" class="nav-link-item active">About</a></li>
+            <li><a href="index.html#features" class="nav-link-item">Features</a></li>
+            <li><a href="index.html#workflow" class="nav-link-item">How It Works</a></li>
+            <li><a href="index.html#contact" class="nav-link-item">Contact</a></li>
+        </ul>
+
+        <!-- Right Prominent Gradient Login Button -->
+        <div>
+            <button onclick="openLoginModal('student')" class="btn-gradient px-6 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2">
+                <i class="fas fa-sign-in-alt text-xs"></i>
+                <span>Login</span>
+            </button>
+        </div>
+    </header>
+
+
+    <!-- MAIN CONTENT FLOW -->
+    <main class="relative z-10 flex-1">
+
+        <!-- 2. CORE CONTENT SECTION 1: OUR MISSION & VISION (ELITE 2-COLUMN SPLIT GRID) -->
+        <section class="mission-section">
+            
+            <!-- Left Column: Copy & Badges -->
+            <div class="space-y-6">
+                <!-- Glowing Badge -->
+                <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-card border border-blue-500/30 text-blue-400 text-xs font-semibold tracking-wide">
+                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    <span>ABOUT THE PROJECT</span>
+                </div>
+
+                <!-- Bold High-Contrast Headline -->
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-[1.18]">
+                    Empowering Campus Operations Through <br>
+                    <span class="text-gradient">Tech-Driven Accountability</span>
+                </h1>
+
+                <!-- Paragraph 1 -->
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    CampusTracker was born out of a critical academic necessity: to bridge the operational gap between students, faculty members, and structural administrators. Traditional grievance systems rely heavily on manual tracking, leading to delayed resolution speeds, misplaced requests, and complete lack of visibility into system bottlenecks.
+                </p>
+
+                <!-- Paragraph 2 -->
+                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                    Our goal is to build an uncompromised framework where every infrastructure breakdown, academic support ticket, or maintenance emergency is instantly captured, intelligently sorted, and actively monitored until resolution—fostering absolute transparency across the entire institute.
+                </p>
+
+                <!-- Key Metrics Row -->
+                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800/80">
+                    <div>
+                        <div class="text-2xl font-extrabold text-white">100%</div>
+                        <div class="text-xs text-slate-400 font-medium mt-1">Audit Transparency</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-blue-400">&lt; 15 Mins</div>
+                        <div class="text-xs text-slate-400 font-medium mt-1">Auto-Dispatch</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-purple-400">Zero</div>
+                        <div class="text-xs text-slate-400 font-medium mt-1">Lost Tickets</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Premium Dark Glassmorphic Preview Block -->
+            <div class="relative w-full">
+                <div class="relative mx-auto max-w-md lg:max-w-none">
+                    <!-- Ambient Glow Effect -->
+                    <div class="absolute -inset-1.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-xl opacity-25"></div>
+
+                    <!-- Glass Preview Card -->
+                    <div class="relative glass-card rounded-xl p-10 border border-slate-700/60 shadow-2xl space-y-6">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                            <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+                                <i class="fas fa-shield-halved text-blue-400"></i> Core Values Framework
+                            </h3>
+                            <span class="px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-semibold border border-blue-500/20">Operational Standard</span>
+                        </div>
+
+                        <!-- Item 1: Radical Transparency -->
+                        <div class="p-5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-4 transition-all hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/30 neon-glow-blue">
+                                <i class="fas fa-eye text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-bold text-white">Radical Transparency</h4>
+                                <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                                    Students, faculty, and admins always see the real-time status updates of every operational workflow with complete timestamped visibility.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Item 2: Automated Dispatch -->
+                        <div class="p-5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-4 transition-all hover:-translate-y-1">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/30 neon-glow-purple">
+                                <i class="fas fa-bolt text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-bold text-white">Automated Dispatch</h4>
+                                <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                                    Eliminating paperwork by instantly routing complaints directly to the respective department head upon filing.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- 3. CORE CONTENT SECTION 2: PLATFORM PILLARS (3-COLUMN GRID LAYOUT) -->
+        <section class="py-24 px-[5%] bg-slate-950/80 border-t border-slate-800/80">
+            <div class="max-w-7xl mx-auto space-y-16">
+                
+                <!-- Section Title Deck -->
+                <div class="text-center max-w-3xl mx-auto space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold tracking-wider uppercase">
+                        OUR FRAMEWORK
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                        Built for Scalable <span class="text-gradient">Academic Excellence</span>
+                    </h2>
+                    <p class="text-slate-400 text-sm sm:text-base">
+                        Engineered with a high-performance modular architecture ensuring instant speed, role-scoped security, and robust data persistence.
+                    </p>
+                </div>
+
+                <!-- Responsive 3-Column Container Card Grid -->
+                <div class="grid md:grid-cols-3 gap-8">
+                    
+                    <!-- Card 1: Speed & Automation -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
+                        <div class="space-y-6">
+                            <div class="w-14 h-14 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20 text-2xl neon-glow-blue">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">Speed & Automation</h3>
+                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                    Our intelligent routing algorithm intercepts issues on filing and tags them accurately—for example, matching 'Wi-Fi failure' straight to 'IT Support' without human latency.
+                                </p>
+                            </div>
+                            <ul class="space-y-2.5 text-xs text-slate-300">
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-check text-blue-400"></i>
+                                    <span>Keyword & Category Parsing</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-check text-blue-400"></i>
+                                    <span>Automated SLA Warning Triggers</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-check text-blue-400"></i>
+                                    <span>Zero Manual Dispatch Overhead</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: User-Centric Architecture -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
+                        <div class="space-y-6">
+                            <div class="w-14 h-14 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20 text-2xl neon-glow-purple">
+                                <i class="fas fa-users-gear"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">User-Centric Architecture</h3>
+                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                    Three independent, custom dashboard interfaces constructed tailored specifically to the unique access needs of Students, Faculty, and Admin roles.
+                                </p>
+                            </div>
+                            <ul class="space-y-2.5 text-xs text-slate-300">
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-check text-purple-400"></i>
+                                    <span>1-Click Student Incident Logging</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-check text-purple-400"></i>
+                                    <span>Streamlined Faculty Work Queues</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-check text-purple-400"></i>
+                                    <span>Executive Overview Dashboards</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Data Reliability -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
+                        <div class="space-y-6">
+                            <div class="w-14 h-14 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20 text-2xl neon-glow-cyan">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">Data Reliability</h3>
+                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                    A localized, highly secure client-side storage model (`localStorage`) ensuring immediate query synchronization and instant data persistence across views.
+                                </p>
+                            </div>
+                            <ul class="space-y-2.5 text-xs text-slate-300">
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-check text-cyan-400"></i>
+                                    <span>Client-Side Data Integrity</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-check text-cyan-400"></i>
+                                    <span>Protected Password Gatekeeping</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <i class="fas fa-check text-cyan-400"></i>
+                                    <span>Instant UI Hydration & Sync</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- 4. ISOLATED FOOTER AT BASE -->
+    <footer class="footer-section">
+        <div class="max-w-7xl mx-auto space-y-12">
+            
+            <div class="footer-grid">
+                <!-- Column 1: Brand Overview (2fr) -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                            <i class="fas fa-cube text-lg"></i>
+                        </div>
+                        <span class="text-xl font-extrabold text-white">Campus<span class="text-blue-500">Tracker</span></span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
+                        Enterprise-grade academic operations management platform designed to automate maintenance, ticketing, and administrative dispatching seamlessly.
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-blue-500 flex items-center justify-center transition-colors text-xs">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-blue-500 flex items-center justify-center transition-colors text-xs">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-blue-500 flex items-center justify-center transition-colors text-xs">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-blue-500 flex items-center justify-center transition-colors text-xs">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Quick Links (1fr) -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Quick Links</h5>
+                    <ul class="space-y-2 text-xs text-slate-400 list-none p-0 m-0">
+                        <li><a href="index.html" class="hover:text-blue-400 transition-colors">Home Page</a></li>
+                        <li><a href="about.html" class="hover:text-blue-400 transition-colors text-blue-400 font-semibold">About Platform</a></li>
+                        <li><a href="index.html#features" class="hover:text-blue-400 transition-colors">Core Features</a></li>
+                        <li><a href="index.html#workflow" class="hover:text-blue-400 transition-colors">How It Works</a></li>
+                        <li><a href="index.html#contact" class="hover:text-blue-400 transition-colors">Helpdesk Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Role Portals (1fr) -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Role Portals</h5>
+                    <ul class="space-y-2 text-xs text-slate-400 list-none p-0 m-0">
+                        <li><a href="#" onclick="openLoginModal('student')" class="hover:text-blue-400 transition-colors">Student Login</a></li>
+                        <li><a href="#" onclick="openLoginModal('faculty')" class="hover:text-blue-400 transition-colors">Faculty Login</a></li>
+                        <li><a href="#" onclick="openLoginModal('other')" class="hover:text-blue-400 transition-colors">Executive Admin</a></li>
+                        <li><a href="#" onclick="openLoginModal('student')" class="hover:text-blue-400 transition-colors">Status Lookup</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Contact Info (1fr) -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Campus Address</h5>
+                    <ul class="space-y-2 text-xs text-slate-400 list-none p-0 m-0">
+                        <li>Admin Block 4, Main Campus</li>
+                        <li>support@campustracker.edu</li>
+                        <li>+1 (800) 555-CAMPUS</li>
+                        <li class="text-emerald-400 font-semibold pt-1 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> System Operational
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Horizontal Line Rule & Policy Terms -->
+            <div class="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <p>&copy; 2026 CampusTracker. All rights reserved.</p>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="hover:text-slate-400 transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-slate-400 transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-slate-400 transition-colors">Security Policy</a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+
+    <!-- UNIFIED ROLE LOGIN OVERLAY MODAL -->
+    <div id="loginModalOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="relative w-full max-w-md glass-card rounded-2xl border border-slate-700/80 p-6 sm:p-8 shadow-2xl animate-float-slow">
+            
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-800/50 flex items-center justify-center transition-colors">
+                &times;
+            </button>
+
+            <div class="text-center space-y-2 mb-6">
+                <h3 class="text-2xl font-extrabold text-white tracking-tight">Welcome Back</h3>
+                <p class="text-xs text-slate-400">Select your role and sign in to access your portal.</p>
+            </div>
+
+            <div class="role-tabs flex p-1 bg-slate-900 rounded-xl border border-slate-800 mb-6">
+                <button type="button" class="role-tab active flex-1 py-2 rounded-lg text-xs font-bold text-slate-300 transition-all" data-role="student" data-icon="fa-user-graduate" data-title="Student Login" data-label="Student ID" data-redirect="student/dashboard.html">
+                    <i class="fas fa-user-graduate mr-1"></i> Student
+                </button>
+                <button type="button" class="role-tab flex-1 py-2 rounded-lg text-xs font-bold text-slate-300 transition-all" data-role="faculty" data-icon="fa-chalkboard-teacher" data-title="Faculty Login" data-label="Faculty ID" data-redirect="faculty/dashboard.html">
+                    <i class="fas fa-chalkboard-teacher mr-1"></i> Faculty
+                </button>
+                <button type="button" class="role-tab flex-1 py-2 rounded-lg text-xs font-bold text-slate-300 transition-all" data-role="other" data-icon="fa-user-shield" data-title="Admin Login" data-label="Admin ID" data-redirect="admin/dashboard.html">
+                    <i class="fas fa-user-shield mr-1"></i> Admin
+                </button>
+            </div>
+            
+            <div class="flex items-center gap-3 mb-6 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0" id="dynamicRoleIcon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <span class="text-xs font-bold text-white" id="dynamicRoleTitle">Student Login</span>
+            </div>
+
+            <form id="unifiedLoginForm" class="space-y-4">
+                <div class="input-group text-left">
+                    <label for="userId" id="dynamicUserIdLabel" class="block text-xs font-medium text-slate-300 mb-1">Student ID</label>
+                    <div class="input-wrapper relative">
+                        <i class="fas fa-id-badge absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="text" id="userId" placeholder="Enter Student ID" autocomplete="username" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                    <span class="error-message text-[11px] text-red-400 mt-1 block" id="userIdError"></span>
+                </div>
+
+                <div class="input-group text-left">
+                    <label for="password" class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+                    <div class="input-wrapper relative">
+                        <i class="fas fa-lock absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="password" id="password" placeholder="Enter Password" autocomplete="current-password" class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                        <button type="button" class="toggle-password absolute right-3.5 top-3 text-slate-400 hover:text-slate-200 text-sm" id="togglePassword">
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                    <span class="error-message text-[11px] text-red-400 mt-1 block" id="passwordError"></span>
+                </div>
+
+                <div class="flex items-center justify-between text-xs pt-1">
+                    <label class="flex items-center gap-2 text-slate-400 cursor-pointer">
+                        <input type="checkbox" id="rememberMe" class="rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-0">
+                        <span>Remember Me</span>
+                    </label>
+                    <a href="#" class="text-blue-400 hover:underline">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="w-full btn-gradient py-3 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 mt-4" id="loginBtn">
+                    <span class="btn-text">Sign In To Dashboard</span>
+                    <div class="spinner hidden" id="btnSpinner"></div>
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <script>
+        function openLoginModal(role = 'student') {
+            const overlay = document.getElementById('loginModalOverlay');
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+                
+                const targetTab = document.querySelector(`.role-tab[data-role="${role}"]`) || document.querySelector('.role-tab[data-role="student"]');
+                if (targetTab) {
+                    targetTab.click();
+                }
+            }
+        }
+
+        function closeLoginModal() {
+            const overlay = document.getElementById('loginModalOverlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            }
+        }
+
+        document.getElementById('loginModalOverlay')?.addEventListener('click', (e) => {
+            if (e.target.id === 'loginModalOverlay') {
+                closeLoginModal();
+            }
+        });
+    </script>
+
+    <!-- Custom Login JS -->
+    <script src="assets/js/login.js"></script>
+
+</body>
+</html>
