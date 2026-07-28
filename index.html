@@ -169,8 +169,10 @@
             overflow: hidden;
             transform-origin: center center;
             position: absolute;
-            will-change: transform, border-radius;
+            margin-left: -20px;
+            will-change: transform, border-radius, margin-left;
             backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
         }
 
         #title-left {
@@ -236,8 +238,10 @@
             z-index: 40;
             width: 90%;
             max-width: 1280px;
-            will-change: transform, opacity;
+            margin-left: -20px;
+            will-change: transform, opacity, margin-left;
             backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
             transform-origin: center center;
             opacity: 0;
             transform: scale(0.4);
@@ -349,13 +353,13 @@
                             <span class="text-gradient">Issue Management</span> System
                         </h1>
 
-                        <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
+                        <p class="text-sm sm:text-base text-slate-300 leading-relaxed -mt-8" style="margin-top: -2rem;">
                             Streamlining campus maintenance, IT support, and administrative ticketing with automated routing, transparent workflows, and real-time SLA tracking.
                         </p>
                     </div>
 
                     <!-- Column Center (Grid Span 4 - The Master Action Node) -->
-                    <div class="lg:col-span-4 flex flex-col items-center justify-center text-center relative z-50 py-6" style="-webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; transform: translateZ(0);">
+                    <div id="get-started-command-hub" class="lg:col-span-4 flex flex-col items-center justify-center text-center relative z-50 py-6" style="-webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; transform: translateZ(0);">
                         <div class="relative group">
                             <!-- Orbital Glow Aura Ring -->
                             <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 blur-xl opacity-70 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
@@ -420,12 +424,12 @@
 
                 <!-- Bottom Metrics Anchoring Layer -->
                 <div class="border-t border-slate-800/80 pt-6 mt-8 grid grid-cols-3 gap-6 text-center relative z-40" style="-webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; transform: translateZ(0);">
-                    <div class="p-4 rounded-xl glass-card border border-slate-800/80 relative overflow-hidden group hover:border-blue-500/30 transition-colors">
+                    <div class="p-4 rounded-xl glass-card border border-slate-800/80 relative overflow-hidden group hover:border-blue-500/30 transition-colors -ml-[10px]" style="margin-left: -10px;">
                         <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
                         <div class="text-2xl sm:text-3xl font-black text-white tracking-tight">99.4%</div>
                         <div class="text-xs text-slate-400 font-medium mt-1">Resolution Rate</div>
                     </div>
-                    <div class="p-4 rounded-xl glass-card border border-slate-800/80 relative overflow-hidden group hover:border-blue-500/30 transition-colors">
+                    <div class="p-4 rounded-xl glass-card border border-slate-800/80 relative overflow-hidden group hover:border-blue-500/30 transition-colors mr-[15px]" style="margin-right: 15px;">
                         <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent"></div>
                         <div class="text-2xl sm:text-3xl font-black text-blue-400 tracking-tight">&lt; 2 Hours</div>
                         <div class="text-xs text-slate-400 font-medium mt-1">Response Time</div>
@@ -523,10 +527,10 @@
                 duration: 0.5
             }, 0.25);
 
-            // Phase 3 (65% to 100% of Scroll): #hero-content-wrapper emerges from center, scaling from 0.4 to 1 and fading in to 1
+            // Phase 3 (65% to 100% of Scroll): #hero-content-wrapper emerges from center, scaling from 0.4 to 1.2 and fading in to 1
             tl.to("#hero-content-wrapper", {
                 opacity: 1,
-                scale: 1,
+                scale: 1.2,
                 pointerEvents: "auto",
                 ease: "power2.out",
                 duration: 0.35
