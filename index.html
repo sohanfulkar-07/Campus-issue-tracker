@@ -1,16 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< Updated upstream
     <title>Zeal College | Official Campus Portal</title>
     <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+=======
+    <title>CampusTracker | Smart Campus Issue Management System</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+>>>>>>> Stashed changes
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Custom CSS -->
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0A0E1A',
+                        'obsidian-card': '#121829',
+                        'obsidian-border': '#1E293B',
+                        'electric-blue': '#3B82F6',
+                        'electric-purple': '#8B5CF6',
+                        'cyan-glow': '#06B6D4'
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS Base Reset & Explicit Layout Architecture -->
     <link rel="stylesheet" href="assets/css/login.css">
+    <style>
+        /* 1. RESET DOCUMENT AND BODY WIDTH FLOW */
+        html, body {
+            width: 100vw;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            background-color: #0A0E1A;
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            box-sizing: border-box;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* 2. FIXED HORIZONTAL STICKY NAVBAR LAYOUT */
+        .navbar-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 5%;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links-menu {
+            display: flex;
+            gap: 2.5rem;
+            justify-content: center;
+            align-items: center;
+            width: auto;
+            font-size: 0.95rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .nav-link-item {
+            color: #94A3B8;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .nav-link-item:hover {
+            color: #3B82F6;
+        }
+
+        /* 3. HERO SECTION SPLIT 2-COLUMN GRID */
+        .hero-section {
+            width: 100%;
+            padding: 6rem 5% 4rem 5%;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-metrics {
+            display: flex;
+            gap: 3rem;
+            justify-content: flex-start;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 992px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding-top: 4rem;
+            }
+            .nav-links-menu {
+                display: none; /* Mobile Navigation Toggle fallback */
+            }
+        }
+
+        /* 4. ISOLATED FOOTER AT BASE */
+        .footer-section {
+            width: 100%;
+            margin-top: auto;
+            display: block;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 4rem 5% 2rem 5%;
+            box-sizing: border-box;
+            background-color: #060911;
+            clear: both;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        @media (max-width: 992px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 576px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* UTILITY CLASSES & GLASSMORPHISM */
+        .glass-card {
+            background: rgba(18, 24, 41, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-hover:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px rgba(37, 99, 235, 0.2);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #7C3AED 100%);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 50%, #6D28D9 100%);
+            box-shadow: 0 6px 25px rgba(37, 99, 235, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Floating Animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes floatReverse {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(10px); }
+        }
+        .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
+        .animate-float-reverse { animation: floatReverse 7s ease-in-out infinite; }
+    </style>
 </head>
+<<<<<<< Updated upstream
 <body>
     <div class="split-container">
         <!-- Left Side: Branding & Illustration -->
@@ -22,8 +223,49 @@
                 <h1 class="title">Zeal College of Engineering &amp; Research</h1>
                 <h2 class="subtitle">Official Campus Issue Portal</h2>
                 <p class="small-text">A modern and secure platform for reporting and resolving campus concerns in Pune.</p>
+=======
+<body class="bg-obsidian text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
+
+    <!-- Ambient Mesh Glow Background -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/3 -right-40 w-[30rem] h-[30rem] bg-purple-600/15 rounded-full blur-[140px]"></div>
+        <div class="absolute -bottom-40 left-1/3 w-[32rem] h-[32rem] bg-cyan-500/10 rounded-full blur-[150px]"></div>
+    </div>
+
+    <!-- 2. FIXED HORIZONTAL STICKY NAVBAR LAYOUT -->
+    <header class="navbar-header">
+        <!-- Brand Logo Slot -->
+        <a href="#" class="flex items-center gap-3 group text-decoration-none">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-transform">
+                <i class="fas fa-cube text-xl"></i>
+>>>>>>> Stashed changes
             </div>
+            <div class="flex flex-col">
+                <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    Campus<span class="text-blue-500">Tracker</span>
+                </span>
+                <span class="text-[10px] font-semibold tracking-widest text-slate-400 uppercase">Academic Operations</span>
+            </div>
+        </a>
+
+        <!-- Center Links Menu -->
+        <ul class="nav-links-menu">
+            <li><a href="#hero" class="nav-link-item">Home</a></li>
+            <li><a href="#about" class="nav-link-item">About</a></li>
+            <li><a href="#features" class="nav-link-item">Features</a></li>
+            <li><a href="#workflow" class="nav-link-item">How It Works</a></li>
+            <li><a href="#contact" class="nav-link-item">Contact</a></li>
+        </ul>
+
+        <!-- Right Prominent Gradient Login Button -->
+        <div>
+            <button onclick="openLoginModal('student')" class="btn-gradient px-6 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2">
+                <i class="fas fa-sign-in-alt text-xs"></i>
+                <span>Login</span>
+            </button>
         </div>
+<<<<<<< Updated upstream
 ----------
         <!-- Right Side: Login Form -->
         <div class="right-side">
@@ -32,84 +274,721 @@
                 <div class="card-header">
                     <h2>Welcome Back</h2>
                     <p>Select your role and sign in to continue.</p>
+=======
+    </header>
+
+
+    <!-- MAIN CONTENT FLOW -->
+    <main class="relative z-10 flex-1">
+
+        <!-- 3. COMPLETE HERO SECTION STRUCTURAL OVERHAUL (SPLIT 2-COLUMN GRID) -->
+        <section id="hero" class="hero-section">
+            
+            <!-- Column 1: Left Content Block -->
+            <div class="space-y-6">
+                <!-- Glowing Badge -->
+                <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-card border border-blue-500/30 text-blue-400 text-xs font-semibold tracking-wide">
+                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    <span>Modern Academic Operations</span>
+>>>>>>> Stashed changes
                 </div>
 
-                <!-- Role Selection Tabs -->
-                <div class="role-tabs">
-                    <button class="role-tab active" data-role="student" data-icon="fa-user-graduate" data-title="Student Login" data-label="Student ID" data-redirect="student/dashboard.html">
-                        <i class="fas fa-user-graduate"></i> Student
+                <!-- Bold High-Impact Headline -->
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15]">
+                    Smart Campus <br>
+                    <span class="text-gradient">Issue Management</span> System
+                </h1>
+
+                <!-- Supportive Text Description -->
+                <p class="text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed">
+                    Streamlining campus maintenance, IT support, and administrative ticketing with automated routing, transparent workflows, and real-time SLA tracking.
+                </p>
+
+                <!-- Dual Action Buttons -->
+                <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <button onclick="openLoginModal('student')" class="btn-gradient px-8 py-4 rounded-xl text-sm font-bold text-white flex items-center gap-3">
+                        <span>Get Started Now</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
                     </button>
-                    <button class="role-tab" data-role="faculty" data-icon="fa-chalkboard-teacher" data-title="Faculty Login" data-label="Faculty ID" data-redirect="faculty/dashboard.html">
-                        <i class="fas fa-chalkboard-teacher"></i> Faculty
-                    </button>
-                    <button class="role-tab" data-role="other" data-icon="fa-user-shield" data-title="Admin Login" data-label="Admin ID" data-redirect="admin/dashboard.html">
-                        <i class="fas fa-user-shield"></i> Admin
+                    <button onclick="openLoginModal('student')" class="px-7 py-4 rounded-xl text-sm font-semibold text-slate-200 glass-card border border-slate-700 hover:border-slate-500 hover:bg-slate-800/50 transition-all flex items-center gap-2">
+                        <i class="fas fa-lock text-xs text-blue-400"></i>
+                        <span>Portal Login</span>
                     </button>
                 </div>
-                
-                <div class="dynamic-header">
-                    <div class="role-icon" id="dynamicRoleIcon">
-                        <i class="fas fa-user-graduate"></i>
+
+                <!-- 3 Bottom Accent Statistics Metrics Columns (Stacked Horizontally) -->
+                <div class="hero-metrics">
+                    <div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">99.4%</div>
+                        <div class="text-xs text-slate-400 font-medium mt-1">Resolution Rate</div>
                     </div>
-                    <h3 id="dynamicRoleTitle">Student Login</h3>
-                </div>
-
-                <form id="unifiedLoginForm" class="login-form">
-                    <div class="input-group">
-                        <label for="userId" id="dynamicUserIdLabel">Student ID</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-id-badge icon"></i>
-                            <input type="text" id="userId" placeholder="Enter Student ID" autocomplete="username">
-                        </div>
-                        <span class="error-message" id="userIdError"></span>
+                    <div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-blue-400 tracking-tight">&lt; 2 Hours</div>
+                        <div class="text-xs text-slate-400 font-medium mt-1">Response Time</div>
                     </div>
-
-                    <div class="input-group">
-                        <label for="password">Password</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock icon"></i>
-                            <input type="password" id="password" placeholder="Enter Password" autocomplete="current-password">
-                            <button type="button" class="toggle-password" id="togglePassword">
-                                <i class="fas fa-eye" id="eyeIcon"></i>
-                            </button>
-                        </div>
-                        <span class="error-message" id="passwordError"></span>
+                    <div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-purple-400 tracking-tight">10,000+</div>
+                        <div class="text-xs text-slate-400 font-medium mt-1">Campus Users</div>
                     </div>
-
-                    <div class="form-options">
-                        <label class="remember-me">
-                            <input type="checkbox" id="rememberMe">
-                            <span class="checkmark"></span>
-                            Remember Me
-                        </label>
-                        <a href="#" class="forgot-password">Forgot Password?</a>
-                    </div>
-
-                    <button type="submit" class="btn-primary" id="loginBtn">
-                        <span class="btn-text">Login</span>
-                        <div class="spinner" id="btnSpinner"></div>
-                    </button>
-                    
-                    <div class="divider">
-                        <span>OR</span>
-                    </div>
-
-                    <button type="button" class="btn-secondary">
-                        <i class="fab fa-microsoft"></i> Login using College Email
-                    </button>
-                </form>
-
-                <div class="card-footer">
-                    <p>Don't have access? <a href="#">Contact Administrator</a></p>
                 </div>
             </div>
+
+            <!-- Column 2: Right Glassmorphism Mockup Panel -->
+            <div class="relative w-full">
+                <div class="relative mx-auto max-w-md lg:max-w-none">
+                    <!-- Background Glowing Panel -->
+                    <div class="absolute -inset-1.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-xl opacity-30 animate-pulse"></div>
+
+                    <!-- Floating Ticket Display Layout -->
+                    <div class="relative glass-card rounded-2xl p-6 border border-slate-700/60 shadow-2xl space-y-4">
+                        
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                            <div class="flex items-center gap-3">
+                                <div class="flex gap-1.5">
+                                    <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                                </div>
+                                <span class="text-xs font-semibold text-slate-400 tracking-wide uppercase">Live Issue Monitor</span>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                Live Operations
+                            </span>
+                        </div>
+
+                        <!-- Ticket Item 1: Auto Routing -->
+                        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between animate-float-slow">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20">
+                                    <i class="fas fa-robot text-base"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Auto Routing Engine</div>
+                                    <div class="text-xs text-slate-400">Smart Dept Categorization</div>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 text-[11px] font-semibold text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-md">99.8% Efficiency</span>
+                        </div>
+
+                        <!-- Ticket Item 2: Wi-Fi Outage -->
+                        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between animate-float-reverse">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
+                                    <i class="fas fa-wifi text-base"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Wi-Fi Outage - Hall B</div>
+                                    <div class="text-xs text-slate-400">Assigned to IT Support</div>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 text-[11px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-md">In Progress</span>
+                        </div>
+
+                        <!-- Ticket Item 3: Projector Repair -->
+                        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
+                                    <i class="fas fa-check-circle text-base"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Auditorium Projector Repair</div>
+                                    <div class="text-xs text-slate-400">Resolved 14m ago</div>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-md">Resolved</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- FEATURE VALUE PROPOSITION SECTION -->
+        <section id="about" class="py-20 bg-slate-950/60 border-y border-slate-800/60 px-[5%]">
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Column -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-wider uppercase">
+                        ABOUT THE PLATFORM
+                    </div>
+
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                        Streamlining Campus Life Through <span class="text-gradient">Intelligent Automation</span>
+                    </h2>
+
+                    <p class="text-slate-300 leading-relaxed text-sm sm:text-base">
+                        CampusTracker removes administrative bottlenecks by replacing fragmented emails and manual forms with a unified, real-time ticketing ecosystem tailored for educational institutions.
+                    </p>
+
+                    <!-- 3 Micro-Feature List Rows -->
+                    <div class="space-y-4 pt-4">
+                        <div class="p-4 rounded-xl glass-card flex items-start gap-4 border border-slate-800">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 mt-0.5 border border-blue-500/20">
+                                <i class="fas fa-bolt text-xs"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-white flex items-center gap-2">
+                                    Instant Incident Logging
+                                    <span class="px-2 py-0.5 text-[10px] bg-blue-500/10 text-blue-400 rounded-full font-semibold">1-Min Setup</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Submit tickets with photos, categories, and severity levels in under 60 seconds.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl glass-card flex items-start gap-4 border border-slate-800">
+                            <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0 mt-0.5 border border-purple-500/20">
+                                <i class="fas fa-network-wired text-xs"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-white flex items-center gap-2">
+                                    Smart Auto-Forwarding
+                                    <span class="px-2 py-0.5 text-[10px] bg-purple-500/10 text-purple-400 rounded-full font-semibold">AI Routing</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Automated dispatch algorithm routes requests directly to the designated department team.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl glass-card flex items-start gap-4 border border-slate-800">
+                            <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5 border border-cyan-500/20">
+                                <i class="fas fa-shield-alt text-xs"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-white flex items-center gap-2">
+                                    Total Transparency & Auditing
+                                    <span class="px-2 py-0.5 text-[10px] bg-cyan-500/10 text-cyan-400 rounded-full font-semibold">SLA Tracked</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Real-time status tracking with timestamped audit logs for complete accountability.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side Card -->
+                <div class="lg:col-span-5">
+                    <div class="glass-card rounded-2xl p-8 border border-slate-700/80 shadow-2xl relative overflow-hidden text-center space-y-6">
+                        <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-3xl shadow-xl shadow-blue-500/30">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-extrabold text-white">Trusted Campus Operating Standard</h3>
+                            <p class="text-xs text-slate-400 mt-2">Enterprise-grade security and reliability built specifically for higher education networks.</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800">
+                            <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-left">
+                                <div class="text-base font-bold text-blue-400">24/7 Active</div>
+                                <div class="text-[11px] text-slate-400 font-medium">Issue Tracking</div>
+                            </div>
+                            <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-left">
+                                <div class="text-base font-bold text-purple-400">100% Encrypted</div>
+                                <div class="text-[11px] text-slate-400 font-medium">Audit-Ready Logs</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- OPERATIONAL STAKEHOLDERS PORTAL GRID -->
+        <section id="features" class="py-24 px-[5%]">
+            <div class="max-w-7xl mx-auto space-y-16">
+                
+                <div class="text-center max-w-3xl mx-auto space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold tracking-wider uppercase">
+                        DEDICATED ROLE PORTALS
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                        Designed for Every <span class="text-gradient">Campus Stakeholder</span>
+                    </h2>
+                    <p class="text-slate-400 text-sm sm:text-base">
+                        Tailored experiences designed specifically to empower students, faculty members, and system administrators.
+                    </p>
+                </div>
+
+                <!-- 3-Column Grid -->
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Student Portal -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
+                        <div class="space-y-6">
+                            <div class="w-14 h-14 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20 text-2xl">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">Student Portal</h3>
+                                <p class="text-xs text-slate-400 mt-1">Seamless incident reporting and resolution updates at your fingertips.</p>
+                            </div>
+                            <ul class="space-y-3 text-xs text-slate-300">
+                                <li class="flex items-center gap-2.5">
+                                    <i class="fas fa-check-circle text-blue-400 text-sm"></i>
+                                    <span>Quick 1-Minute Reporting</span>
+                                </li>
+                                <li class="flex items-center gap-2.5">
+                                    <i class="fas fa-check-circle text-blue-400 text-sm"></i>
+                                    <span>Live Status Notifications</span>
+                                </li>
+                                <li class="flex items-center gap-2.5">
+                                    <i class="fas fa-check-circle text-blue-400 text-sm"></i>
+                                    <span>Ratings & Feedback</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="openLoginModal('student')" class="w-full py-3 rounded-xl bg-blue-600/15 hover:bg-blue-600 text-blue-400 hover:text-white font-semibold text-xs transition-all border border-blue-500/30 flex items-center justify-center gap-2">
+                            <span>Launch Student Portal</span>
+                            <i class="fas fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+
+                    <!-- Faculty Portal -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
+                        <div class="space-y-6">
+                            <div class="w-14 h-14 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20 text-2xl">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">Faculty & Staff Portal</h3>
+                                <p class="text-xs text-slate-400 mt-1">Manage maintenance tasks, department queues, and student requests.</p>
+                            </div>
+                            <ul class="space-y-3 text-xs text-slate-300">
+                                <li class="flex items-center gap-2.5">
+                                    <i class="fas fa-check-circle text-purple-400 text-sm"></i>
+                                    <span>Auto-Forwarded Task Queue</span>
+                                </li>
+                                <li class="flex items-center gap-2.5">
+                                    <i class="fas fa-check-circle text-purple-400 text-sm"></i>
+                                    <span>One-Click Status Updates</span>
+                                </li>
+                                <li class="flex items-center gap-2.5">
+                                    <i class="fas fa-check-circle text-purple-400 text-sm"></i>
+                                    <span>Direct Messaging</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="openLoginModal('faculty')" class="w-full py-3 rounded-xl bg-purple-600/15 hover:bg-purple-600 text-purple-400 hover:text-white font-semibold text-xs transition-all border border-purple-500/30 flex items-center justify-center gap-2">
+                            <span>Launch Faculty Portal</span>
+                            <i class="fas fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+
+                    <!-- Executive Admin Portal -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
+                        <div class="space-y-6">
+                            <div class="w-14 h-14 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20 text-2xl">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">Executive Admin Portal</h3>
+                                <p class="text-xs text-slate-400 mt-1">Full control over operations, user roles, analytics, and department SLA metrics.</p>
+                            </div>
+                            <ul class="space-y-3 text-xs text-slate-300">
+                                <li class="flex items-center gap-2.5">
+                                    <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
+                                    <span>User & System Role Management</span>
+                                </li>
+                                <li class="flex items-center gap-2.5">
+                                    <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
+                                    <span>Manual Override Assignments</span>
+                                </li>
+                                <li class="flex items-center gap-2.5">
+                                    <i class="fas fa-check-circle text-cyan-400 text-sm"></i>
+                                    <span>Analytics Time Reports</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="openLoginModal('other')" class="w-full py-3 rounded-xl bg-cyan-600/15 hover:bg-cyan-600 text-cyan-400 hover:text-white font-semibold text-xs transition-all border border-cyan-500/30 flex items-center justify-center gap-2">
+                            <span>Launch Admin Portal</span>
+                            <i class="fas fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- STEP-BY-STEP HOW IT WORKS WORKFLOW -->
+        <section id="workflow" class="py-20 bg-slate-950/80 border-t border-slate-800/80 px-[5%]">
+            <div class="max-w-7xl mx-auto space-y-12">
+                
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold tracking-wider uppercase">
+                        SEAMLESS OPERATION
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-white tracking-tight">
+                        How It <span class="text-gradient">Works</span>
+                    </h2>
+                </div>
+
+                <!-- Banner -->
+                <div class="p-6 sm:p-8 rounded-2xl glass-card border border-slate-800 flex flex-wrap items-center justify-between gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center text-xl shrink-0 border border-blue-500/30">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-white">Intelligent Auto-Routing Mechanism</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Automated issue dispatching reduces turnaround time by over 65%.</p>
+                        </div>
+                    </div>
+                    <button onclick="openLoginModal('student')" class="btn-gradient px-6 py-3 rounded-xl text-xs font-bold text-white flex items-center gap-2">
+                        <span>Try Portal Now</span>
+                        <i class="fas fa-external-link-alt text-[10px]"></i>
+                    </button>
+                </div>
+
+                <!-- 5 Steps -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <div class="glass-card rounded-xl p-5 border border-slate-800 text-center space-y-3">
+                        <div class="w-8 h-8 mx-auto rounded-full bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center shadow-lg shadow-blue-600/30">1</div>
+                        <h5 class="text-sm font-bold text-white">Login</h5>
+                        <p class="text-xs text-slate-400">Secure role authentication via student or staff credentials.</p>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-5 border border-slate-800 text-center space-y-3">
+                        <div class="w-8 h-8 mx-auto rounded-full bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center shadow-lg shadow-blue-600/30">2</div>
+                        <h5 class="text-sm font-bold text-white">Submit Issue</h5>
+                        <p class="text-xs text-slate-400">Log ticket details, category, location, and urgency status.</p>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-5 border border-slate-800 text-center space-y-3">
+                        <div class="w-8 h-8 mx-auto rounded-full bg-purple-600 text-white font-extrabold text-xs flex items-center justify-center shadow-lg shadow-purple-600/30">3</div>
+                        <h5 class="text-sm font-bold text-white">Auto Assign</h5>
+                        <p class="text-xs text-slate-400">Smart routing engine dispatches to target department.</p>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-5 border border-slate-800 text-center space-y-3">
+                        <div class="w-8 h-8 mx-auto rounded-full bg-purple-600 text-white font-extrabold text-xs flex items-center justify-center shadow-lg shadow-purple-600/30">4</div>
+                        <h5 class="text-sm font-bold text-white">Faculty Resolves</h5>
+                        <p class="text-xs text-slate-400">Maintenance team inspects, executes, and updates task.</p>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-5 border border-slate-800 text-center space-y-3">
+                        <div class="w-8 h-8 mx-auto rounded-full bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center shadow-lg shadow-emerald-600/30">5</div>
+                        <h5 class="text-sm font-bold text-white">Status Updated</h5>
+                        <p class="text-xs text-slate-400">System updates audit logs and notifies reporter.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- HELPDESK & INTERACTIVE COMMUNICATION CENTER -->
+        <section id="contact" class="py-24 px-[5%]">
+            <div class="max-w-7xl mx-auto space-y-16">
+                
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-wider uppercase">
+                        GET IN TOUCH
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                        Campus Support & <span class="text-gradient">Helpdesk</span>
+                    </h2>
+                    <p class="text-slate-400 text-sm">Have questions or require administrative assistance? Reach out to our technical support team.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-12 gap-8 items-start">
+                    <!-- Left: Contact Details -->
+                    <div class="lg:col-span-5 glass-card rounded-2xl p-8 border border-slate-800 space-y-6">
+                        <h3 class="text-xl font-bold text-white border-b border-slate-800 pb-4">Contact Information</h3>
+                        
+                        <div class="space-y-5">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Campus Location</div>
+                                    <div class="text-sm font-medium text-slate-200 mt-0.5">Main Campus - Admin Block 4, Desk 102</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/20">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Direct Telephone</div>
+                                    <div class="text-sm font-medium text-slate-200 mt-0.5">+1 (800) 555-CAMPUS / Ext. 409</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/20">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Support Email</div>
+                                    <div class="text-sm font-medium text-slate-200 mt-0.5">support@campustracker.edu</div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Operational Hours</div>
+                                    <div class="text-sm font-medium text-slate-200 mt-0.5">Mon - Fri: 8:00 AM - 8:00 PM EST</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start gap-3 mt-6">
+                            <i class="fas fa-exclamation-triangle text-amber-400 text-base mt-0.5"></i>
+                            <p class="text-xs text-amber-300/90 leading-relaxed">
+                                For life-threatening emergencies or security hazards, please dial Campus Security at extension 911 immediately.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Message Form -->
+                    <div class="lg:col-span-7 glass-card rounded-2xl p-8 border border-slate-800">
+                        <h3 class="text-xl font-bold text-white mb-6">Send a Direct Message</h3>
+
+                        <form id="contactHelpdeskForm" onsubmit="handleContactSubmit(event)" class="space-y-5">
+                            <div class="grid sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1.5">Your Full Name *</label>
+                                    <input type="text" required placeholder="e.g. Alex Johnson" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1.5">Campus Email *</label>
+                                    <input type="email" required placeholder="alex@university.edu" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                                </div>
+                            </div>
+
+                            <div class="grid sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1.5">Campus Role *</label>
+                                    <select required class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-blue-500 transition-colors">
+                                        <option value="">Select Your Role</option>
+                                        <option value="Student">Student</option>
+                                        <option value="Faculty">Faculty / Staff</option>
+                                        <option value="Admin">Administrator</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-300 mb-1.5">Subject *</label>
+                                    <input type="text" required placeholder="Inquiry topic" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Your Message *</label>
+                                <textarea rows="4" required placeholder="Describe your question or technical issue..." class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full btn-gradient py-4 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2">
+                                <i class="fas fa-paper-plane text-xs"></i>
+                                <span>Submit Message</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- 4. ISOLATE AND PUSH FOOTER ELEMENTS DOWN -->
+    <footer class="footer-section">
+        <div class="max-w-7xl mx-auto space-y-12">
+            
+            <div class="footer-grid">
+                <!-- Column 1: Brand Overview (2fr) -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                            <i class="fas fa-cube text-lg"></i>
+                        </div>
+                        <span class="text-xl font-extrabold text-white">Campus<span class="text-blue-500">Tracker</span></span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
+                        Enterprise-grade academic operations management platform designed to automate maintenance, ticketing, and administrative dispatching seamlessly.
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-blue-500 flex items-center justify-center transition-colors text-xs">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-blue-500 flex items-center justify-center transition-colors text-xs">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-blue-500 flex items-center justify-center transition-colors text-xs">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-blue-500 flex items-center justify-center transition-colors text-xs">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Quick Links (1fr) -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Quick Links</h5>
+                    <ul class="space-y-2 text-xs text-slate-400 list-none p-0 m-0">
+                        <li><a href="#hero" class="hover:text-blue-400 transition-colors">Home Page</a></li>
+                        <li><a href="#about" class="hover:text-blue-400 transition-colors">About Platform</a></li>
+                        <li><a href="#features" class="hover:text-blue-400 transition-colors">Core Features</a></li>
+                        <li><a href="#workflow" class="hover:text-blue-400 transition-colors">How It Works</a></li>
+                        <li><a href="#contact" class="hover:text-blue-400 transition-colors">Helpdesk Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Role Portals (1fr) -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Role Portals</h5>
+                    <ul class="space-y-2 text-xs text-slate-400 list-none p-0 m-0">
+                        <li><a href="#" onclick="openLoginModal('student')" class="hover:text-blue-400 transition-colors">Student Login</a></li>
+                        <li><a href="#" onclick="openLoginModal('faculty')" class="hover:text-blue-400 transition-colors">Faculty Login</a></li>
+                        <li><a href="#" onclick="openLoginModal('other')" class="hover:text-blue-400 transition-colors">Executive Admin</a></li>
+                        <li><a href="#" onclick="openLoginModal('student')" class="hover:text-blue-400 transition-colors">Status Lookup</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Contact Info (1fr) -->
+                <div class="space-y-3">
+                    <h5 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Campus Address</h5>
+                    <ul class="space-y-2 text-xs text-slate-400 list-none p-0 m-0">
+                        <li>Admin Block 4, Main Campus</li>
+                        <li>support@campustracker.edu</li>
+                        <li>+1 (800) 555-CAMPUS</li>
+                        <li class="text-emerald-400 font-semibold pt-1 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> System Operational
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Horizontal Line Rule & Policy Terms -->
+            <div class="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <p>&copy; 2026 CampusTracker. All rights reserved.</p>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="hover:text-slate-400 transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-slate-400 transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-slate-400 transition-colors">Security Policy</a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+
+    <!-- UNIFIED ROLE LOGIN OVERLAY MODAL -->
+    <div id="loginModalOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="relative w-full max-w-md glass-card rounded-2xl border border-slate-700/80 p-6 sm:p-8 shadow-2xl animate-float-slow">
+            
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-800/50 flex items-center justify-center transition-colors">
+                &times;
+            </button>
+
+            <div class="text-center space-y-2 mb-6">
+                <h3 class="text-2xl font-extrabold text-white tracking-tight">Welcome Back</h3>
+                <p class="text-xs text-slate-400">Select your role and sign in to access your portal.</p>
+            </div>
+
+            <div class="role-tabs flex p-1 bg-slate-900 rounded-xl border border-slate-800 mb-6">
+                <button type="button" class="role-tab active flex-1 py-2 rounded-lg text-xs font-bold text-slate-300 transition-all" data-role="student" data-icon="fa-user-graduate" data-title="Student Login" data-label="Student ID" data-redirect="student/dashboard.html">
+                    <i class="fas fa-user-graduate mr-1"></i> Student
+                </button>
+                <button type="button" class="role-tab flex-1 py-2 rounded-lg text-xs font-bold text-slate-300 transition-all" data-role="faculty" data-icon="fa-chalkboard-teacher" data-title="Faculty Login" data-label="Faculty ID" data-redirect="faculty/dashboard.html">
+                    <i class="fas fa-chalkboard-teacher mr-1"></i> Faculty
+                </button>
+                <button type="button" class="role-tab flex-1 py-2 rounded-lg text-xs font-bold text-slate-300 transition-all" data-role="other" data-icon="fa-user-shield" data-title="Admin Login" data-label="Admin ID" data-redirect="admin/dashboard.html">
+                    <i class="fas fa-user-shield mr-1"></i> Admin
+                </button>
+            </div>
+            
+            <div class="flex items-center gap-3 mb-6 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0" id="dynamicRoleIcon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <span class="text-xs font-bold text-white" id="dynamicRoleTitle">Student Login</span>
+            </div>
+
+            <form id="unifiedLoginForm" class="space-y-4">
+                <div class="input-group text-left">
+                    <label for="userId" id="dynamicUserIdLabel" class="block text-xs font-medium text-slate-300 mb-1">Student ID</label>
+                    <div class="input-wrapper relative">
+                        <i class="fas fa-id-badge absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="text" id="userId" placeholder="Enter Student ID" autocomplete="username" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                    <span class="error-message text-[11px] text-red-400 mt-1 block" id="userIdError"></span>
+                </div>
+
+                <div class="input-group text-left">
+                    <label for="password" class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+                    <div class="input-wrapper relative">
+                        <i class="fas fa-lock absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="password" id="password" placeholder="Enter Password" autocomplete="current-password" class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                        <button type="button" class="toggle-password absolute right-3.5 top-3 text-slate-400 hover:text-slate-200 text-sm" id="togglePassword">
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                    <span class="error-message text-[11px] text-red-400 mt-1 block" id="passwordError"></span>
+                </div>
+
+                <div class="flex items-center justify-between text-xs pt-1">
+                    <label class="flex items-center gap-2 text-slate-400 cursor-pointer">
+                        <input type="checkbox" id="rememberMe" class="rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-0">
+                        <span>Remember Me</span>
+                    </label>
+                    <a href="#" class="text-blue-400 hover:underline">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="w-full btn-gradient py-3 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 mt-4" id="loginBtn">
+                    <span class="btn-text">Sign In To Dashboard</span>
+                    <div class="spinner hidden" id="btnSpinner"></div>
+                </button>
+            </form>
+
         </div>
     </div>
-    
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="toast-container"></div>
 
-    <!-- Custom JS -->
+    <div id="toastContainer" class="toast-container fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <script>
+        function openLoginModal(role = 'student') {
+            const overlay = document.getElementById('loginModalOverlay');
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+                
+                const targetTab = document.querySelector(`.role-tab[data-role="${role}"]`) || document.querySelector('.role-tab[data-role="student"]');
+                if (targetTab) {
+                    targetTab.click();
+                }
+            }
+        }
+
+        function closeLoginModal() {
+            const overlay = document.getElementById('loginModalOverlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            }
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            alert('Thank you! Your message has been transmitted to Campus Support.');
+            e.target.reset();
+        }
+
+        document.getElementById('loginModalOverlay')?.addEventListener('click', (e) => {
+            if (e.target.id === 'loginModalOverlay') {
+                closeLoginModal();
+            }
+        });
+    </script>
+
+    <!-- Custom Login JS -->
     <script src="assets/js/login.js"></script>
+
 </body>
 </html>
