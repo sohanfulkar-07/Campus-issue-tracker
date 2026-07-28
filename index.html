@@ -24,7 +24,7 @@
             theme: {
                 extend: {
                     colors: {
-                        obsidian: '#050A19',
+                        obsidian: '#030712',
                         'obsidian-card': 'rgba(10, 20, 40, 0.7)',
                         'obsidian-border': 'rgba(255, 255, 255, 0.05)',
                         'electric-blue': '#3B82F6',
@@ -50,9 +50,7 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-            background-color: #050A19;
-            background-image: radial-gradient(circle at center, #09122B 0%, #050A19 100%);
-            background-attachment: fixed;
+            background-color: #030712;
             color: #FFFFFF;
             font-family: 'Plus Jakarta Sans', sans-serif;
             box-sizing: border-box;
@@ -74,7 +72,7 @@
             top: 0;
             left: 0;
             z-index: 50;
-            background: rgba(5, 10, 25, 0.85);
+            background: rgba(3, 7, 18, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -188,6 +186,7 @@
             backface-visibility: hidden;
             letter-spacing: -0.03em;
             text-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            mix-blend-mode: difference;
         }
 
         #title-right {
@@ -205,6 +204,7 @@
             backface-visibility: hidden;
             letter-spacing: -0.03em;
             text-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            mix-blend-mode: difference;
         }
 
         #hero-content-wrapper {
@@ -215,6 +215,9 @@
             will-change: transform, opacity;
             backface-visibility: hidden;
             transform-origin: center center;
+            opacity: 0;
+            transform: scale(0.4);
+            pointer-events: none;
         }
     </style>
 </head>
@@ -258,16 +261,22 @@
     </header>
 
     <!-- VIEWPORT-LOCKED SCROLL CONTAINER FOR GSAP BREAKTHROUGH & HERO REVEAL -->
-    <div id="scroll-container">
-        <div id="sticky-stage">
+    <div id="scroll-container" class="relative w-full h-[450vh]">
+        <div id="sticky-stage" class="sticky top-0 w-full h-screen overflow-hidden flex justify-center items-center">
             
-            <!-- Custom Video Loop File Uploader Control -->
-            <div class="absolute top-20 right-6 z-40">
-                <label for="video-uploader" class="px-3 py-1.5 rounded-lg glass-card border border-slate-700/80 text-slate-300 hover:text-white hover:border-blue-500/50 text-[11px] font-semibold flex items-center gap-2 cursor-pointer transition-all shadow-lg hover:scale-105">
+            <!-- Custom Video Loop File Controllers Panel -->
+            <div class="absolute top-20 right-6 z-40 flex items-center gap-2">
+                <input type="file" id="video-asset-loader" accept="video/*" class="hidden">
+                
+                <button id="trigger-upload-btn" class="px-3 py-1.5 rounded-lg glass-card border border-slate-700/80 text-slate-300 hover:text-white hover:border-blue-500/50 text-[11px] font-semibold flex items-center gap-2 transition-all shadow-lg hover:scale-105 cursor-pointer">
                     <i class="fas fa-video text-blue-400"></i>
-                    <span>Custom Video Loop</span>
-                </label>
-                <input type="file" id="video-uploader" accept="video/*" class="hidden">
+                    <span>Upload Video Loop</span>
+                </button>
+                
+                <button id="reset-default-btn" class="px-3 py-1.5 rounded-lg glass-card border border-slate-700/80 text-slate-400 hover:text-white hover:border-indigo-500/50 text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-lg hover:scale-105 cursor-pointer" title="Reset to Production GitHub Stream">
+                    <i class="fas fa-undo text-xs text-indigo-400"></i>
+                    <span>Reset Stream</span>
+                </button>
             </div>
 
             <!-- Background Canvas (Zoom Card) -->
@@ -276,7 +285,8 @@
                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,#1e2b4d_0%,#080d1a_70%)]"></div>
                 
                 <!-- Background Loop Video Element -->
-                <video id="bg-loop-video" src="use_this_img_and_genrate_a_vid.mp4" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-60 pointer-events-none z-0 transition-opacity duration-500">
+                <video id="bg-loop-video" autoplay loop muted playsinline webkit-playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-80 pointer-events-none will-change-transform">
+                    <source id="video-source-node" src="https://github.com/sohanfulkar-07/Campus-issue-tracker/raw/refs/heads/main/use_this_img_and_genrate_a_vid.mp4" type="video/mp4">
                 </video>
 
                 <!-- Vector Blueprint Line Graphics -->
@@ -417,6 +427,8 @@
 
     <!-- MULTI-PHASE GSAP SCROLLTRIGGER MOTION ENGINE SCRIPT -->
     <script>
+        const DEFAULT_GITHUB_VIDEO_URL = "https://github.com/sohanfulkar-07/Campus-issue-tracker/raw/refs/heads/main/use_this_img_and_genrate_a_vid.mp4";
+
         document.addEventListener('DOMContentLoaded', () => {
             gsap.registerPlugin(ScrollTrigger);
 
@@ -481,68 +493,93 @@
                 duration: 0.25
             }, 0);
 
-            // Initialize Local Video File Stream Engine
-            initLocalVideoStreamEngine();
+            // Initialize Video Stream Controller Engine
+            initVideoStreamController();
         });
 
-        /* LOCAL VIDEO STREAM INJECTION & LIFECYCLE ENGINE */
-        function initLocalVideoStreamEngine() {
-            const videoUploader = document.getElementById('video-uploader');
+        /* LOCAL & REMOTE VIDEO STREAM CONTROLLER ENGINE */
+        function initVideoStreamController() {
+            const fileInput = document.getElementById('video-asset-loader');
+            const triggerBtn = document.getElementById('trigger-upload-btn');
+            const resetBtn = document.getElementById('reset-default-btn');
             const bgVideo = document.getElementById('bg-loop-video');
+            const videoSource = document.getElementById('video-source-node');
             let currentObjectUrl = null;
 
-            if (!videoUploader || !bgVideo) return;
+            if (!fileInput || !bgVideo) return;
 
-            videoUploader.addEventListener('change', function(event) {
+            // Trigger file dialog
+            if (triggerBtn) {
+                triggerBtn.addEventListener('click', () => {
+                    fileInput.click();
+                });
+            }
+
+            // Local File Upload Listener
+            fileInput.addEventListener('change', function() {
                 try {
                     const selectedFile = this.files && this.files[0];
 
                     if (selectedFile) {
-                        // Verify valid video MIME type or extension
                         if (!selectedFile.type.startsWith('video/') && !selectedFile.name.match(/\.(mp4|webm|ogg|mov)$/i)) {
                             alert('Please select a valid video file format (MP4, WebM, OGG, MOV).');
                             return;
                         }
 
-                        // Revoke previous Object URL lifecycle memory to prevent memory leaks
+                        // Revoke previous local Object URL memory to prevent memory leaks
                         if (currentObjectUrl) {
                             URL.revokeObjectURL(currentObjectUrl);
                         }
 
-                        // Generate secure local Object URL stream
+                        // Create local Blob Stream URL
                         currentObjectUrl = URL.createObjectURL(selectedFile);
-                        
-                        // Hydrate video element
+
+                        // Update video src
+                        if (videoSource) {
+                            videoSource.src = currentObjectUrl;
+                        }
                         bgVideo.src = currentObjectUrl;
-                        bgVideo.classList.remove('hidden');
-                        
-                        // Force load and play stream programmatically
+
+                        // Programmatically load & play
                         bgVideo.load();
                         const playPromise = bgVideo.play();
                         if (playPromise !== undefined) {
                             playPromise.catch(err => {
-                                console.warn('Auto-play playback policy fallback triggered:', err);
+                                console.warn('Auto-play policy restriction:', err);
                             });
                         }
-                    } else {
-                        // Reset to default gradient void background if input is cleared
-                        resetVideoSource();
                     }
                 } catch (error) {
-                    console.error('Failed to inject local video stream:', error);
-                    resetVideoSource();
+                    console.error('Video injection error:', error);
                 }
             });
 
-            function resetVideoSource() {
-                if (currentObjectUrl) {
-                    URL.revokeObjectURL(currentObjectUrl);
-                    currentObjectUrl = null;
-                }
-                bgVideo.pause();
-                bgVideo.removeAttribute('src');
-                bgVideo.load();
-                bgVideo.classList.add('hidden');
+            // Reset to Production GitHub Stream
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    try {
+                        if (currentObjectUrl) {
+                            URL.revokeObjectURL(currentObjectUrl);
+                            currentObjectUrl = null;
+                        }
+                        fileInput.value = '';
+
+                        if (videoSource) {
+                            videoSource.src = DEFAULT_GITHUB_VIDEO_URL;
+                        }
+                        bgVideo.src = DEFAULT_GITHUB_VIDEO_URL;
+
+                        bgVideo.load();
+                        const playPromise = bgVideo.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(err => {
+                                console.warn('Reset playback policy:', err);
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Reset video stream error:', error);
+                    }
+                });
             }
         }
     </script>
