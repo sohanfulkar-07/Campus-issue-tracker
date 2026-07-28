@@ -1,8 +1,4 @@
-/**
- * Student Dashboard Multi-Status Notification Engine
- * Dynamically tracks ticket status updates from localStorage ('campus_tickets_master')
- * and generates context-aware alert cards with dismissal persistence.
- */
+
 
 (function () {
     'use strict';
@@ -45,7 +41,7 @@
                 }
 
                 .notification-feed {
-                    max-height: 360px;
+                    max-height: 440px;
                     overflow-y: auto;
                     padding: 0.75rem 1rem;
                     display: flex;
@@ -63,14 +59,14 @@
                     border-radius: 4px;
                 }
 
-                /* Luxury Notification Card Styling */
+                /* Notification Card Styling */
                 .notif-alert-card {
                     position: relative;
                     background: #ffffff;
                     border: 1px solid #e2e8f0;
                     border-left: 4px solid #3b82f6;
                     border-radius: 12px;
-                    padding: 0.9rem 1rem 0.85rem 1rem;
+                    padding: 0.9rem 1rem;
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
                     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
                     display: flex;
@@ -93,14 +89,17 @@
                 }
 
                 /* Status Variant Themes */
+                .notif-alert-card.status-pending {
+                    border-left-color: #f59e0b;
+                }
+                .notif-alert-card.status-assigned {
+                    border-left-color: #8b5cf6;
+                }
                 .notif-alert-card.status-in-progress {
                     border-left-color: #3b82f6;
                 }
                 .notif-alert-card.status-resolved {
                     border-left-color: #10b981;
-                }
-                .notif-alert-card.status-pending {
-                    border-left-color: #f59e0b;
                 }
 
                 .notif-icon-circle {
@@ -110,23 +109,27 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 1rem;
+                    font-size: 1.25rem;
                     flex-shrink: 0;
+                    background: #f1f5f9;
                 }
 
-                .status-in-progress .notif-icon-circle {
-                    background: rgba(59, 130, 246, 0.12);
-                    color: #3b82f6;
-                }
-
-                .status-resolved .notif-icon-circle {
-                    background: rgba(16, 185, 129, 0.12);
-                    color: #10b981;
+                [data-theme="dark"] .notif-icon-circle,
+                body.dark-theme .notif-icon-circle {
+                    background: #334155;
                 }
 
                 .status-pending .notif-icon-circle {
                     background: rgba(245, 158, 11, 0.12);
-                    color: #f59e0b;
+                }
+                .status-assigned .notif-icon-circle {
+                    background: rgba(139, 92, 246, 0.12);
+                }
+                .status-in-progress .notif-icon-circle {
+                    background: rgba(59, 130, 246, 0.12);
+                }
+                .status-resolved .notif-icon-circle {
+                    background: rgba(16, 185, 129, 0.12);
                 }
 
                 .notif-content-body {
@@ -135,24 +138,26 @@
                 }
 
                 .notif-card-title {
-                    font-size: 0.875rem;
+                    font-size: 0.85rem;
                     font-weight: 700;
-                    margin: 0 0 0.25rem 0;
+                    color: #3b82f6;
+                    margin: 0 0 0.2rem 0;
                     display: flex;
                     align-items: center;
                     gap: 0.4rem;
                 }
 
                 .notif-card-detail {
-                    font-size: 0.8rem;
-                    color: #64748b;
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    color: #1e293b;
                     margin: 0 0 0.35rem 0;
                     line-height: 1.4;
                 }
 
                 [data-theme="dark"] .notif-card-detail,
                 body.dark-theme .notif-card-detail {
-                    color: #94a3b8;
+                    color: #f8fafc;
                 }
 
                 .notif-card-timestamp {
@@ -189,7 +194,7 @@
                     color: #ef4444;
                 }
 
-                /* Sleek Empty Placeholder */
+                /* Empty Placeholder */
                 .no-notif-placeholder {
                     text-align: center;
                     padding: 2.5rem 1rem;
@@ -212,7 +217,6 @@
                     font-weight: 500;
                 }
 
-                /* Animations */
                 .notif-fade-out {
                     opacity: 0;
                     transform: translateX(30px);
@@ -251,71 +255,88 @@
         }
 
         /**
-         * 2. Multi-Status Update Notification Engine
-         * Detects ticket status changes in 'campus_tickets_master' against acknowledged_status_map
+         * Helper to determine exact lifecycle notification icon, message, and styling
          */
+        getNotificationState(ticket) {
+            const status = String(ticket.status || '').toUpperCase().trim();
+            const hasAdminAssignment = ticket.assignedTo || ticket.assignedAdmin || ticket.adminNotes || ticket.assignedFaculty;
+
+            if (status.includes('RESOLVED') || status.includes('CLOSED')) {
+                return {
+                    icon: '✅',
+                    message: 'Your complaint has been Resolved.',
+                    statusClass: 'status-resolved'
+                };
+            } else if (status.includes('PROGRESS') || status === 'IN_PROGRESS') {
+                return {
+                    icon: '🔄',
+                    message: 'your complaint is In Progress.',
+                    statusClass: 'status-in-progress'
+                };
+            } else if (status.includes('ASSIGNED') || hasAdminAssignment) {
+                return {
+                    icon: '👨‍🔧',
+                    message: 'Your complaint has been assigned to the admin.',
+                    statusClass: 'status-assigned'
+                };
+            } else {
+                // Submitted / New / Unassigned
+                return {
+                    icon: '🔔',
+                    message: 'Your complaint has been submitted.',
+                    statusClass: 'status-pending'
+                };
+            }
+        }
+
         checkTicketStatusUpdates() {
             const container = document.getElementById('notificationList') || document.getElementById('notificationsList');
             if (!container) return;
 
-            // Ensure container has scrollable feed class
             container.className = 'notification-feed';
 
             const masterTickets = JSON.parse(localStorage.getItem(this.masterStorageKey) || '[]');
             const ackMap = this.getAcknowledgedMap();
 
-            // Detect current student user details
             const currentUserId = localStorage.getItem('currentUserId') || '';
             const studentProfileStr = localStorage.getItem('studentProfile');
             const studentProfile = studentProfileStr ? JSON.parse(studentProfileStr) : null;
             const studentName = studentProfile ? studentProfile.name : '';
 
-            // Filter tickets for current student session (or all if test environment)
+            // Filter tickets for current student session
             const studentTickets = masterTickets.filter(t => {
                 if (!t) return false;
-                if (!currentUserId && !studentName) return true; // Show all if no session set
+                if (!currentUserId && !studentName) return true;
                 const tUser = String(t.user || t.author || t.studentName || t.student || '').toLowerCase();
                 const tEmail = String(t.email || t.userId || '').toLowerCase();
-                
-                return tUser.includes(studentName.toLowerCase()) || 
-                       tEmail.includes(currentUserId.toLowerCase()) ||
-                       true; // Master array status tracker
+
+                return tUser.includes(studentName.toLowerCase()) ||
+                    tEmail.includes(currentUserId.toLowerCase()) ||
+                    true;
             });
 
-            const unreadNotifs = [];
+            const notifItems = [];
 
             studentTickets.forEach(ticket => {
                 const ticketId = String(ticket.id);
                 const currentStatus = String(ticket.status || 'Pending');
-                const lastSeenStatus = ackMap[ticketId];
+                const state = this.getNotificationState(ticket);
 
-                // Initial registration: if ticket has never been seen, record current status as baseline
-                if (lastSeenStatus === undefined) {
-                    ackMap[ticketId] = currentStatus;
-                } else if (lastSeenStatus !== currentStatus) {
-                    // Status change detected! Generate unread notification card
-                    unreadNotifs.push({
-                        ticketId: ticketId,
-                        title: ticket.title || `Issue #${ticketId}`,
-                        status: currentStatus,
-                        previousStatus: lastSeenStatus,
-                        timestamp: ticket.date || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                    });
-                }
+                notifItems.push({
+                    ticketId: ticketId,
+                    title: ticket.title || `Issue #${ticketId}`,
+                    status: currentStatus,
+                    icon: state.icon,
+                    message: state.message,
+                    statusClass: state.statusClass,
+                    timestamp: ticket.date || new Date().toLocaleDateString()
+                });
             });
 
-            // Save updated initial baselines if changed
-            this.saveAcknowledgedMap(ackMap);
-
-            // Render notification cards
-            this.renderNotifications(container, unreadNotifs);
+            this.renderNotifications(container, notifItems);
         }
 
-        /**
-         * 3. Context-Aware Visual Alert Cards Renderer
-         */
         renderNotifications(container, notifs) {
-            // Update Header Unread Badge
             const header = container.previousElementSibling;
             let badge = document.getElementById('notifBadgeCount');
 
@@ -326,8 +347,7 @@
                 header.appendChild(badge);
             }
 
-            if (notifs.length === 0) {
-                // 1. Sleek Empty Placeholder
+            if (!notifs || notifs.length === 0) {
                 if (badge) badge.style.display = 'none';
                 container.innerHTML = `
                     <div class="no-notif-placeholder">
@@ -346,32 +366,14 @@
             let cardsHtml = '';
 
             notifs.forEach(notif => {
-                const statusNormalized = notif.status.toUpperCase();
-                let statusClass = 'status-pending';
-                let iconHtml = '<i class="fas fa-info-circle"></i>';
-                let titleText = `Status Changed: ${notif.status}`;
-                let detailText = `Your ticket #${notif.ticketId} ('${notif.title}') status has been updated to ${notif.status}.`;
-
-                if (statusNormalized.includes('IN PROGRESS') || statusNormalized === 'IN_PROGRESS') {
-                    statusClass = 'status-in-progress';
-                    iconHtml = '<i class="fas fa-spinner fa-spin"></i>';
-                    titleText = 'Issue Updated: In Progress';
-                    detailText = `Your ticket #${notif.ticketId} ('${notif.title}') is now being handled by the department.`;
-                } else if (statusNormalized.includes('RESOLVED') || statusNormalized.includes('CLOSED')) {
-                    statusClass = 'status-resolved';
-                    iconHtml = '<i class="fas fa-check-circle"></i>';
-                    titleText = 'Issue Resolved!';
-                    detailText = `Great news! Your ticket #${notif.ticketId} ('${notif.title}') has been successfully resolved.`;
-                }
-
                 cardsHtml += `
-                    <div class="notif-alert-card ${statusClass}" data-ticket-id="${notif.ticketId}" data-status="${notif.status}">
+                    <div class="notif-alert-card ${notif.statusClass}" data-ticket-id="${notif.ticketId}" data-status="${notif.status}">
                         <div class="notif-icon-circle">
-                            ${iconHtml}
+                            ${notif.icon}
                         </div>
                         <div class="notif-content-body">
-                            <div class="notif-card-title">${titleText}</div>
-                            <div class="notif-card-detail">${detailText}</div>
+                            <div class="notif-card-title">Issue #${notif.ticketId} - ${notif.title}</div>
+                            <div class="notif-card-detail">${notif.icon} ${notif.message}</div>
                             <div class="notif-card-timestamp">
                                 <i class="far fa-clock"></i> Synced: ${notif.timestamp}
                             </div>
@@ -384,9 +386,6 @@
             container.innerHTML = cardsHtml;
         }
 
-        /**
-         * 4. Clear & Acknowledge Dismissal Event Delegation
-         */
         bindDismissalListeners() {
             document.addEventListener('click', (e) => {
                 const btn = e.target.closest('.notif-dismiss-btn');
@@ -400,20 +399,17 @@
                 const card = btn.closest('.notif-alert-card');
 
                 if (card) {
-                    // Smooth CSS fade-out transition
                     card.classList.add('notif-fade-out');
 
                     setTimeout(() => {
                         card.remove();
 
-                        // Update local acknowledged_status_map
                         if (ticketId && newStatus) {
                             const ackMap = this.getAcknowledgedMap();
                             ackMap[ticketId] = newStatus;
                             this.saveAcknowledgedMap(ackMap);
                         }
 
-                        // Check remaining cards in feed
                         const container = document.getElementById('notificationList') || document.getElementById('notificationsList');
                         if (container) {
                             const remainingCards = container.querySelectorAll('.notif-alert-card');

@@ -21,6 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
     closeSidebar.addEventListener('click', closeMenu);
     sidebarOverlay.addEventListener('click', closeMenu);
 
+    // --- Contact Support Toggle ---
+    const contactSupportBtn = document.getElementById('contactSupportBtn');
+    const supportDetails = document.getElementById('supportDetails');
+    if (contactSupportBtn && supportDetails) {
+        contactSupportBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isOpen = supportDetails.classList.contains('active');
+            if (isOpen) {
+                supportDetails.classList.remove('active');
+                contactSupportBtn.innerHTML = 'Contact Support';
+            } else {
+                supportDetails.classList.add('active');
+                contactSupportBtn.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Support Info';
+            }
+        });
+    }
 
     // --- Mock Data Rendering ---
     
