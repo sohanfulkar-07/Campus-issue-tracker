@@ -470,6 +470,61 @@
 
     </main>
 
+    <!-- VIEWPORT TRANSITION LAYER (RIPPLE EXPANSION & ROLE PORTAL OVERLAY) -->
+    <div id="role-portal-overlay" class="fixed inset-0 z-[100] pointer-events-none hidden items-center justify-center bg-[#030712]/90 backdrop-blur-2xl opacity-0 transition-opacity duration-300">
+        <!-- Concentrated Ripple Ring -->
+        <div id="portal-ripple-ring" class="absolute rounded-full bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 opacity-0 pointer-events-none transform -translate-x-1/2 -translate-y-1/2 will-change-transform z-0" style="width: 10px; height: 10px;"></div>
+        
+        <!-- Role Portal Cards Grid -->
+        <div id="portal-cards-grid" class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full px-6 opacity-0 transform scale-90 will-change-all">
+            
+            <!-- Student Portal -->
+            <a href="login-selection.html" class="glass-card bg-[#0d1527]/80 border border-indigo-500/30 p-8 rounded-2xl shadow-2xl backdrop-blur-md hover:border-indigo-400 hover:shadow-indigo-500/20 transition-all duration-300 group cursor-pointer text-center text-decoration-none hover:-translate-y-2">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all text-2xl shadow-inner">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Student Portal</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">File maintenance issues, track real-time resolution status, and rate campus support.</p>
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 mt-4 group-hover:translate-x-1 transition-transform">
+                    <span>Enter Portal</span>
+                    <i class="fas fa-arrow-right text-[10px]"></i>
+                </span>
+            </a>
+            
+            <!-- Faculty Command -->
+            <a href="login-selection.html" class="glass-card bg-[#0d1527]/80 border border-purple-500/30 p-8 rounded-2xl shadow-2xl backdrop-blur-md hover:border-purple-400 hover:shadow-purple-500/20 transition-all duration-300 group cursor-pointer text-center text-decoration-none hover:-translate-y-2">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-all text-2xl shadow-inner">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">Faculty Command</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Request classroom equipment repairs, IT infrastructure support, and room maintenance.</p>
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-purple-400 mt-4 group-hover:translate-x-1 transition-transform">
+                    <span>Enter Command</span>
+                    <i class="fas fa-arrow-right text-[10px]"></i>
+                </span>
+            </a>
+
+            <!-- System Administrator -->
+            <a href="login-selection.html" class="glass-card bg-[#0d1527]/80 border border-blue-500/30 p-8 rounded-2xl shadow-2xl backdrop-blur-md hover:border-blue-400 hover:shadow-blue-500/20 transition-all duration-300 group cursor-pointer text-center text-decoration-none hover:-translate-y-2">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all text-2xl shadow-inner">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">System Administrator</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Manage SLA dispatches, assign department technicians, and view analytics dashboards.</p>
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 mt-4 group-hover:translate-x-1 transition-transform">
+                    <span>Enter Admin Hub</span>
+                    <i class="fas fa-arrow-right text-[10px]"></i>
+                </span>
+            </a>
+
+        </div>
+
+        <!-- Close Overlay Button -->
+        <button id="close-portal-overlay-btn" class="absolute top-8 right-8 z-20 w-10 h-10 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-sm transition-all hover:scale-110 cursor-pointer shadow-lg" title="Close Overlay">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
     <!-- MULTI-PHASE GSAP SCROLLTRIGGER MOTION ENGINE SCRIPT -->
     <script>
         const DEFAULT_GITHUB_VIDEO_URL = "https://github.com/sohanfulkar-07/Campus-issue-tracker/raw/refs/heads/main/use_this_img_and_genrate_a_vid.mp4";
@@ -540,6 +595,9 @@
 
             // Initialize Video Stream Controller Engine
             initVideoStreamController();
+
+            // Initialize Command Hub Portal Transition
+            initCommandHubPortalTransition();
         });
 
         /* LOCAL & REMOTE VIDEO STREAM CONTROLLER ENGINE */
@@ -624,6 +682,85 @@
                     } catch (error) {
                         console.error('Reset video stream error:', error);
                     }
+                });
+            }
+        }
+
+        /* COMMAND HUB INTERACTIVE RIPPLE & ROLE PORTAL TRANSITION ENGINE */
+        function initCommandHubPortalTransition() {
+            const commandHubBtn = document.querySelector('#get-started-command-hub a');
+            const portalOverlay = document.getElementById('role-portal-overlay');
+            const rippleRing = document.getElementById('portal-ripple-ring');
+            const portalCardsGrid = document.getElementById('portal-cards-grid');
+            const closeOverlayBtn = document.getElementById('close-portal-overlay-btn');
+
+            if (!commandHubBtn || !portalOverlay || !rippleRing || !portalCardsGrid) return;
+
+            commandHubBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                const clickX = e.clientX;
+                const clickY = e.clientY;
+
+                // Position ripple ring at exact click coordinates
+                gsap.set(rippleRing, {
+                    left: clickX + 'px',
+                    top: clickY + 'px',
+                    scale: 1,
+                    opacity: 0.8
+                });
+
+                // Show overlay container
+                portalOverlay.classList.remove('hidden');
+                portalOverlay.classList.add('flex');
+                portalOverlay.style.pointerEvents = 'auto';
+
+                // GSAP Micro-Interaction Sequence
+                const transitionTl = gsap.timeline();
+
+                transitionTl.to(portalOverlay, {
+                    opacity: 1,
+                    duration: 0.2
+                });
+
+                // Phase 1: Ripple expansion from click point
+                transitionTl.to(rippleRing, {
+                    scale: 300,
+                    opacity: 1,
+                    duration: 0.6,
+                    ease: 'power2.inOut'
+                }, 0);
+
+                // Phase 2: Role Portal cards reveal
+                transitionTl.to(portalCardsGrid, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.45,
+                    ease: 'back.out(1.2)'
+                }, 0.35);
+            });
+
+            if (closeOverlayBtn) {
+                closeOverlayBtn.addEventListener('click', () => {
+                    const closeTl = gsap.timeline({
+                        onComplete: () => {
+                            portalOverlay.classList.add('hidden');
+                            portalOverlay.classList.remove('flex');
+                            portalOverlay.style.pointerEvents = 'none';
+                        }
+                    });
+
+                    closeTl.to(portalCardsGrid, {
+                        opacity: 0,
+                        scale: 0.9,
+                        duration: 0.25,
+                        ease: 'power2.in'
+                    });
+
+                    closeTl.to(portalOverlay, {
+                        opacity: 0,
+                        duration: 0.25
+                    }, 0.1);
                 });
             }
         }
