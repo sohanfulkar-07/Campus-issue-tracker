@@ -204,19 +204,19 @@
         .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
         .animate-float-reverse { animation: floatReverse 7s ease-in-out infinite; }
 
-        /* 5. ELITE HOVER MICRO-INTERACTION GRID SYSTEM */
-        .framework-card {
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            will-change: transform, opacity, box-shadow;
+        /* 5. ELITE ELASTIC LAYOUT-SHIFTING HOVER SYSTEM */
+        .interactive-shift-grid .framework-card {
+            transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease;
+            will-change: transform, opacity;
             position: relative;
             z-index: 1;
         }
 
         /* Hovered Card: 3D Scale Lift & Focus Dynamic */
-        .framework-card:hover {
-            transform: scale(1.06) translateY(-8px) !important;
+        .interactive-shift-grid .framework-card:hover {
+            transform: scale(1.05) translateY(-8px) !important;
             opacity: 1 !important;
-            z-index: 20;
+            z-index: 20 !important;
         }
 
         /* Specific Theme Neon Glow Shadow Highlights & Crisp Border */
@@ -233,12 +233,37 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(6, 182, 212, 0.25) !important;
         }
 
-        /* Unhovered Sibling Push Aside & Recess Dynamics */
-        .card-interactive-container:hover .framework-card:not(:hover) {
-            transform: scale(0.96);
-            opacity: 0.55;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.03);
+        /* Directional Repulsion & Elastic Layout Shift Dynamics */
+        @media (min-width: 768px) {
+            /* 1. Left Box Hover State (.card-1) */
+            .interactive-shift-grid:has(.card-1:hover) .card-2 {
+                transform: translateX(20px) scale(0.96);
+                opacity: 0.6;
+            }
+            .interactive-shift-grid:has(.card-1:hover) .card-3 {
+                transform: translateX(40px) scale(0.96);
+                opacity: 0.6;
+            }
+
+            /* 2. Center Box Hover State (.card-2) */
+            .interactive-shift-grid:has(.card-2:hover) .card-1 {
+                transform: translateX(-30px) scale(0.96);
+                opacity: 0.6;
+            }
+            .interactive-shift-grid:has(.card-2:hover) .card-3 {
+                transform: translateX(30px) scale(0.96);
+                opacity: 0.6;
+            }
+
+            /* 3. Right Box Hover State (.card-3) */
+            .interactive-shift-grid:has(.card-3:hover) .card-2 {
+                transform: translateX(-20px) scale(0.96);
+                opacity: 0.6;
+            }
+            .interactive-shift-grid:has(.card-3:hover) .card-1 {
+                transform: translateX(-40px) scale(0.96);
+                opacity: 0.6;
+            }
         }
     </style>
 </head>
@@ -516,9 +541,9 @@
                 </div>
 
                 <!-- 3-Column Grid -->
-                <div class="grid md:grid-cols-3 gap-8 card-interactive-container group/grid">
+                <div class="grid md:grid-cols-3 gap-8 interactive-shift-grid card-interactive-container group/grid">
                     <!-- Student Portal -->
-                    <div class="glass-card framework-card card-glow-blue rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
+                    <div class="glass-card framework-card card-1 card-glow-blue rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
                         <div class="space-y-6">
                             <div class="w-14 h-14 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20 text-2xl">
                                 <i class="fas fa-user-graduate"></i>
@@ -549,7 +574,7 @@
                     </div>
 
                     <!-- Faculty Portal -->
-                    <div class="glass-card framework-card card-glow-purple rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
+                    <div class="glass-card framework-card card-2 card-glow-purple rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
                         <div class="space-y-6">
                             <div class="w-14 h-14 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20 text-2xl">
                                 <i class="fas fa-chalkboard-teacher"></i>
@@ -580,7 +605,7 @@
                     </div>
 
                     <!-- Executive Admin Portal -->
-                    <div class="glass-card framework-card card-glow-cyan rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
+                    <div class="glass-card framework-card card-3 card-glow-cyan rounded-2xl p-8 border border-slate-800 flex flex-col justify-between space-y-6">
                         <div class="space-y-6">
                             <div class="w-14 h-14 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20 text-2xl">
                                 <i class="fas fa-user-shield"></i>
