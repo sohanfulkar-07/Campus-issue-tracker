@@ -151,6 +151,8 @@
             justify-content: center;
             align-items: center;
             background-color: #030712;
+            perspective: 1000px;
+            perspective-origin: center center;
         }
 
         #zoom-card {
@@ -182,11 +184,22 @@
             z-index: 30;
             transform-origin: right center;
             white-space: nowrap;
-            will-change: transform, opacity;
-            backface-visibility: hidden;
             letter-spacing: -0.03em;
             text-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
             mix-blend-mode: difference;
+
+            /* Sub-Pixel Font Antialiasing & Smoothing */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+
+            /* Hardware GPU Layer Promotion & Vector Lock */
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
         #title-right {
@@ -200,11 +213,22 @@
             z-index: 30;
             transform-origin: left center;
             white-space: nowrap;
-            will-change: transform, opacity;
-            backface-visibility: hidden;
             letter-spacing: -0.03em;
             text-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
             mix-blend-mode: difference;
+
+            /* Sub-Pixel Font Antialiasing & Smoothing */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+
+            /* Hardware GPU Layer Promotion & Vector Lock */
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
         #hero-content-wrapper {
