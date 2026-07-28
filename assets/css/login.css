@@ -7,16 +7,17 @@
 
 :root {
     --primary-dark: #0F172A;
-    --primary-blue: #0EA5E9;
-    --primary-blue-hover: #0284C7;
+    --primary-blue: #1E4D8C;
+    --primary-blue-hover: #153A63;
+    --accent-gold: #C8A24A;
     --bg-color: #F8FAFC;
     --text-dark: #1E293B;
     --text-muted: #64748B;
     --card-bg: #FFFFFF;
-    --border-radius: 12px;
+    --border-radius: 14px;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 20px rgba(15, 23, 42, 0.12);
+    --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.16);
     --transition: all 0.3s ease;
     --error-color: #EF4444;
     --error-bg: #FEE2E2;
@@ -40,7 +41,9 @@ body {
 /* Left Side - Branding */
 .left-side {
     flex: 1;
-    background: linear-gradient(135deg, var(--primary-dark) 0%, #1E293B 100%);
+    background:
+        linear-gradient(135deg, rgba(30, 77, 140, 0.92) 0%, rgba(15, 23, 42, 0.88) 100%),
+        url('https://media.licdn.com/dms/image/v2/C511BAQFuu_54hzrFSA/company-background_10000/company-background_10000/0/1586942378867/zeal_institutes_cover?e=2147483647&v=beta&t=HyCIB1p39JKgcVslKpNTRej06rPXOAKxxi4a7ohUSOE') center/cover no-repeat;
     color: #FFFFFF;
     display: flex;
     flex-direction: column;
@@ -72,7 +75,7 @@ body {
 
 .logo {
     font-size: 3.5rem;
-    color: var(--primary-blue);
+    color: var(--accent-gold);
     margin-bottom: 1.5rem;
     filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
 }
@@ -88,7 +91,7 @@ body {
 .subtitle {
     font-size: 1.5rem;
     font-weight: 500;
-    color: var(--primary-blue);
+    color: var(--accent-gold);
     margin-bottom: 1rem;
 }
 
@@ -130,6 +133,7 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
     transition: var(--transition);
+    border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .card-header {
@@ -185,7 +189,7 @@ body {
 }
 
 .role-tab.active {
-    background-color: #FFFFFF;
+    background: linear-gradient(135deg, rgba(30, 77, 140, 0.12), rgba(200, 162, 74, 0.16));
     color: var(--primary-blue);
     box-shadow: var(--shadow-sm);
 }
