@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentRedirect.includes('faculty')) role = 'faculty';
                     if (currentRedirect.includes('admin')) role = 'admin';
                     
+                    sessionStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('currentUserRole', role);
                     localStorage.setItem('currentUserId', userId);
                     localStorage.setItem('currentUserPassword', password);

@@ -18,8 +18,9 @@
 
     if (requiredRole) {
         const currentUserRole = localStorage.getItem('currentUserRole');
-        if (!currentUserRole || currentUserRole !== requiredRole) {
-            console.warn(`Unauthorized access. Required: ${requiredRole}, Found: ${currentUserRole}`);
+        const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+        if (!isLoggedIn || !currentUserRole || currentUserRole !== requiredRole) {
+            console.warn(`Unauthorized access or inactive session. Redirecting to login.`);
             window.location.href = loginRedirectPath;
             return; // Stop execution
         }
