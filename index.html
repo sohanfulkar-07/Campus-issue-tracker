@@ -506,37 +506,39 @@
             initPortalOverlayEngine();
         });
 
-        /* OVERLAY TRANSITION TRIGGER ENGINE */
+        /* INSTANTANEOUS PAGE-STATE SWAP OVERLAY ENGINE */
         function initPortalOverlayEngine() {
             const startBtn = document.getElementById('get-started-btn');
             const overlay = document.getElementById('portal-overlay');
             const portalContent = document.getElementById('portal-content-wrapper');
+            const mainDashboard = document.getElementById('hero-content-wrapper');
             const closeOverlayBtn = document.getElementById('close-portal-overlay-btn');
 
-            if (!startBtn || !overlay || !portalContent) return;
+            if (!startBtn || !overlay || !portalContent || !mainDashboard) return;
 
             startBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                gsap.set(overlay, { display: "flex", pointerEvents: "none" });
-                gsap.set(portalContent, { scale: 0.95, opacity: 0 });
 
-                const fadeTL = gsap.timeline();
-                fadeTL
-                    .to(overlay, { opacity: 1, duration: 0.4, ease: "power2.inOut", pointerEvents: "auto" })
-                    .to(portalContent, { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }, "<0.1");
+                // 1. Instantly hide main dashboard layout
+                mainDashboard.style.display = 'none';
+
+                // 2. Instantly show premium portal overlay
+                overlay.style.display = 'flex';
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'auto';
+
+                // 3. Ensure inner cards are fully visible at full scale
+                portalContent.style.opacity = '1';
+                portalContent.style.transform = 'scale(1)';
             });
 
             if (closeOverlayBtn) {
                 closeOverlayBtn.addEventListener('click', () => {
-                    const closeTL = gsap.timeline({
-                        onComplete: () => {
-                            gsap.set(overlay, { display: "none", pointerEvents: "none" });
-                        }
-                    });
-
-                    closeTL
-                        .to(portalContent, { opacity: 0, scale: 0.95, duration: 0.3, ease: "power2.in" })
-                        .to(overlay, { opacity: 0, duration: 0.3, ease: "power2.in" }, "<0.1");
+                    overlay.style.display = 'none';
+                    overlay.style.opacity = '0';
+                    overlay.style.pointerEvents = 'none';
+                    mainDashboard.style.display = 'block';
+                    mainDashboard.style.opacity = '1';
                 });
             }
         }
