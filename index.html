@@ -140,7 +140,7 @@
             position: relative;
             width: 100%;
             height: 450vh;
-            background: #050A19;
+            background-color: #030712;
         }
 
         #sticky-stage {
@@ -152,15 +152,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #030712;
         }
 
         #zoom-card {
             width: 320px;
             height: 320px;
             border-radius: 32px;
-            background: #0c1020;
-            border: 2px solid rgba(99, 102, 241, 0.2);
-            box-shadow: 0 0 50px rgba(99, 102, 241, 0.15);
+            background: #080d1a;
+            background-image: linear-gradient(#080d1a, #080d1a), linear-gradient(135deg, #6366f1 0%, #3b82f6 50%, #1d4ed8 100%);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            border: 1px solid transparent;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(59, 130, 246, 0.15);
             z-index: 5;
             overflow: hidden;
             transform-origin: center center;
@@ -175,7 +179,7 @@
             padding-right: 20px;
             font-size: clamp(3.5rem, 10vw, 9rem);
             font-weight: 900;
-            color: #FFFFFF;
+            color: #ffffff;
             font-family: 'Plus Jakarta Sans', sans-serif;
             z-index: 30;
             transform-origin: right center;
@@ -192,7 +196,7 @@
             padding-left: 20px;
             font-size: clamp(3.5rem, 10vw, 9rem);
             font-weight: 900;
-            color: #FFFFFF;
+            color: #ffffff;
             font-family: 'Plus Jakarta Sans', sans-serif;
             z-index: 30;
             transform-origin: left center;
@@ -259,12 +263,13 @@
             
             <!-- Background Canvas (Zoom Card) -->
             <div id="zoom-card" class="flex items-center justify-center relative">
-                <!-- Inner Glowing Neon Grid & Particle Orbs -->
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.5)_0%,rgba(59,130,246,0.2)_50%,transparent_100%)] animate-pulse"></div>
-                <div class="w-48 h-48 rounded-full border-2 border-indigo-400/30 border-dashed animate-spin" style="animation-duration: 16s;"></div>
-                <div class="w-32 h-32 rounded-full border border-blue-500/40 border-dotted animate-spin" style="animation-duration: 10s; animation-direction: reverse;"></div>
-                <div class="w-16 h-16 rounded-2xl bg-indigo-600/30 backdrop-blur-md border border-indigo-400/40 flex items-center justify-center z-10 shadow-lg shadow-indigo-500/50">
-                    <i class="fas fa-cube text-3xl text-indigo-300"></i>
+                <!-- Concentrated Inner Glow Aura -->
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,#1e2b4d_0%,#080d1a_70%)]"></div>
+                <!-- Vector Blueprint Line Graphics -->
+                <div class="w-56 h-56 rounded-full border border-[rgba(99,102,241,0.25)] border-dashed animate-spin" style="animation-duration: 20s;"></div>
+                <div class="w-40 h-40 rounded-full border border-[rgba(99,102,241,0.25)] border-dotted animate-spin absolute" style="animation-duration: 12s; animation-direction: reverse;"></div>
+                <div class="w-20 h-20 rounded-2xl bg-[#080d1a]/80 backdrop-blur-md border border-[rgba(99,102,241,0.35)] flex items-center justify-center z-10 shadow-lg shadow-indigo-500/20">
+                    <i class="fas fa-cube text-3xl text-indigo-400"></i>
                 </div>
             </div>
 
@@ -367,9 +372,9 @@
 
             <!-- Scroll Prompt Indicator -->
             <div id="scrollPrompt" class="absolute bottom-10 flex flex-col items-center gap-2 z-30 transition-opacity duration-300">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Scroll to Explore</span>
-                <div class="w-5 h-9 rounded-full border-2 border-slate-600 flex justify-center p-1">
-                    <div class="w-1 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-[#475569]">Scroll to Explore</span>
+                <div class="w-5 h-9 rounded-full border-2 border-[#3b82f6] flex justify-center p-1 shadow-lg shadow-blue-500/20">
+                    <div class="w-1 h-2 bg-[#3b82f6] rounded-full animate-bounce"></div>
                 </div>
             </div>
 
