@@ -110,44 +110,126 @@
                     background: #ffffff;
                     color: #1e293b;
                     width: 100%;
-                    max-width: 540px;
-                    border-radius: 16px;
-                    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+                    max-width: 560px;
+                    border-radius: 20px;
+                    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(37, 99, 235, 0.15);
                     overflow: hidden;
-                    border: 1px solid #e2e8f0;
+                    border: 1px solid rgba(226, 232, 240, 0.8);
                     display: flex;
                     flex-direction: column;
                     position: relative;
+                    animation: pwModalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
                 }
 
                 [data-theme="dark"] .profile-wizard-modal,
                 body.dark-theme .profile-wizard-modal {
-                    background: #1e293b;
+                    background: #0f172a;
                     color: #f8fafc;
-                    border-color: #334155;
+                    border-color: rgba(51, 65, 85, 0.8);
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(59, 130, 246, 0.25);
                 }
 
                 .pw-header {
-                    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+                    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #2563eb 100%);
                     color: #ffffff;
-                    padding: 1.5rem 1.75rem;
+                    padding: 2.2rem 2rem 1.8rem;
                     text-align: center;
                     position: relative;
+                    overflow: hidden;
                 }
 
-                .pw-header h2 { margin: 0 0 0.4rem 0; font-size: 1.4rem; font-weight: 700; }
-                .pw-header p { margin: 0; font-size: 0.875rem; opacity: 0.9; }
+                .pw-header::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    right: -20%;
+                    width: 240px;
+                    height: 240px;
+                    background: radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, transparent 70%);
+                    pointer-events: none;
+                    border-radius: 50%;
+                }
+
+                .pw-header::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -50%;
+                    left: -20%;
+                    width: 200px;
+                    height: 200px;
+                    background: radial-gradient(circle, rgba(14, 165, 233, 0.35) 0%, transparent 70%);
+                    pointer-events: none;
+                    border-radius: 50%;
+                }
+
+                .pw-header-icon {
+                    width: 54px;
+                    height: 54px;
+                    margin: 0 auto 0.85rem;
+                    background: rgba(255, 255, 255, 0.15);
+                    backdrop-filter: blur(8px);
+                    -webkit-backdrop-filter: blur(8px);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.45rem;
+                    color: #ffffff;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .pw-header h2 {
+                    margin: 0 0 0.45rem 0;
+                    font-size: 1.55rem;
+                    font-weight: 700;
+                    letter-spacing: -0.02em;
+                    color: #ffffff;
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .pw-header p {
+                    margin: 0;
+                    font-size: 0.925rem;
+                    color: rgba(255, 255, 255, 0.92);
+                    font-weight: 400;
+                    line-height: 1.5;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .pw-role-badge {
+                    background: rgba(255, 255, 255, 0.22);
+                    backdrop-filter: blur(6px);
+                    -webkit-backdrop-filter: blur(6px);
+                    padding: 0.2rem 0.65rem;
+                    border-radius: 20px;
+                    font-weight: 700;
+                    font-size: 0.8rem;
+                    letter-spacing: 0.05em;
+                    color: #ffffff;
+                    border: 1px solid rgba(255, 255, 255, 0.4);
+                    display: inline-block;
+                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+                    margin: 0 0.15rem;
+                }
 
                 .pw-close-btn {
                     position: absolute;
-                    top: 1rem; right: 1.25rem;
+                    top: 1.25rem; right: 1.25rem;
                     background: rgba(255, 255, 255, 0.2);
-                    border: none; color: #fff;
-                    width: 32px; height: 32px; border-radius: 50%;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: #fff;
+                    width: 34px; height: 34px; border-radius: 50%;
                     cursor: pointer; display: flex; align-items: center; justify-content: center;
-                    font-size: 1rem; transition: background 0.2s ease;
+                    font-size: 1.1rem; transition: all 0.2s ease;
+                    z-index: 2;
                 }
-                .pw-close-btn:hover { background: rgba(255, 255, 255, 0.35); }
+                .pw-close-btn:hover { background: rgba(255, 255, 255, 0.35); transform: scale(1.05); }
 
                 .pw-body { padding: 1.75rem; max-height: calc(85vh - 100px); overflow-y: auto; }
 
@@ -337,6 +419,7 @@
                 }
 
                 @keyframes pwFadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+                @keyframes pwModalPop { from { opacity: 0; transform: scale(0.94) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
                 @keyframes pwShake {
                     0%, 100% { transform: translateX(0); }
                     25% { transform: translateX(-5px); }
@@ -435,7 +518,13 @@
 
             const isStudent = this.role === 'student';
             const modalTitle = isEditMode ? 'Edit Profile Details' : 'Welcome! Set Up Your Profile';
-            const modalSub = isEditMode ? 'Update your personal profile information below.' : `Complete your details for your ${this.role.toUpperCase()} account.`;
+            const modalSub = isEditMode 
+                ? 'Update your personal profile information below.' 
+                : `Complete your details for your <span class="pw-role-badge">${this.role.toUpperCase()}</span> account.`;
+
+            const headerIconClass = this.role === 'admin' 
+                ? 'fa-user-shield' 
+                : (this.role === 'faculty' ? 'fa-chalkboard-teacher' : 'fa-user-graduate');
 
             // 1. Diverse 8-Avatar Collection
             const nameSeed = this.userId || 'User';
@@ -456,6 +545,9 @@
             overlay.innerHTML = `
                 <div class="profile-wizard-modal" role="dialog" aria-modal="true">
                     <div class="pw-header">
+                        <div class="pw-header-icon">
+                            <i class="fas ${headerIconClass}"></i>
+                        </div>
                         <h2>${modalTitle}</h2>
                         <p>${modalSub}</p>
                         ${isEditMode ? '<button class="pw-close-btn" id="closeEditModalBtn">&times;</button>' : ''}
@@ -540,16 +632,18 @@
                                     </div>
                                 </div>
 
-                                <div class="pw-divider-text">OR CHOOSE PRESET AVATAR</div>
+                                ${isStudent ? `
+                                    <div class="pw-divider-text">OR CHOOSE PRESET AVATAR</div>
 
-                                <!-- Preset Avatar Grid -->
-                                <div class="pw-avatar-grid" id="pwAvatarGrid">
-                                    ${avatars.map((url, idx) => `
-                                        <div class="pw-avatar-item ${!isCustomAvatar && (url === currentAvatar || (idx === 0 && !prefillData)) ? 'selected' : ''}" data-avatar="${url}">
-                                            <img src="${url}" alt="Avatar Option ${idx + 1}" />
-                                        </div>
-                                    `).join('')}
-                                </div>
+                                    <!-- Preset Avatar Grid -->
+                                    <div class="pw-avatar-grid" id="pwAvatarGrid">
+                                        ${avatars.map((url, idx) => `
+                                            <div class="pw-avatar-item ${!isCustomAvatar && (url === currentAvatar || (idx === 0 && !prefillData)) ? 'selected' : ''}" data-avatar="${url}">
+                                                <img src="${url}" alt="Avatar Option ${idx + 1}" />
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
                             </div>
 
                             <button type="submit" class="pw-submit-btn">
