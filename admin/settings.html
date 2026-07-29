@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Settings | Campus Issue Tracker</title>
     <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js -->
@@ -25,42 +27,50 @@
             max-width: 800px;
             margin-top: 2rem;
         }
+
         .settings-card {
             border: 1px solid var(--border-color);
         }
+
         .settings-card .card-header {
             padding: 1.25rem 1.5rem;
             border-bottom: 1px solid var(--border-color);
         }
+
         .settings-card .card-header h2 {
             font-size: 1.1rem;
             margin: 0;
             color: var(--text-dark);
         }
+
         .settings-list {
             padding: 1.5rem;
         }
+
         .setting-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .setting-item h4 {
             margin: 0;
             font-size: 1rem;
             font-weight: 500;
         }
+
         .setting-item p {
             color: var(--text-light);
             font-size: 0.85rem;
             margin: 0.25rem 0 0 0;
         }
+
         .setting-divider {
             border: 0;
             border-top: 1px solid var(--border-color);
             margin: 1.5rem 0;
         }
-        
+
         /* Toggle Switch CSS */
         .toggle-switch {
             position: relative;
@@ -68,11 +78,13 @@
             width: 44px;
             height: 24px;
         }
+
         .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
+
         .slider {
             position: absolute;
             cursor: pointer;
@@ -84,6 +96,7 @@
             transition: .4s;
             border-radius: 24px;
         }
+
         .slider:before {
             position: absolute;
             content: "";
@@ -95,13 +108,15 @@
             transition: .4s;
             border-radius: 50%;
         }
-        input:checked + .slider {
+
+        input:checked+.slider {
             background-color: var(--primary-blue);
         }
-        input:checked + .slider:before {
+
+        input:checked+.slider:before {
             transform: translateX(20px);
         }
-        
+
         .custom-select {
             padding: 0.5rem 1rem;
             border: 1px solid var(--border-color);
@@ -111,7 +126,7 @@
             outline: none;
             font-family: inherit;
         }
-        
+
         .btn-outline-sm {
             padding: 0.5rem 1rem;
             border: 1px solid var(--primary-blue);
@@ -122,10 +137,12 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
+
         .btn-outline-sm:hover {
             background: var(--primary-blue);
             color: white;
         }
+
         .btn-primary-sm {
             padding: 0.55rem 1.1rem;
             background-color: var(--primary-blue);
@@ -136,10 +153,11 @@
             cursor: pointer;
             transition: background-color 0.2s ease;
         }
+
         .btn-primary-sm:hover {
             background-color: var(--primary-blue-hover);
         }
-        
+
         .btn-danger-sm {
             padding: 0.55rem 1.1rem;
             background-color: #ef4444;
@@ -150,6 +168,7 @@
             cursor: pointer;
             transition: background-color 0.2s ease;
         }
+
         .btn-danger-sm:hover {
             background-color: #dc2626;
         }
@@ -157,6 +176,7 @@
     <!-- Theme JS (loads early to prevent FOUC) -->
     <script src="js/theme.js"></script>
 </head>
+
 <body>
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -221,22 +241,24 @@
                     <i class="fas fa-cog"></i>
                 </button>
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=0b132a&color=fff&rounded=true" alt="Admin" class="avatar" id="headerAvatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0b132a&color=fff&rounded=true"
+                        alt="Admin" class="avatar" id="headerAvatar">
                 </div>
             </div>
         </header>
 
         <!-- Dashboard Content Container -->
         <main class="content-container">
-            
+
             <div id="settings-view" class="dashboard-view active">
                 <div class="welcome-section" style="margin-bottom: 2rem;">
                     <h1 style="font-size: 1.75rem; color: var(--text-dark); margin-bottom: 0.5rem;">System Settings</h1>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Manage platform configurations, routing rules, and your account preferences.</p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Manage platform configurations, routing
+                        rules, and your account preferences.</p>
                 </div>
 
                 <div class="settings-grid">
-                    
+
                     <!-- Base: Account & Identity -->
                     <div class="card settings-card">
                         <div class="card-header border-bottom">
@@ -248,7 +270,8 @@
                                     <h4>Password Management</h4>
                                     <p>Change the admin login password.</p>
                                 </div>
-                                <button class="btn-primary-sm" id="btnChangePassword" type="button">Change Password</button>
+                                <button class="btn-primary-sm" id="btnChangePassword" type="button">Change
+                                    Password</button>
                             </div>
                         </div>
                     </div>
@@ -284,7 +307,8 @@
                                     <h4>Target Resolution Time (Hours)</h4>
                                     <p>Global threshold before tickets are flagged overdue.</p>
                                 </div>
-                                <input type="number" id="slaHoursInput" value="24" class="custom-select" style="width: 100px; text-align: center;">
+                                <input type="number" id="slaHoursInput" value="24" class="custom-select"
+                                    style="width: 100px; text-align: center;">
                             </div>
                             <hr class="setting-divider">
                             <div class="setting-item">
@@ -292,7 +316,8 @@
                                     <h4>SLA Compliance Rate Target (%)</h4>
                                     <p>Minimum expected compliance across departments.</p>
                                 </div>
-                                <input type="number" id="slaRateInput" value="95" class="custom-select" style="width: 100px; text-align: center;">
+                                <input type="number" id="slaRateInput" value="95" class="custom-select"
+                                    style="width: 100px; text-align: center;">
                             </div>
                             <hr class="setting-divider">
                             <div style="display: flex; justify-content: flex-end;">
@@ -309,11 +334,16 @@
                         <div class="settings-list">
                             <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: flex-end;">
                                 <div style="flex: 1;">
-                                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Issue Category</label>
-                                    <input type="text" id="routeCategory" placeholder="e.g. Wi-Fi Down" class="custom-select" style="width: 100%;">
+                                    <label
+                                        style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Issue
+                                        Category</label>
+                                    <input type="text" id="routeCategory" placeholder="e.g. Wi-Fi Down"
+                                        class="custom-select" style="width: 100%;">
                                 </div>
                                 <div style="flex: 1;">
-                                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Target Department</label>
+                                    <label
+                                        style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">Target
+                                        Department</label>
                                     <select id="routeDept" class="custom-select" style="width: 100%;">
                                         <option value="IT Support">IT Support</option>
                                         <option value="Hostel Maintenance">Hostel Maintenance</option>
@@ -324,7 +354,7 @@
                                     <button class="btn-primary-sm" id="btnAddRoute">Add Mapping</button>
                                 </div>
                             </div>
-                            
+
                             <div id="routingRulesContainer" style="display: flex; flex-direction: column; gap: 0.5rem;">
                                 <!-- Mappings injected via JS -->
                             </div>
@@ -342,7 +372,8 @@
                                     <h4>Database Backup</h4>
                                     <p>Download a snapshot of all system data.</p>
                                 </div>
-                                <button class="btn-outline-sm" id="btnDownloadBackup"><i class="fas fa-download"></i> Download JSON</button>
+                                <button class="btn-outline-sm" id="btnDownloadBackup"><i class="fas fa-download"></i>
+                                    Download JSON</button>
                             </div>
                             <hr class="setting-divider">
                             <div class="setting-item">
@@ -350,14 +381,15 @@
                                     <h4 style="color: #ef4444;">Clear Resolved Tickets</h4>
                                     <p>Archive and remove historical closed tickets from live DB.</p>
                                 </div>
-                                <button class="btn-danger-sm" id="btnClearTickets"><i class="fas fa-trash-alt"></i> Archive Data</button>
+                                <button class="btn-danger-sm" id="btnClearTickets"><i class="fas fa-trash-alt"></i>
+                                    Archive Data</button>
                             </div>
                         </div>
                     </div>
 
                 </div>
             </div>
-            
+
             <footer class="main-footer">
                 <p>&copy; 2026 Campus Issue Tracker. All rights reserved.</p>
             </footer>
@@ -369,4 +401,5 @@
     <script src="js/settings.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
+
 </html>

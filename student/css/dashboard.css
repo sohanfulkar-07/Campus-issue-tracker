@@ -14,72 +14,91 @@
     --color-text-muted: #64748B;
     --color-bg-container: rgba(10, 20, 40, 0.7);
     --color-bg-container-hover: rgba(15, 28, 56, 0.8);
-    --color-border: rgba(255, 255, 255, 0.05);
+    --color-border: rgba(255, 255, 255, 0.08);
     --color-accent-gold: #D4AF37;
     --color-accent-gold-glow: rgba(212, 175, 55, 0.25);
     --color-accent-glow: #3B82F6;
     --color-accent-purple: #8B5CF6;
 
-    /* Legacy Theme Variables */
+    /* Theme Variables */
     --sidebar-bg: #070D1E;
     --sidebar-hover: rgba(255, 255, 255, 0.08);
     --primary-blue: #3B82F6;
     --primary-blue-hover: #2563EB;
     --accent-gold: #D4AF37;
     --bg-color: #050A19;
-    --card-bg: rgba(10, 20, 40, 0.7);
+    --card-bg: rgba(13, 23, 42, 0.78);
+    --top-header-bg: rgba(10, 18, 38, 0.85);
 
     --text-dark: #FFFFFF;
-    --text-muted: #A0A9BF;
+    --text-muted: #94A3BF;
     --text-light: #64748B;
 
-    --border-color: rgba(255, 255, 255, 0.05);
+    --border-color: rgba(255, 255, 255, 0.08);
     --border-radius: 12px;
     --border-radius-lg: 16px;
 
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 15px rgba(5, 10, 25, 0.4);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
 
     /* Semantic Colors */
     --danger-color: #ef4444;
-    --danger-bg: rgba(239, 68, 68, 0.15);
+    --danger-bg: rgba(239, 68, 68, 0.18);
     --warning-color: #f59e0b;
-    --warning-bg: rgba(245, 158, 11, 0.15);
+    --warning-bg: rgba(245, 158, 11, 0.18);
     --success-color: #10b981;
-    --success-bg: rgba(16, 185, 129, 0.15);
+    --success-bg: rgba(16, 185, 129, 0.18);
     --info-color: #0ea5e9;
-    --info-bg: rgba(14, 165, 233, 0.15);
+    --info-bg: rgba(14, 165, 233, 0.18);
     --purple-color: #8b5cf6;
-    --purple-bg: rgba(139, 92, 246, 0.15);
+    --purple-bg: rgba(139, 92, 246, 0.18);
+
+    --table-header-bg: rgba(19, 31, 56, 0.9);
+    --table-row-hover: rgba(255, 255, 255, 0.04);
 
     --transition: all 0.2s ease-in-out;
 }
 
 :root[data-theme="dark"] {
-    --bg-color: #0f172a;
-    --card-bg: #1e293b;
+    --bg-color: #050a19;
+    --card-bg: rgba(15, 23, 42, 0.85);
+    --top-header-bg: rgba(7, 13, 30, 0.9);
     --text-dark: #f8fafc;
     --text-muted: #94a3b8;
     --text-light: #64748b;
-    --border-color: #334155;
-    --sidebar-bg: #020617;
-    --danger-bg: rgba(239, 68, 68, 0.1);
-    --warning-bg: rgba(245, 158, 11, 0.1);
-    --success-bg: rgba(16, 185, 129, 0.1);
-    --info-bg: rgba(14, 165, 233, 0.1);
-    --purple-bg: rgba(139, 92, 246, 0.1);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --sidebar-bg: #040814;
+    --table-header-bg: rgba(15, 23, 42, 0.95);
+    --table-row-hover: rgba(255, 255, 255, 0.04);
+}
+
+:root[data-theme="light"] {
+    --bg-color: #f1f5f9;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --top-header-bg: rgba(255, 255, 255, 0.92);
+    --sidebar-bg: #0f172a;
+    --text-dark: #0f172a;
+    --text-muted: #475569;
+    --text-light: #64748b;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --table-header-bg: #f8fafc;
+    --table-row-hover: #f1f5f9;
 }
 
 body {
     font-family: 'Poppins', sans-serif;
-    background:
-        linear-gradient(135deg, rgba(30, 77, 140, 0.86) 0%, rgba(15, 23, 42, 0.78) 100%),
-        url('https://media.licdn.com/dms/image/v2/C511BAQFuu_54hzrFSA/company-background_10000/company-background_10000/0/1586942378867/zeal_institutes_cover?e=2147483647&v=beta&t=HyCIB1p39JKgcVslKpNTRej06rPXOAKxxi4a7ohUSOE') center/cover no-repeat;
+    background-color: #050a18;
+    background-image: 
+        radial-gradient(at 15% 15%, rgba(59, 130, 246, 0.18) 0px, transparent 50%),
+        radial-gradient(at 85% 20%, rgba(139, 92, 246, 0.16) 0px, transparent 45%),
+        radial-gradient(at 50% 80%, rgba(16, 185, 129, 0.1) 0px, transparent 55%),
+        radial-gradient(at 85% 85%, rgba(212, 175, 55, 0.12) 0px, transparent 50%),
+        linear-gradient(135deg, #050a18 0%, #0a1329 50%, #060c1c 100%);
+    background-attachment: fixed;
     color: var(--text-dark);
     display: flex;
     min-height: 100vh;
     overflow-x: hidden;
-    background-attachment: fixed;
 }
 
 a {
@@ -208,15 +227,14 @@ ul {
     flex-direction: column;
     min-height: 100vh;
     transition: var(--transition);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-    backdrop-filter: blur(2px);
+    background: transparent;
 }
 
 /* Top Header */
 .top-header {
     height: 70px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(14px);
+    background: var(--top-header-bg);
+    backdrop-filter: blur(16px);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -224,8 +242,8 @@ ul {
     position: sticky;
     top: 0;
     z-index: 99;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 24px rgba(2, 6, 23, 0.12);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .header-left .menu-toggle {
@@ -298,23 +316,23 @@ ul {
 
 .welcome-section {
     margin-bottom: 2rem;
-    padding: 1.5rem 1.75rem;
+    padding: 1.75rem 2rem;
     border-radius: 20px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 245, 232, 0.9));
-    backdrop-filter: blur(18px);
-    box-shadow: 0 12px 30px rgba(2, 6, 23, 0.14);
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    background: linear-gradient(135deg, rgba(24, 45, 88, 0.75), rgba(11, 20, 42, 0.85));
+    backdrop-filter: blur(20px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(212, 175, 55, 0.35);
 }
 
 .welcome-section h1 {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 0.25rem;
+    color: #ffffff;
+    margin-bottom: 0.35rem;
 }
 
 .welcome-section p {
-    color: #475569;
+    color: #cbd5e1;
     font-size: 0.95rem;
 }
 
@@ -339,12 +357,13 @@ ul {
 
 /* Card General */
 .card {
-    background: rgba(255, 255, 255, 0.84);
+    background: var(--card-bg);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.65);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     padding: 1.5rem;
-    box-shadow: 0 10px 28px rgba(2, 6, 23, 0.12);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    color: var(--text-dark);
 }
 
 /* Profile Card */
@@ -485,12 +504,12 @@ ul {
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.86);
+    background: var(--card-bg);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     padding: 1.5rem;
-    box-shadow: 0 10px 28px rgba(2, 6, 23, 0.12);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
     display: flex;
     flex-direction: column;
     position: relative;
@@ -528,7 +547,7 @@ ul {
 
 .stat-label {
     font-size: 0.85rem;
-    color: var(--text-dark);
+    color: var(--text-muted);
     font-weight: 500;
     margin-bottom: 0.25rem;
 }
@@ -550,7 +569,7 @@ ul {
 
 /* Stat Variants */
 .stat-blue .stat-icon {
-    background: #f0f5ff;
+    background: rgba(59, 130, 246, 0.18);
     color: var(--primary-blue);
 }
 
@@ -643,7 +662,7 @@ ul {
     font-weight: 600;
     color: var(--text-muted);
     border-bottom: 1px solid var(--border-color);
-    background-color: #fafbfc;
+    background-color: var(--table-header-bg);
 }
 
 .data-table td {
@@ -659,7 +678,7 @@ ul {
 }
 
 .data-table tbody tr:hover {
-    background-color: #f8fafc;
+    background-color: var(--table-row-hover);
 }
 
 .td-id {
@@ -801,8 +820,8 @@ ul {
 
 /* Quick Help Card */
 .quick-help-card {
-    background-color: #f8faff;
-    border: 1px dashed #c2d5ff;
+    background: rgba(14, 165, 233, 0.08);
+    border: 1px dashed rgba(56, 189, 248, 0.35);
 }
 
 .help-header {
@@ -834,7 +853,7 @@ ul {
     display: none;
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px dashed #c2d5ff;
+    border-top: 1px dashed rgba(56, 189, 248, 0.35);
     flex-direction: column;
     gap: 0.65rem;
     animation: fadeInSupport 0.3s ease-in-out forwards;
