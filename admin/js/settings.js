@@ -1,24 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Theme logic (if not handled globally)
-    const themeSelector = document.getElementById('themeSelector');
-    if (themeSelector) {
-        themeSelector.addEventListener('change', (e) => {
-            const val = e.target.value;
-            // Simulated theme change (in reality, applies data-theme on body)
-            if (val === 'dark' || val === 'light') {
-                document.documentElement.setAttribute('data-theme', val);
-                localStorage.setItem('admin_theme', val);
-            } else {
-                localStorage.removeItem('admin_theme');
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                }
-            }
-        });
-    }
+
 
     // SLA Configuration Logic
     const slaHoursInput = document.getElementById('slaHoursInput');

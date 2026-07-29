@@ -1,31 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Theme Selector Logic ---
-    const themeSelector = document.getElementById('themeSelector');
-    if (themeSelector) {
-        // Sync select with current saved theme
-        const savedTheme = localStorage.getItem('theme') || 'system';
-        themeSelector.value = savedTheme;
 
-        // Handle changes
-        themeSelector.addEventListener('change', (e) => {
-            const selectedTheme = e.target.value;
-            localStorage.setItem('theme', selectedTheme);
-            
-            // Apply the theme directly
-            if (selectedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            } else if (selectedTheme === 'light') {
-                document.documentElement.setAttribute('data-theme', 'light');
-            } else {
-                // System default
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                }
-            }
-        });
-    }
 
     // --- Privacy Toggles Logic ---
     const togglePublicHide = document.getElementById('togglePublicHide');

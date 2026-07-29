@@ -23,29 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeSidebar) closeSidebar.addEventListener('click', closeMenu);
     if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeMenu);
 
-    // --- Theme Selector Logic ---
-    const themeSelector = document.getElementById('themeSelector');
-    if (themeSelector) {
-        const savedTheme = localStorage.getItem('theme') || 'system';
-        themeSelector.value = savedTheme;
 
-        themeSelector.addEventListener('change', (e) => {
-            const selectedTheme = e.target.value;
-            localStorage.setItem('theme', selectedTheme);
-            
-            if (selectedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            } else if (selectedTheme === 'light') {
-                document.documentElement.setAttribute('data-theme', 'light');
-            } else {
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                }
-            }
-        });
-    }
 
     // --- Password Management Modal Logic ---
     const btnChangePassword = document.getElementById('btnChangePassword');
