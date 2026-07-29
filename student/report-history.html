@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report History | Campus Issue Tracker</title>
     <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -24,6 +26,7 @@
             font-family: inherit;
             outline: none;
         }
+
         .header-actions {
             display: flex;
             gap: 1rem;
@@ -31,6 +34,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -82,7 +86,8 @@
             <div class="header-right">
                 <div class="user-profile">
                     <a href="profile.html">
-                        <img src="https://ui-avatars.com/api/?name=Student&background=0b132a&color=fff&rounded=true" alt="Profile" class="avatar" id="headerAvatar">
+                        <img src="https://ui-avatars.com/api/?name=Student&background=0b132a&color=fff&rounded=true"
+                            alt="Profile" class="avatar" id="headerAvatar">
                     </a>
                 </div>
             </div>
@@ -109,7 +114,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="data-table">
                         <thead>
@@ -126,13 +131,14 @@
                         <tbody id="historyTableBody">
                             <!-- Populated dynamically -->
                             <tr>
-                                <td colspan="7" style="text-align: center; padding: 2rem;">No complaints found in history.</td>
+                                <td colspan="7" style="text-align: center; padding: 2rem;">No complaints found in
+                                    history.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            
+
             <footer class="main-footer" style="margin-top: 2rem;">
                 <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
             </footer>
@@ -144,4 +150,5 @@
     <script src="js/profile-data.js"></script>
     <script src="js/complaints-data.js"></script>
 </body>
+
 </html>

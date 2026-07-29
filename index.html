@@ -206,10 +206,14 @@
                 </button>
             </div>
         </div>
-    </header>
+    <!-- Clickable Sticky Top Logo -->
+    <a href="index.html" class="fixed top-8 left-8 z-[1000] flex items-center gap-2 group cursor-pointer no-underline">
+      <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(99,102,241,0.3)]">💠</div>
+      <span class="text-xl font-black tracking-tighter text-white">CAMPUS<span class="text-indigo-400">TRACKER</span></span>
+    </a>
 
     <!-- Main Content Area -->
-    <main class="flex-grow pt-20">
+    <main class="flex-grow pt-20" id="mainDashboard">
 
         <!-- VIEWPORT-LOCKED CINEMATIC DOM SCROLL TRACK STRUCTURE -->
         <div id="scroll-container" class="relative w-full h-[450vh]">
@@ -352,12 +356,79 @@
 
     </main>
 
+    <!-- PORTAL OVERLAY CONTAINER -->
+    <div id="portal-overlay" class="fixed inset-0 z-[999] bg-slate-950/90 backdrop-blur-xl flex flex-col items-center justify-center p-6 transition-all" style="display: none; opacity: 0; pointer-events: none;">
+      <button id="close-portal-btn" class="absolute top-8 right-8 z-[101] flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-all cursor-pointer backdrop-blur-md">
+        <span class="text-sm font-bold">✕ Return to Home</span>
+      </button>
+
+      <div id="portal-content-wrapper" class="w-full max-w-4xl text-center space-y-8 z-[100]">
+        <div class="space-y-3">
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Select Role Portal</h2>
+          <p class="text-slate-400 text-sm max-w-md mx-auto">Access your campus workspace to manage issues, view telemetry, or handle administrative tasks.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <a href="student/dashboard.html" class="p-6 rounded-2xl glass-card border border-slate-700/80 hover:border-indigo-500/80 transition-all text-decoration-none group hover:scale-[1.02]">
+            <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-indigo-500 group-hover:text-white transition-all shadow-lg">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Student Portal</h3>
+            <p class="text-xs text-slate-400">Report issues, track tickets & view campus resolution updates</p>
+          </a>
+
+          <a href="faculty/dashboard.html" class="p-6 rounded-2xl glass-card border border-slate-700/80 hover:border-purple-500/80 transition-all text-decoration-none group hover:scale-[1.02]">
+            <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-purple-500 group-hover:text-white transition-all shadow-lg">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Faculty Portal</h3>
+            <p class="text-xs text-slate-400">Classroom maintenance requests, lab issues & department tasks</p>
+          </a>
+
+          <a href="admin/dashboard.html" class="p-6 rounded-2xl glass-card border border-slate-700/80 hover:border-blue-500/80 transition-all text-decoration-none group hover:scale-[1.02]">
+            <div class="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-blue-500 group-hover:text-white transition-all shadow-lg">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Admin Portal</h3>
+            <p class="text-xs text-slate-400">Central dispatch, department management & analytics dashboard</p>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- MULTI-PHASE GSAP SCROLLTRIGGER SEQUENCE EXECUTION LOGIC -->
     <script>
         const DEFAULT_GITHUB_VIDEO_URL = "https://github.com/sohanfulkar-07/Campus-issue-tracker/raw/refs/heads/main/use_this_img_and_genrate_a_vid.mp4";
 
         document.addEventListener('DOMContentLoaded', () => {
             gsap.registerPlugin(ScrollTrigger);
+
+            const closeBtn = document.getElementById('close-portal-btn');
+            const overlay = document.getElementById('portal-overlay');
+            const mainDashboard = document.getElementById('mainDashboard') || document.querySelector('main');
+
+            if (closeBtn && overlay) {
+                closeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    // 1. Hide the overlay
+                    overlay.style.display = 'none';
+                    overlay.style.opacity = '0';
+                    overlay.style.pointerEvents = 'none';
+
+                    // 2. Bring back the main dashboard
+                    if (mainDashboard) {
+                        mainDashboard.style.display = 'flex';
+
+                        // Note: GSAP might have set opacity to 0 on the mainDashboard, so let's reset it safely
+                        if (typeof gsap !== 'undefined') {
+                            gsap.to(mainDashboard, { opacity: 1, duration: 0.3 });
+                        } else {
+                            mainDashboard.style.opacity = '1';
+                        }
+                    }
+                });
+            }
 
             // Center initial state of hero content wrapper
             gsap.set("#hero-content-wrapper", {

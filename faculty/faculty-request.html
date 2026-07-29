@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Faculty Request | Faculty Dashboard</title>
     <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -23,18 +25,18 @@
             margin-top: 1.5rem;
             border: 1px solid var(--border-color);
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--text-dark);
         }
-        
+
         .form-control {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -46,18 +48,18 @@
             font-size: 0.95rem;
             transition: var(--transition);
         }
-        
+
         .form-control:focus {
             outline: none;
             border-color: var(--primary-blue);
             box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
         }
-        
+
         textarea.form-control {
             resize: vertical;
             min-height: 120px;
         }
-        
+
         .btn-submit {
             background-color: var(--primary-blue);
             color: #fff;
@@ -72,12 +74,12 @@
             gap: 0.5rem;
             font-size: 1rem;
         }
-        
+
         .btn-submit:hover {
             background-color: var(--primary-blue-hover);
             transform: translateY(-1px);
         }
-        
+
         .btn-submit:active {
             transform: translateY(0);
         }
@@ -95,17 +97,25 @@
             border: 1px solid rgba(16, 185, 129, 0.2);
             animation: fadeInDown 0.3s ease-out;
         }
-        
+
         .success-message.active {
             display: flex;
         }
-        
+
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -127,7 +137,7 @@
             <a href="report-history.html" class="nav-item">
                 <i class="fas fa-history"></i> <span>Report Resolved History</span>
             </a>
-            
+
             <a href="settings.html" class="nav-item">
                 <i class="fas fa-cog"></i> <span>Settings</span>
             </a>
@@ -164,13 +174,15 @@
             <div class="request-form-card">
                 <div class="success-message" id="successMessage">
                     <i class="fas fa-check-circle" style="font-size: 1.25rem;"></i>
-                    <span>Your request has been submitted successfully! The administration will review it shortly.</span>
+                    <span>Your request has been submitted successfully! The administration will review it
+                        shortly.</span>
                 </div>
 
                 <form id="facultyRequestForm">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                         <div class="form-group">
-                            <label for="requestType">Request Category <span style="color: var(--danger-color);">*</span></label>
+                            <label for="requestType">Request Category <span
+                                    style="color: var(--danger-color);">*</span></label>
                             <select id="requestType" class="form-control" required>
                                 <option value="" disabled selected>Select category...</option>
                                 <option value="IT Support">IT Equipment (Laptops, Projectors)</option>
@@ -182,7 +194,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="urgency">Urgency Level <span style="color: var(--danger-color);">*</span></label>
+                            <label for="urgency">Urgency Level <span
+                                    style="color: var(--danger-color);">*</span></label>
                             <select id="urgency" class="form-control" required>
                                 <option value="Normal" selected>Normal</option>
                                 <option value="High">High (Needed within 48 hrs)</option>
@@ -192,8 +205,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="requestTitle">Request Summary / Item Name <span style="color: var(--danger-color);">*</span></label>
-                        <input type="text" id="requestTitle" class="form-control" placeholder="E.g., 5 Boxes of Whiteboard Markers" required>
+                        <label for="requestTitle">Request Summary / Item Name <span
+                                style="color: var(--danger-color);">*</span></label>
+                        <input type="text" id="requestTitle" class="form-control"
+                            placeholder="E.g., 5 Boxes of Whiteboard Markers" required>
                     </div>
 
                     <div class="form-group" style="width: 150px;">
@@ -202,8 +217,11 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="requestDesc">Detailed Justification / Description <span style="color: var(--danger-color);">*</span></label>
-                        <textarea id="requestDesc" class="form-control" placeholder="Please provide details on why this is needed, specific models, etc." required></textarea>
+                        <label for="requestDesc">Detailed Justification / Description <span
+                                style="color: var(--danger-color);">*</span></label>
+                        <textarea id="requestDesc" class="form-control"
+                            placeholder="Please provide details on why this is needed, specific models, etc."
+                            required></textarea>
                     </div>
 
                     <button type="submit" class="btn-submit" id="submitBtn">
@@ -211,7 +229,7 @@
                     </button>
                 </form>
             </div>
-            
+
             <footer class="main-footer" style="margin-top: 2rem;">
                 <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
             </footer>
@@ -223,4 +241,5 @@
     <script src="js/profile-data.js"></script> <!-- To load header avatar -->
     <script src="js/faculty-request.js"></script>
 </body>
+
 </html>

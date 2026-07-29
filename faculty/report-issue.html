@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Issue | Faculty Dashboard</title>
     <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -21,18 +23,18 @@
             padding: 2rem;
             max-width: 800px;
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             color: var(--text-dark);
             font-weight: 500;
         }
-        
+
         .form-control {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -44,23 +46,23 @@
             outline: none;
             transition: border-color 0.2s;
         }
-        
+
         .form-control:focus {
             border-color: var(--primary-blue);
         }
-        
+
         textarea.form-control {
             resize: vertical;
             min-height: 120px;
         }
-        
+
         .media-buttons {
             display: flex;
             gap: 1rem;
             margin-bottom: 1rem;
             flex-wrap: wrap;
         }
-        
+
         .media-btn {
             display: inline-flex;
             align-items: center;
@@ -74,19 +76,19 @@
             transition: all 0.2s;
             font-weight: 500;
         }
-        
+
         .media-btn:hover {
             border-color: var(--primary-blue);
             color: var(--primary-blue);
         }
-        
+
         .media-preview-container {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
             margin-top: 1rem;
         }
-        
+
         .media-preview-box {
             position: relative;
             width: 120px;
@@ -96,13 +98,14 @@
             background-color: var(--bg-color);
             border: 1px solid var(--border-color);
         }
-        
-        .media-preview-box img, .media-preview-box video {
+
+        .media-preview-box img,
+        .media-preview-box video {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .media-preview-box .remove-btn {
             position: absolute;
             top: 5px;
@@ -119,7 +122,7 @@
             cursor: pointer;
             font-size: 0.75rem;
         }
-        
+
         /* Camera Modal Overlay */
         .camera-modal {
             display: none;
@@ -128,17 +131,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 2000;
             justify-content: center;
             align-items: center;
             flex-direction: column;
         }
-        
+
         .camera-modal.active {
             display: flex;
         }
-        
+
         .camera-container {
             position: relative;
             width: 90%;
@@ -147,12 +150,12 @@
             border-radius: 12px;
             overflow: hidden;
         }
-        
+
         #cameraStream {
             width: 100%;
             display: block;
         }
-        
+
         .camera-controls {
             display: flex;
             justify-content: center;
@@ -160,7 +163,7 @@
             padding: 1.5rem;
             background: #111;
         }
-        
+
         .capture-btn {
             background-color: #fff;
             color: #000;
@@ -174,7 +177,7 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .record-btn {
             background-color: #ef4444;
             color: #fff;
@@ -188,17 +191,25 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .record-btn.recording {
             animation: pulse 1.5s infinite;
         }
-        
+
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
-        
+
         .close-camera-btn {
             position: absolute;
             top: 20px;
@@ -210,9 +221,9 @@
             cursor: pointer;
             z-index: 2010;
         }
-
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -260,7 +271,8 @@
             </div>
             <div class="header-right">
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Faculty&background=0b132a&color=fff&rounded=true" alt="Profile" class="avatar" id="headerAvatar">
+                    <img src="https://ui-avatars.com/api/?name=Faculty&background=0b132a&color=fff&rounded=true"
+                        alt="Profile" class="avatar" id="headerAvatar">
                 </div>
             </div>
         </header>
@@ -276,9 +288,10 @@
                 <form id="issueForm">
                     <div class="form-group">
                         <label for="issueTitle">Issue Subject/Title</label>
-                        <input type="text" id="issueTitle" class="form-control" required placeholder="e.g. Broken projector in Room 302">
+                        <input type="text" id="issueTitle" class="form-control" required
+                            placeholder="e.g. Broken projector in Room 302">
                     </div>
-                    
+
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                         <div class="form-group">
                             <label for="issueCategory">Category</label>
@@ -293,19 +306,22 @@
                         </div>
                         <div class="form-group">
                             <label for="issueLocation">Location</label>
-                            <input type="text" id="issueLocation" class="form-control" required placeholder="e.g. Main Building, 3rd Floor">
+                            <input type="text" id="issueLocation" class="form-control" required
+                                placeholder="e.g. Main Building, 3rd Floor">
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="issueDescription">Description</label>
-                        <textarea id="issueDescription" class="form-control" required placeholder="Describe the issue in detail..."></textarea>
+                        <textarea id="issueDescription" class="form-control" required
+                            placeholder="Describe the issue in detail..."></textarea>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Media Attachments (Optional)</label>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Add photos or videos to help us understand the issue better.</p>
-                        
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Add photos or
+                            videos to help us understand the issue better.</p>
+
                         <div class="media-buttons">
                             <button type="button" class="media-btn" id="btnTakePhoto">
                                 <i class="fas fa-camera"></i> Take Photo
@@ -313,19 +329,21 @@
                             <button type="button" class="media-btn" id="btnRecordVideo">
                                 <i class="fas fa-video"></i> Record Video
                             </button>
-                            <button type="button" class="media-btn" id="btnUploadFile" onclick="document.getElementById('fileUploadInput').click()">
+                            <button type="button" class="media-btn" id="btnUploadFile"
+                                onclick="document.getElementById('fileUploadInput').click()">
                                 <i class="fas fa-upload"></i> Upload File
                             </button>
                             <input type="file" id="fileUploadInput" accept="image/*,video/*" style="display: none;">
                         </div>
-                        
+
                         <div class="media-preview-container" id="mediaPreviewContainer">
                             <!-- Preview thumbnails will appear here -->
                         </div>
                     </div>
-                    
+
                     <div class="form-group" style="margin-top: 2rem;">
-                        <button type="submit" class="btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem;" id="submitIssueBtn">
+                        <button type="submit" class="btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem;"
+                            id="submitIssueBtn">
                             Submit Issue Report
                         </button>
                     </div>
@@ -356,4 +374,5 @@
     <script src="js/dashboard.js"></script> <!-- Reusing sidebar toggles -->
     <script src="js/report-issue.js"></script>
 </body>
+
 </html>

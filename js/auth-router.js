@@ -2,7 +2,7 @@
  * Global Authentication & Role-Based Routing
  * Ensures users can only access their authorized dashboard.
  */
-(function() {
+(function () {
     const path = window.location.pathname.toLowerCase();
     let requiredRole = null;
     let loginRedirectPath = '../index.html';
@@ -33,7 +33,7 @@
         master = master.map(ticket => {
             if (ticket.status && typeof ticket.status === 'object') {
                 let state = ticket.status.state || 'New / Unassigned';
-                if(state === 'Open') state = 'New / Unassigned';
+                if (state === 'Open') state = 'New / Unassigned';
                 ticket.status = state;
                 updated = true;
             }
@@ -55,8 +55,8 @@
     }
 
     // Expose global logout function
-    window.unifiedLogout = function(e) {
-        if(e) e.preventDefault();
+    window.unifiedLogout = function (e) {
+        if (e) e.preventDefault();
         // Keep master tickets, but clear session identity
         localStorage.removeItem('currentUserRole');
         sessionStorage.clear();

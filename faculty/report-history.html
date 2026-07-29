@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Resolved History | Faculty Dashboard</title>
     <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/dashboard.css">
-    
+
     <!-- Auth Router -->
     <script src="../js/auth-router.js"></script>
     <!-- Theme Script -->
     <script src="js/theme.js"></script>
 </head>
+
 <body>
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -63,7 +66,8 @@
             </div>
             <div class="header-right">
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Faculty&background=0b132a&color=fff&rounded=true" alt="Profile" class="avatar" id="headerAvatar">
+                    <img src="https://ui-avatars.com/api/?name=Faculty&background=0b132a&color=fff&rounded=true"
+                        alt="Profile" class="avatar" id="headerAvatar">
                 </div>
             </div>
         </header>
@@ -80,7 +84,7 @@
                 <div class="card-header border-bottom">
                     <h2>Resolved Issues</h2>
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="data-table">
                         <thead>
@@ -97,13 +101,14 @@
                         <tbody id="resolvedTableBody">
                             <!-- Populated dynamically -->
                             <tr>
-                                <td colspan="7" style="text-align: center; padding: 2rem;">No resolved issues found.</td>
+                                <td colspan="7" style="text-align: center; padding: 2rem;">No resolved issues found.
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            
+
             <footer class="main-footer" style="margin-top: 2rem;">
                 <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
             </footer>
@@ -114,4 +119,5 @@
     <script src="js/dashboard.js"></script> <!-- Sidebar logic -->
     <script src="js/report-history.js"></script>
 </body>
+
 </html>

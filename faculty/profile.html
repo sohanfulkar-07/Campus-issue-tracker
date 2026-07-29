@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | Faculty Dashboard</title>
     <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -19,6 +21,7 @@
             max-width: 800px;
             margin-top: 2rem;
         }
+
         .profile-card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
@@ -26,39 +29,47 @@
             overflow: hidden;
             border: 1px solid var(--border-color);
         }
+
         .profile-header-bg {
             height: 120px;
             background: linear-gradient(135deg, #0b132a 0%, #1e293b 100%);
             position: relative;
         }
+
         .profile-avatar-container {
             position: relative;
             margin-top: -60px;
             margin-left: 2rem;
             display: inline-block;
         }
+
         .profile-avatar-container img {
             border: 4px solid var(--card-bg);
             background: var(--card-bg);
         }
+
         .profile-info {
             padding: 1.5rem 2rem;
         }
+
         .profile-name-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
+
         .profile-name-row h2 {
             font-size: 1.5rem;
             color: var(--text-dark);
         }
+
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
@@ -66,6 +77,7 @@
             color: var(--text-muted);
             font-weight: 500;
         }
+
         .form-control {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -75,33 +87,40 @@
             color: var(--text-dark);
             font-family: inherit;
         }
+
         .form-control:read-only {
             background-color: #f8fafc;
             border-color: transparent;
             font-weight: 500;
         }
+
         .form-control:not(:read-only):focus {
             outline: none;
             border-color: var(--primary-blue);
             box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
         }
-        
+
         /* Modal Styles */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             justify-content: center;
             align-items: center;
             opacity: 0;
             transition: opacity 0.3s;
         }
+
         .modal-overlay.active {
             display: flex;
             opacity: 1;
         }
+
         .modal-card {
             background: var(--card-bg);
             padding: 2rem;
@@ -112,14 +131,17 @@
             transform: translateY(20px);
             transition: transform 0.3s;
         }
+
         .modal-overlay.active .modal-card {
             transform: translateY(0);
         }
+
         .modal-title {
             font-size: 1.25rem;
             margin-bottom: 1rem;
             color: var(--text-dark);
         }
+
         .error-msg {
             color: var(--danger-color);
             font-size: 0.85rem;
@@ -128,6 +150,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -187,14 +210,18 @@
                     <div class="profile-avatar-container">
                         <img src="" alt="Avatar" width="120" height="120" style="border-radius: 50%;" id="pageAvatar">
                     </div>
-                    
+
                     <div class="profile-info">
                         <div class="profile-name-row">
                             <h2 id="displayName">Faculty Name</h2>
                             <div>
-                                <button class="btn-primary" id="btnEditProfile"><i class="fas fa-pen"></i> Edit Profile</button>
-                                <button class="btn-primary" id="btnSaveProfile" style="display: none; background: var(--success-color);"><i class="fas fa-save"></i> Save Changes</button>
-                                <button class="btn-outline-sm" id="btnCancelEdit" style="display: none; margin-left: 0.5rem;">Cancel</button>
+                                <button class="btn-primary" id="btnEditProfile"><i class="fas fa-pen"></i> Edit
+                                    Profile</button>
+                                <button class="btn-primary" id="btnSaveProfile"
+                                    style="display: none; background: var(--success-color);"><i class="fas fa-save"></i>
+                                    Save Changes</button>
+                                <button class="btn-outline-sm" id="btnCancelEdit"
+                                    style="display: none; margin-left: 0.5rem;">Cancel</button>
                             </div>
                         </div>
 
@@ -239,17 +266,21 @@
     <!-- Password Verification Modal -->
     <div class="modal-overlay" id="passwordModal">
         <div class="modal-card">
-            <h3 class="modal-title"><i class="fas fa-lock" style="color: var(--warning-color); margin-right: 0.5rem;"></i> Security Verification</h3>
-            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">Please enter your login password to unlock profile editing.</p>
-            
+            <h3 class="modal-title"><i class="fas fa-lock"
+                    style="color: var(--warning-color); margin-right: 0.5rem;"></i> Security Verification</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">Please enter your login
+                password to unlock profile editing.</p>
+
             <div class="form-group">
-                <input type="password" id="verifyPasswordInput" class="form-control" placeholder="Enter password" style="background: white;">
+                <input type="password" id="verifyPasswordInput" class="form-control" placeholder="Enter password"
+                    style="background: white;">
                 <div class="error-msg" id="passwordErrorMsg">Incorrect password. Please try again.</div>
             </div>
-            
+
             <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
                 <button class="btn-outline-sm" id="btnCancelModal" style="flex: 1; padding: 0.75rem;">Cancel</button>
-                <button class="btn-primary" id="btnVerifyPassword" style="flex: 1; padding: 0.75rem;">Verify & Unlock</button>
+                <button class="btn-primary" id="btnVerifyPassword" style="flex: 1; padding: 0.75rem;">Verify &
+                    Unlock</button>
             </div>
         </div>
     </div>
@@ -259,4 +290,5 @@
     <script src="js/profile-data.js"></script> <!-- To load header avatar -->
     <script src="js/profile-edit.js"></script>
 </body>
+
 </html>

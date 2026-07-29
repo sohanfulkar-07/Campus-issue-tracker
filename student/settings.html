@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Settings | Campus Issue Tracker</title>
     <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -23,14 +25,17 @@
             margin-top: 2rem;
             align-items: start;
         }
+
         .settings-left {
             display: flex;
             flex-direction: column;
             gap: 2rem;
         }
+
         .settings-card {
             border: 1px solid var(--border-color);
         }
+
         .details-panel {
             border: 1px solid var(--border-color);
             background: var(--card-bg);
@@ -38,17 +43,21 @@
             border-radius: 14px;
             display: none;
         }
+
         .details-panel.active {
             display: block;
         }
+
         .details-panel h2 {
             margin-top: 0;
         }
+
         .details-list {
             margin-top: 1.5rem;
             display: grid;
             gap: 1rem;
         }
+
         .details-row {
             display: flex;
             justify-content: space-between;
@@ -58,47 +67,56 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
+
         .details-label {
             color: var(--text-muted);
             font-size: 0.95rem;
         }
+
         .details-value {
             font-weight: 600;
             color: var(--text-color);
         }
+
         .settings-card .card-header {
             padding: 1.25rem 1.5rem;
             border-bottom: 1px solid var(--border-color);
         }
+
         .settings-card .card-header h2 {
             font-size: 1.1rem;
             margin: 0;
             color: var(--text-color);
         }
+
         .settings-list {
             padding: 1.5rem;
         }
+
         .setting-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .setting-item h4 {
             margin: 0;
             font-size: 1rem;
             font-weight: 500;
         }
+
         .setting-item p {
             color: var(--text-light);
             font-size: 0.85rem;
             margin: 0.25rem 0 0 0;
         }
+
         .setting-divider {
             border: 0;
             border-top: 1px solid var(--border-color);
             margin: 1.5rem 0;
         }
-        
+
         /* Toggle Switch CSS */
         .toggle-switch {
             position: relative;
@@ -106,11 +124,13 @@
             width: 44px;
             height: 24px;
         }
+
         .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
+
         .slider {
             position: absolute;
             cursor: pointer;
@@ -122,6 +142,7 @@
             transition: .4s;
             border-radius: 24px;
         }
+
         .slider:before {
             position: absolute;
             content: "";
@@ -133,13 +154,15 @@
             transition: .4s;
             border-radius: 50%;
         }
-        input:checked + .slider {
+
+        input:checked+.slider {
             background-color: var(--primary-blue);
         }
-        input:checked + .slider:before {
+
+        input:checked+.slider:before {
             transform: translateX(20px);
         }
-        
+
         .custom-select {
             padding: 0.5rem 1rem;
             border: 1px solid var(--border-color);
@@ -149,7 +172,7 @@
             outline: none;
             font-family: inherit;
         }
-        
+
         .btn-outline-sm {
             padding: 0.5rem 1rem;
             border: 1px solid var(--primary-blue);
@@ -160,10 +183,12 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
+
         .btn-outline-sm:hover {
             background: var(--primary-blue);
             color: white;
         }
+
         .btn-primary-sm {
             padding: 0.55rem 1.1rem;
             background-color: var(--primary-blue);
@@ -174,9 +199,11 @@
             cursor: pointer;
             transition: background-color 0.2s ease;
         }
+
         .btn-primary-sm:hover {
             background-color: var(--primary-blue-hover);
         }
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -184,7 +211,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
             z-index: 1000;
             justify-content: center;
@@ -192,10 +219,12 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
+
         .modal-overlay.active {
             display: flex;
             opacity: 1;
         }
+
         .modal-card {
             background: var(--card-bg);
             padding: 2rem;
@@ -208,9 +237,11 @@
             color: var(--text-dark);
             border: 1px solid var(--border-color);
         }
+
         .modal-overlay.active .modal-card {
             transform: translateY(0);
         }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -219,6 +250,7 @@
             padding-bottom: 0.75rem;
             border-bottom: 1px solid var(--border-color);
         }
+
         .modal-header h3 {
             font-size: 1.15rem;
             color: var(--text-dark);
@@ -227,6 +259,7 @@
             align-items: center;
             font-weight: 600;
         }
+
         .modal-close {
             background: none;
             border: none;
@@ -238,13 +271,16 @@
             border-radius: 6px;
             transition: var(--transition);
         }
+
         .modal-close:hover {
             color: var(--danger-color);
             background-color: var(--danger-bg);
         }
+
         .form-group {
             margin-bottom: 1.15rem;
         }
+
         .form-group label {
             display: block;
             font-size: 0.85rem;
@@ -252,11 +288,13 @@
             margin-bottom: 0.4rem;
             color: var(--text-dark);
         }
+
         .password-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
         }
+
         .form-control {
             width: 100%;
             padding: 0.65rem 2.5rem 0.65rem 0.85rem;
@@ -269,10 +307,12 @@
             outline: none;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
+
         .form-control:focus {
             border-color: var(--primary-blue);
             box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
         }
+
         .btn-toggle-pwd {
             position: absolute;
             right: 0.75rem;
@@ -286,9 +326,11 @@
             align-items: center;
             justify-content: center;
         }
+
         .btn-toggle-pwd:hover {
             color: var(--primary-blue);
         }
+
         .field-error {
             color: var(--danger-color);
             font-size: 0.78rem;
@@ -296,6 +338,7 @@
             display: none;
             font-weight: 500;
         }
+
         .alert-box {
             padding: 0.75rem 1rem;
             border-radius: 8px;
@@ -306,24 +349,28 @@
             gap: 0.5rem;
             font-weight: 500;
         }
+
         .alert-box.success {
             display: flex;
             background-color: var(--success-bg);
             color: var(--success-color);
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
+
         .alert-box.error {
             display: flex;
             background-color: var(--danger-bg);
             color: var(--danger-color);
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
+
         .password-strength {
             margin-top: 0.4rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
+
         .strength-meter {
             flex: 1;
             height: 4px;
@@ -331,11 +378,13 @@
             border-radius: 2px;
             overflow: hidden;
         }
+
         .strength-bar {
             height: 100%;
             width: 0%;
             transition: width 0.3s ease, background-color 0.3s ease;
         }
+
         .strength-text {
             font-size: 0.75rem;
             color: var(--text-muted);
@@ -343,6 +392,7 @@
             text-align: right;
             font-weight: 500;
         }
+
         .modal-actions {
             display: flex;
             gap: 0.75rem;
@@ -350,6 +400,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -401,7 +452,8 @@
             <div class="header-right">
                 <div class="user-profile">
                     <a href="profile.html">
-                        <img src="https://ui-avatars.com/api/?name=Student&background=0b132a&color=fff&rounded=true" alt="Profile" class="avatar" id="headerAvatar">
+                        <img src="https://ui-avatars.com/api/?name=Student&background=0b132a&color=fff&rounded=true"
+                            alt="Profile" class="avatar" id="headerAvatar">
                     </a>
                 </div>
             </div>
@@ -418,103 +470,105 @@
             <!-- Settings Sections -->
             <div class="settings-grid">
                 <div class="settings-left">
-                <!-- Account & Identity -->
-                <div class="card settings-card">
-                    <div class="card-header border-bottom">
-                        <h2>Account & Identity</h2>
-                    </div>
-                    <div class="settings-list">
-                        <div class="setting-item">
-                            <div>
-                                <h4>Password Management</h4>
-                                <p>Change the account login password.</p>
-                            </div>
-                            <button class="btn-primary-sm" id="btnChangePassword" type="button">Change Password</button>
+                    <!-- Account & Identity -->
+                    <div class="card settings-card">
+                        <div class="card-header border-bottom">
+                            <h2>Account & Identity</h2>
                         </div>
-                        <hr class="setting-divider">
-                        <div class="setting-item">
-                            <div>
-                                <h4>Campus Details</h4>
-                                <p>View student ID, current hostel room, and department.</p>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Password Management</h4>
+                                    <p>Change the account login password.</p>
+                                </div>
+                                <button class="btn-primary-sm" id="btnChangePassword" type="button">Change
+                                    Password</button>
                             </div>
-                            <button class="btn-outline-sm" id="btnViewCampusDetails" type="button">View Details</button>
+                            <hr class="setting-divider">
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Campus Details</h4>
+                                    <p>View student ID, current hostel room, and department.</p>
+                                </div>
+                                <button class="btn-outline-sm" id="btnViewCampusDetails" type="button">View
+                                    Details</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Display & Interface -->
+                    <div class="card settings-card">
+                        <div class="card-header border-bottom">
+                            <h2>Display & Interface</h2>
+                        </div>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Theme Selector</h4>
+                                    <p>Toggle light mode, dark mode, or system default.</p>
+                                </div>
+                                <select class="custom-select" id="themeSelector">
+                                    <option value="system">System Default</option>
+                                    <option value="light">Light Mode</option>
+                                    <option value="dark">Dark Mode</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Privacy & Anonymity -->
+                    <div class="card settings-card">
+                        <div class="card-header border-bottom">
+                            <h2>Privacy & Anonymity</h2>
+                        </div>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Public Hide</h4>
+                                    <p>Toggle to mask your name on public complaint feeds.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <hr class="setting-divider">
+                            <div class="setting-item">
+                                <div>
+                                    <h4>Admin Visibility</h4>
+                                    <p>Set which profile data campus admins can view.</p>
+                                </div>
+                                <button class="btn-outline-sm">Manage Visibility</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="details-panel" id="campusDetailsPanel">
+                        <h2>Campus Details</h2>
+                        <p class="text-muted">View student ID, current hostel room, and department.</p>
+                        <div class="details-list">
+                            <div class="details-row">
+                                <span class="details-label">Student ID</span>
+                                <span class="details-value" id="campusStudentId">--</span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-label">Hostel Room</span>
+                                <span class="details-value" id="campusHostelRoom">--</span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-label">Department</span>
+                                <span class="details-value" id="campusDepartment">--</span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-label">Academic Year</span>
+                                <span class="details-value" id="campusAcademicYear">--</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Display & Interface -->
-                <div class="card settings-card">
-                    <div class="card-header border-bottom">
-                        <h2>Display & Interface</h2>
-                    </div>
-                    <div class="settings-list">
-                        <div class="setting-item">
-                            <div>
-                                <h4>Theme Selector</h4>
-                                <p>Toggle light mode, dark mode, or system default.</p>
-                            </div>
-                            <select class="custom-select" id="themeSelector">
-                                <option value="system">System Default</option>
-                                <option value="light">Light Mode</option>
-                                <option value="dark">Dark Mode</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Privacy & Anonymity -->
-                <div class="card settings-card">
-                    <div class="card-header border-bottom">
-                        <h2>Privacy & Anonymity</h2>
-                    </div>
-                    <div class="settings-list">
-                        <div class="setting-item">
-                            <div>
-                                <h4>Public Hide</h4>
-                                <p>Toggle to mask your name on public complaint feeds.</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <hr class="setting-divider">
-                        <div class="setting-item">
-                            <div>
-                                <h4>Admin Visibility</h4>
-                                <p>Set which profile data campus admins can view.</p>
-                            </div>
-                            <button class="btn-outline-sm">Manage Visibility</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="details-panel" id="campusDetailsPanel">
-                    <h2>Campus Details</h2>
-                    <p class="text-muted">View student ID, current hostel room, and department.</p>
-                    <div class="details-list">
-                        <div class="details-row">
-                            <span class="details-label">Student ID</span>
-                            <span class="details-value" id="campusStudentId">--</span>
-                        </div>
-                        <div class="details-row">
-                            <span class="details-label">Hostel Room</span>
-                            <span class="details-value" id="campusHostelRoom">--</span>
-                        </div>
-                        <div class="details-row">
-                            <span class="details-label">Department</span>
-                            <span class="details-value" id="campusDepartment">--</span>
-                        </div>
-                        <div class="details-row">
-                            <span class="details-label">Academic Year</span>
-                            <span class="details-value" id="campusAcademicYear">--</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <footer class="main-footer" style="margin-top: 2rem;">
-                <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
-            </footer>
+                <footer class="main-footer" style="margin-top: 2rem;">
+                    <p>&copy; 2024 Campus Issue Tracker. All rights reserved.</p>
+                </footer>
         </main>
     </div>
 
@@ -522,7 +576,8 @@
     <div class="modal-overlay" id="changePasswordModal">
         <div class="modal-card">
             <div class="modal-header">
-                <h3><i class="fas fa-key" style="color: var(--primary-blue); margin-right: 0.5rem;"></i> Change Password</h3>
+                <h3><i class="fas fa-key" style="color: var(--primary-blue); margin-right: 0.5rem;"></i> Change Password
+                </h3>
                 <button class="modal-close" id="btnClosePasswordModal" aria-label="Close modal">&times;</button>
             </div>
 
@@ -532,8 +587,10 @@
                 <div class="form-group">
                     <label for="currentPasswordInput">Current Password</label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="currentPasswordInput" class="form-control" placeholder="Enter current password" autocomplete="current-password">
-                        <button type="button" class="btn-toggle-pwd" data-target="currentPasswordInput" aria-label="Toggle password visibility">
+                        <input type="password" id="currentPasswordInput" class="form-control"
+                            placeholder="Enter current password" autocomplete="current-password">
+                        <button type="button" class="btn-toggle-pwd" data-target="currentPasswordInput"
+                            aria-label="Toggle password visibility">
                             <i class="far fa-eye"></i>
                         </button>
                     </div>
@@ -543,13 +600,17 @@
                 <div class="form-group">
                     <label for="newPasswordInput">New Password</label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="newPasswordInput" class="form-control" placeholder="Minimum 6 characters" autocomplete="new-password">
-                        <button type="button" class="btn-toggle-pwd" data-target="newPasswordInput" aria-label="Toggle password visibility">
+                        <input type="password" id="newPasswordInput" class="form-control"
+                            placeholder="Minimum 6 characters" autocomplete="new-password">
+                        <button type="button" class="btn-toggle-pwd" data-target="newPasswordInput"
+                            aria-label="Toggle password visibility">
                             <i class="far fa-eye"></i>
                         </button>
                     </div>
                     <div class="password-strength" id="passwordStrength" style="display: none;">
-                        <div class="strength-meter"><div class="strength-bar" id="strengthBar"></div></div>
+                        <div class="strength-meter">
+                            <div class="strength-bar" id="strengthBar"></div>
+                        </div>
                         <span class="strength-text" id="strengthText"></span>
                     </div>
                     <div class="field-error" id="newPasswordError"></div>
@@ -558,8 +619,10 @@
                 <div class="form-group">
                     <label for="confirmPasswordInput">Confirm New Password</label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="confirmPasswordInput" class="form-control" placeholder="Re-enter new password" autocomplete="new-password">
-                        <button type="button" class="btn-toggle-pwd" data-target="confirmPasswordInput" aria-label="Toggle password visibility">
+                        <input type="password" id="confirmPasswordInput" class="form-control"
+                            placeholder="Re-enter new password" autocomplete="new-password">
+                        <button type="button" class="btn-toggle-pwd" data-target="confirmPasswordInput"
+                            aria-label="Toggle password visibility">
                             <i class="far fa-eye"></i>
                         </button>
                     </div>
@@ -567,8 +630,10 @@
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="btn-outline-sm" id="btnCancelPasswordModal" style="flex: 1; padding: 0.7rem;">Cancel</button>
-                    <button type="submit" class="btn-primary-sm" id="btnSavePassword" style="flex: 1; padding: 0.7rem;">Update Password</button>
+                    <button type="button" class="btn-outline-sm" id="btnCancelPasswordModal"
+                        style="flex: 1; padding: 0.7rem;">Cancel</button>
+                    <button type="submit" class="btn-primary-sm" id="btnSavePassword"
+                        style="flex: 1; padding: 0.7rem;">Update Password</button>
                 </div>
             </form>
         </div>
@@ -578,4 +643,5 @@
     <script src="js/settings.js"></script>
     <script src="js/profile-data.js"></script>
 </body>
+
 </html>
