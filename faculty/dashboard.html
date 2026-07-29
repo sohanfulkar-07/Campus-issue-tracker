@@ -226,10 +226,12 @@
                             <h2>Notifications</h2>
                             <a href="#" class="view-all-sm">View all</a>
                         </div>
-                        <div class="notifications-list" id="notificationsList">
-                            <!-- Populated dynamically -->
-                            <div style="text-align: center; padding: 1rem; color: var(--text-light);">No new
-                                notifications.</div>
+                        <div class="notifications-list" id="notificationList">
+                            <!-- Populated dynamically by Notifications Engine -->
+                            <div class="no-notif-placeholder">
+                                <i class="far fa-bell-slash"></i>
+                                <p>No new updates on your issues.</p>
+                            </div>
                         </div>
                     </div>
 
@@ -239,7 +241,7 @@
                             <i class="fas fa-headset"></i>
                             <h3>Quick Help</h3>
                         </div>
-                        <p>Need curriculum guidance or system help? We're here to assist you.</p>
+                        <p>Need assistance? We're here to help you with your issues.</p>
                         <button class="btn-primary w-100" id="contactSupportBtn">Contact Support</button>
                         <div class="support-details" id="supportDetails">
                             <div class="support-detail-item">
@@ -297,6 +299,8 @@
     <script src="js/dashboard.js"></script>
     <script src="js/dashboard-data.js"></script>
     <script src="js/profile-data.js"></script>
+    <!-- Multi-Status Notification Engine -->
+    <script src="js/notifications-engine.js"></script>
 </body>
 
 </html>

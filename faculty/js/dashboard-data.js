@@ -1,5 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Seed a sample ticket lifecycle if missing
+    const sampleComplaintId = 'ISSUE-243428';
+    const sampleComplaint = {
+        id: sampleComplaintId,
+        title: 'Projector failure in Lecture Hall 204',
+        category: 'Room / Lab Maintenance',
+        department: 'Maintenance Department',
+        location: 'Lecture Hall 204',
+        description: 'Faculty verified the issue and forwarded it to Maintenance for repair. The complaint has been resolved successfully.',
+        status: 'Resolved',
+        priority: 'High',
+        user: 'Student',
+        assignedTo: 'Maintenance Department',
+        verifiedBy: 'Faculty',
+        date: 'Jul 29, 2026',
+        fullDate: new Date().toISOString(),
+        resolutionHours: 4,
+        media: []
+    };
+
+    function ensureSampleComplaint() {
+        const complaintsStr = localStorage.getItem('campus_tickets_master');
+        const complaints = complaintsStr ? JSON.parse(complaintsStr) : [];
+        const exists = complaints.some(c => c.id === sampleComplaintId);
+        if (!exists) {
+            complaints.push(sampleComplaint);
+            localStorage.setItem('campus_tickets_master', JSON.stringify(complaints));
+        }
+    }
+
+    ensureSampleComplaint();
+
     // Function to render everything
     function renderDashboard() {
         const complaintsStr = localStorage.getItem('campus_tickets_master');
