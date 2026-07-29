@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Campus Issue Management System | Breakthrough Operations</title>
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -22,12 +23,15 @@
             }
         }
     </script>
+    
     <!-- GSAP & ScrollTrigger CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
     <!-- FontAwesome Icons & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
         * {
             box-sizing: border-box;
@@ -35,9 +39,16 @@
             padding: 0;
         }
 
+        :root {
+            --bg-void: #030712;
+            --canvas-fill: #080d1a;
+            --radial-aura: radial-gradient(circle at center, #1e2b4d 0%, #080d1a 70%);
+            --cyber-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(59, 130, 246, 0.15);
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #030712;
+            background-color: var(--bg-void);
             color: #ffffff;
             overflow-x: hidden;
         }
@@ -81,7 +92,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #030712;
+            background-color: var(--bg-void);
             perspective: 1000px;
             perspective-origin: center center;
         }
@@ -92,18 +103,23 @@
             width: 320px;
             height: 320px;
             border-radius: 32px;
-            background: #080d1a;
-            background-image: linear-gradient(#080d1a, #080d1a), linear-gradient(135deg, #6366f1 0%, #3b82f6 50%, #1d4ed8 100%);
+            background: var(--canvas-fill);
+            background-image: linear-gradient(var(--canvas-fill), var(--canvas-fill)), linear-gradient(135deg, #6366f1 0%, #3b82f6 50%, #1d4ed8 100%);
             background-origin: border-box;
             background-clip: content-box, border-box;
             border: 1px solid transparent;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(59, 130, 246, 0.15);
+            box-shadow: var(--cyber-shadow);
             z-index: 5;
             overflow: hidden;
             transform-origin: center center;
             will-change: transform, border-radius;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
+        }
+
+        /* RADIAL AURA OVERLAY LAYER */
+        .radial-aura-layer {
+            background: var(--radial-aura);
         }
 
         /* SPLITTING TITLE TYPOGRAPHY WITH MIX-BLEND-MODE DIFFERENCE */
@@ -176,10 +192,16 @@
         <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-indigo-600/20 rounded-full blur-[128px]"></div>
     </div>
 
+    <!-- Clickable Sticky Top Logo -->
+    <a href="index.html" class="fixed top-8 left-8 z-[1000] flex items-center gap-2 group cursor-pointer no-underline">
+        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(99,102,241,0.3)]">💠</div>
+        <span class="text-xl font-black tracking-tighter text-white">CAMPUS<span class="text-indigo-400">TRACKER</span></span>
+    </a>
+
     <!-- Header Navigation -->
     <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 backdrop-blur-md bg-obsidian/70 border-b border-slate-800/80">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-3 text-decoration-none group">
+        <div class="max-w-7xl mx-auto flex items-center justify-between pl-48 sm:pl-56 md:pl-0">
+            <a href="index.html" class="hidden md:flex items-center gap-3 text-decoration-none group">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 p-0.5 shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
                     <div class="w-full h-full bg-[#080d1a] rounded-[10px] flex items-center justify-center">
                         <i class="fas fa-shield-halved text-blue-400 text-lg"></i>
@@ -195,7 +217,7 @@
                 <a href="login-selection.html" class="hover:text-white transition-colors">Role Portals</a>
             </nav>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4 ml-auto">
                 <input type="file" id="video-asset-loader" accept="video/*" class="hidden">
                 <button id="trigger-upload-btn" class="px-3.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-slate-700 transition-all flex items-center gap-2 cursor-pointer shadow-sm">
                     <i class="fas fa-video text-blue-400"></i>
@@ -206,11 +228,7 @@
                 </button>
             </div>
         </div>
-    <!-- Clickable Sticky Top Logo -->
-    <a href="index.html" class="fixed top-8 left-8 z-[1000] flex items-center gap-2 group cursor-pointer no-underline">
-      <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(99,102,241,0.3)]">💠</div>
-      <span class="text-xl font-black tracking-tighter text-white">CAMPUS<span class="text-indigo-400">TRACKER</span></span>
-    </a>
+    </header>
 
     <!-- Main Content Area -->
     <main class="flex-grow pt-20" id="mainDashboard">
@@ -226,7 +244,7 @@
                             <source id="video-source-node" src="https://github.com/sohanfulkar-07/Campus-issue-tracker/raw/refs/heads/main/use_this_img_and_genrate_a_vid.mp4" type="video/mp4">
                         </video>
                         <div class="absolute inset-0 bg-gradient-to-t from-[#080d1a] via-transparent to-[#080d1a]/60"></div>
-                        <div class="absolute inset-0 bg-radial-at-c from-transparent via-[#080d1a]/40 to-[#080d1a]"></div>
+                        <div class="absolute inset-0 radial-aura-layer opacity-70"></div>
                     </div>
                 </div>
 
@@ -249,7 +267,7 @@
                                 <span>Next-Gen Academic Operations</span>
                             </div>
 
-                            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
+                            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15]">
                                 Smart Campus <br>
                                 <span class="text-gradient">Issue Management</span> System
                             </h1>
@@ -291,7 +309,7 @@
                                 <div class="flex items-center justify-between border-b border-slate-800 pb-3.5">
                                     <div class="flex items-center gap-2.5">
                                         <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
-                                        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Live System Telemetry</span>
+                                        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">LIVE SYSTEM TELEMETRY</span>
                                     </div>
                                     <span class="text-[10px] px-2.5 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 font-semibold">Active Dispatch</span>
                                 </div>
