@@ -4,13 +4,21 @@ const User = require('../models/User');
 const protect = async (req, res, next) => {
     let token;
 
+    if (!process.env.JWT_SECRET) {
+        console.error('[Auth Error] JWT_SECRET environment variable is missing.');
+        return res.status(500).json({
+            success: false,
+            message: 'Server configuration error: JWT_SECRET environment variable is not configured.'
+        });
+    }
+
     if (
         req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer')
     ) {
         try {
             token = req.headers.authorization.split(' ')[1];
-            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super_secret_campus_tracker_jwt_key_2026');
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
             req.user = await User.findById(decoded.id).select('-password');
             if (!req.user) {

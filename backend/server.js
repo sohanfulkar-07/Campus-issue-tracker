@@ -15,12 +15,12 @@ const app = express();
 // Database Connection
 connectDB();
 
-// Middleware
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+// Middleware: Standard API body limit (1MB max for JSON/urlencoded payloads)
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 app.use(cors());
 
-// Health Check Endpoint
+// Health Check Endpoint: Explicit distinction between Server Status & DB Connection
 app.get('/api/health', (req, res) => {
     const dbStateMap = {
         0: 'Disconnected',
@@ -29,11 +29,16 @@ app.get('/api/health', (req, res) => {
         3: 'Disconnecting'
     };
 
-    res.json({
-        status: 'OK',
-        success: true,
-        message: 'Campus Issue Tracker API Server is running',
-        database: dbStateMap[mongoose.connection.readyState] || 'Unknown',
+    const isDbConnected = mongoose.connection.readyState === 1;
+    const dbStatus = dbStateMap[mongoose.connection.readyState] || 'Unknown';
+
+    res.status(isDbConnected ? 200 : 503).json({
+        status: isDbConnected ? 'OK' : 'DEGRADED',
+        success: isDbConnected,
+        message: isDbConnected 
+            ? 'Campus Issue Tracker API Server is running and connected to database'
+            : 'Campus Issue Tracker API Server is running, but database connection is unavailable',
+        database: dbStatus,
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'development'
     });

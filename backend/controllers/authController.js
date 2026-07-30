@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET || 'super_secret_campus_tracker_jwt_key_2026', {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET environment variable is missing');
+    }
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: '30d'
     });
 };
@@ -24,6 +27,13 @@ const checkDbConnection = (res) => {
 // @access  Public
 const loginUser = async (req, res) => {
     if (!checkDbConnection(res)) return;
+
+    if (!process.env.JWT_SECRET) {
+        return res.status(500).json({
+            success: false,
+            message: 'Server configuration error: JWT_SECRET environment variable is not configured.'
+        });
+    }
 
     try {
         const { userId, password, role } = req.body;
@@ -87,6 +97,13 @@ const loginUser = async (req, res) => {
 // @access  Public
 const registerUser = async (req, res) => {
     if (!checkDbConnection(res)) return;
+
+    if (!process.env.JWT_SECRET) {
+        return res.status(500).json({
+            success: false,
+            message: 'Server configuration error: JWT_SECRET environment variable is not configured.'
+        });
+    }
 
     try {
         const { userId, name, email, password, role, department, phone, rollNo, employeeId, designation } = req.body;
