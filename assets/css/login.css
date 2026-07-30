@@ -284,15 +284,20 @@ body {
     border-radius: 8px;
     font-family: inherit;
     font-size: 1rem;
-    color: var(--text-dark);
-    background-color: #F8FAFC;
+    color: #0f172a;
+    background-color: #FFFFFF;
     transition: var(--transition);
+}
+
+.input-wrapper input::placeholder {
+    color: #94a3b8;
 }
 
 .input-wrapper input:focus {
     outline: none;
     border-color: var(--primary-blue);
     background-color: #FFFFFF;
+    color: #0f172a;
     box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
 }
 
