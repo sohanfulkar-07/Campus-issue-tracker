@@ -239,11 +239,45 @@
                     width: 100%; padding: 0.75rem 1rem;
                     border: 1.5px solid #cbd5e1; border-radius: 8px;
                     font-size: 0.95rem; box-sizing: border-box;
-                    background-color: inherit; color: inherit;
+                    background-color: #ffffff; color: #1e293b;
+                }
+                [data-theme="dark"] .profile-wizard-modal .pw-form-group input,
+                [data-theme="dark"] .profile-wizard-modal .pw-form-group select,
+                body.dark-theme .profile-wizard-modal .pw-form-group input,
+                body.dark-theme .profile-wizard-modal .pw-form-group select {
+                    background-color: #1e293b;
+                    color: #f8fafc;
+                    border-color: #334155;
                 }
                 .pw-form-group input:focus, .pw-form-group select:focus {
                     outline: none; border-color: #2563eb;
                     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+                }
+
+                .pw-form-group select option {
+                    background-color: #ffffff;
+                    color: #1e293b;
+                    padding: 0.5rem;
+                }
+                [data-theme="dark"] .profile-wizard-modal .pw-form-group select option,
+                body.dark-theme .profile-wizard-modal .pw-form-group select option {
+                    background-color: #1e293b;
+                    color: #f8fafc;
+                }
+
+                .pw-form-group input:-webkit-autofill,
+                .pw-form-group select:-webkit-autofill {
+                    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+                    -webkit-text-fill-color: #1e293b !important;
+                    transition: background-color 5000s ease-in-out 0s;
+                }
+                [data-theme="dark"] .profile-wizard-modal .pw-form-group input:-webkit-autofill,
+                [data-theme="dark"] .profile-wizard-modal .pw-form-group select:-webkit-autofill,
+                body.dark-theme .profile-wizard-modal .pw-form-group input:-webkit-autofill,
+                body.dark-theme .profile-wizard-modal .pw-form-group select:-webkit-autofill {
+                    -webkit-box-shadow: 0 0 0px 1000px #1e293b inset !important;
+                    -webkit-text-fill-color: #f8fafc !important;
+                    transition: background-color 5000s ease-in-out 0s;
                 }
 
                 .pw-error-alert {
