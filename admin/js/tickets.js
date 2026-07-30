@@ -82,8 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${statusHtml}</td>
                     <td style="color: var(--text-muted); font-size: 0.8rem;">${t.date}</td>
                     <td style="text-align: center; padding: 1rem 1.5rem;">
-                        <button class="view-btn" data-id="${t.id}" style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; color: var(--text-dark); font-weight: 500; font-size: 0.8rem; transition: all 0.2s;">
-                            <i class="fas fa-eye" style="margin-right: 4px; color: var(--text-muted);"></i> View
+                        <button class="view-btn" data-id="${t.id}" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); padding: 0.45rem 0.9rem; border-radius: 6px; cursor: pointer; color: #60a5fa; font-weight: 600; font-size: 0.8rem; transition: all 0.2s;">
+                            <i class="fas fa-eye" style="margin-right: 4px; color: #60a5fa;"></i> View
                         </button>
                     </td>
                 </tr>
@@ -93,13 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Attach event listeners to new buttons
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                // Optional: visual hover effect handled by css, but inline script adds dynamic behavior
                 openModal(e.currentTarget.getAttribute('data-id'));
             });
             
-            // Add a simple hover effect since it's inline styled
-            btn.addEventListener('mouseover', function() { this.style.background = '#e2e8f0'; });
-            btn.addEventListener('mouseout', function() { this.style.background = '#f1f5f9'; });
+            btn.addEventListener('mouseover', function() { this.style.background = 'rgba(59, 130, 246, 0.3)'; this.style.borderColor = 'rgba(59, 130, 246, 0.5)'; });
+            btn.addEventListener('mouseout', function() { this.style.background = 'rgba(59, 130, 246, 0.15)'; this.style.borderColor = 'rgba(59, 130, 246, 0.35)'; });
         });
     }
 
@@ -116,13 +114,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentEditingId = id;
         
-        modalTitle.textContent = ticket.title;
-        modalId.textContent = ticket.id;
-        modalUser.textContent = ticket.user;
-        modalDept.textContent = ticket.department;
-        modalDesc.textContent = ticket.description;
-        modalLayer.textContent = ticket.layer;
-        modalStatus.value = ticket.status;
+        modalTitle.textContent = ticket.title || 'Untitled Ticket';
+        modalId.textContent = ticket.id || '#TKT-0000';
+        modalUser.textContent = ticket.user || 'Student';
+        modalDept.textContent = ticket.department || ticket.category || 'General';
+        modalDesc.textContent = ticket.description || 'No description provided.';
+        
+        const layerText = ticket.layer || 
+            (ticket.category && ticket.location ? `${ticket.category} -> ${ticket.location}` : null) || 
+            ticket.category || 
+            (ticket.location ? `Physical Assets -> ${ticket.location}` : 'Physical Assets -> General Campus');
+        modalLayer.textContent = layerText;
+
+        modalStatus.value = ticket.status || 'New / Unassigned';
 
         modal.style.display = 'flex';
     }
