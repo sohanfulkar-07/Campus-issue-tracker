@@ -6,7 +6,8 @@ const {
     getFacultyAssignedIssues,
     getAllIssues,
     getIssueById,
-    updateIssueStatus
+    updateIssueStatus,
+    deleteIssue
 } = require('../controllers/issueController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
@@ -18,5 +19,6 @@ router.get('/assigned', protect, authorize('faculty', 'admin'), getFacultyAssign
 router.get('/', protect, authorize('admin', 'faculty'), getAllIssues);
 router.get('/:id', protect, getIssueById);
 router.put('/:id/status', protect, authorize('faculty', 'admin'), updateIssueStatus);
+router.delete('/:id', protect, authorize('admin'), deleteIssue);
 
 module.exports = router;

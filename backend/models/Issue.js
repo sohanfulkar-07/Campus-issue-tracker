@@ -29,8 +29,8 @@ const issueSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Assigned', 'In Progress', 'Resolved', 'Rejected'],
-        default: 'Pending'
+        enum: ['New / Unassigned', 'In Progress', 'Resolved', 'Rejected'],
+        default: 'New / Unassigned'
     },
     priority: {
         type: String,

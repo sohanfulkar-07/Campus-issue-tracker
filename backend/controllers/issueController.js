@@ -1,10 +1,35 @@
+const mongoose = require('mongoose');
 const Issue = require('../models/Issue');
 const IssueStatusHistory = require('../models/IssueStatusHistory');
 const User = require('../models/User');
 
+const ALLOWED_STATUSES = ['New / Unassigned', 'In Progress', 'Resolved', 'Rejected'];
+const ALLOWED_PRIORITIES = ['Low', 'Medium', 'High', 'Critical'];
+
 // Helper to format date string
 const formatDate = (date) => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+};
+
+// Helper to generate a collision-safe unique issueId
+const generateUniqueIssueId = async () => {
+    let isUnique = false;
+    let issueId = '';
+    let attempts = 0;
+    while (!isUnique && attempts < 10) {
+        attempts++;
+        const count = await Issue.countDocuments();
+        const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+        issueId = `ISSUE-${100000 + count + attempts}-${randomSuffix}`;
+        const existing = await Issue.findOne({ issueId });
+        if (!existing) {
+            isUnique = true;
+        }
+    }
+    if (!isUnique) {
+        issueId = `ISSUE-${Date.now()}`;
+    }
+    return issueId;
 };
 
 // @desc    Create a new issue/complaint
@@ -15,13 +40,22 @@ const createIssue = async (req, res) => {
         const { title, category, department, location, description, priority } = req.body;
 
         if (!title || !category || !location || !description) {
-            return res.status(400).json({ success: false, message: 'Please fill in all required issue fields' });
+            return res.status(400).json({
+                success: false,
+                message: 'Please fill in all required issue fields: title, category, location, and description'
+            });
         }
 
-        const issueCount = await Issue.countDocuments();
-        const issueId = 'ISSUE-' + (100000 + issueCount + 1);
+        if (priority && !ALLOWED_PRIORITIES.includes(priority)) {
+            return res.status(400).json({
+                success: false,
+                message: `Invalid priority '${priority}'. Allowed priorities are: ${ALLOWED_PRIORITIES.join(', ')}`
+            });
+        }
 
-        // Uploaded files via Multer
+        const issueId = await generateUniqueIssueId();
+
+        // Process uploaded files (Multer disk storage) or direct array
         let mediaFiles = [];
         if (req.files && req.files.length > 0) {
             mediaFiles = req.files.map(f => `/uploads/${f.filename}`);
@@ -37,22 +71,22 @@ const createIssue = async (req, res) => {
             location,
             description,
             priority: priority || 'Medium',
-            status: 'Pending',
+            status: 'New / Unassigned',
             student: req.user.id,
             studentName: req.user.name,
             studentUserId: req.user.userId,
             media: mediaFiles
         });
 
-        // Audit Trail
+        // Audit Trail Record
         await IssueStatusHistory.create({
             issue: newIssue._id,
             issueId: newIssue.issueId,
-            status: 'Pending',
+            status: 'New / Unassigned',
             changedBy: req.user.id,
             changedByName: req.user.name,
             changedByRole: req.user.role,
-            notes: 'Issue created by student'
+            notes: 'Issue reported by student'
         });
 
         res.status(201).json({
@@ -61,6 +95,7 @@ const createIssue = async (req, res) => {
             issue: {
                 ...newIssue.toObject(),
                 id: newIssue.issueId,
+                user: newIssue.studentName,
                 date: formatDate(newIssue.createdAt),
                 fullDate: newIssue.createdAt.toISOString()
             }
@@ -71,7 +106,7 @@ const createIssue = async (req, res) => {
     }
 };
 
-// @desc    Get student's submitted issues
+// @desc    Get logged-in student's submitted issues
 // @route   GET /api/issues/my-issues
 // @access  Private (Student)
 const getMyIssues = async (req, res) => {
@@ -95,18 +130,21 @@ const getMyIssues = async (req, res) => {
     }
 };
 
-// @desc    Get faculty assigned issues
+// @desc    Get faculty assigned/department issues
 // @route   GET /api/issues/assigned
-// @access  Private (Faculty)
+// @access  Private (Faculty / Admin)
 const getFacultyAssignedIssues = async (req, res) => {
     try {
-        // Faculty sees issues assigned to them OR matching their department
-        const query = {
-            $or: [
-                { assignedFaculty: req.user.id },
-                { department: req.user.department }
-            ]
-        };
+        let query = {};
+
+        if (req.user.role === 'faculty') {
+            query = {
+                $or: [
+                    { assignedFaculty: req.user.id },
+                    { department: req.user.department }
+                ]
+            };
+        }
 
         const issues = await Issue.find(query).sort({ createdAt: -1 });
 
@@ -127,7 +165,7 @@ const getFacultyAssignedIssues = async (req, res) => {
     }
 };
 
-// @desc    Get all issues (Admin/Faculty)
+// @desc    Get all issues with filters
 // @route   GET /api/issues
 // @access  Private (Admin / Faculty)
 const getAllIssues = async (req, res) => {
@@ -163,25 +201,40 @@ const getAllIssues = async (req, res) => {
 
         res.json({ success: true, count: formatted.length, data: formatted });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Error fetching all issues', error: error.message });
+        res.status(500).json({ success: false, message: 'Error fetching issues', error: error.message });
     }
 };
 
-// @desc    Get single issue details & history
+// @desc    Get single issue details & audit history
 // @route   GET /api/issues/:id
 // @access  Private
 const getIssueById = async (req, res) => {
     try {
+        const isObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
         const issue = await Issue.findOne({
             $or: [
-                { _id: req.params.id.match(/^[0-9a-fA-F]{24}$/) ? req.params.id : null },
+                ...(isObjectId ? [{ _id: req.params.id }] : []),
                 { issueId: req.params.id }
             ]
         }).populate('student', 'name email userId rollNo phone')
-          .populate('assignedFaculty', 'name email userId employeeId designation');
+          .populate('assignedFaculty', 'name email userId employeeId designation department');
 
         if (!issue) {
             return res.status(404).json({ success: false, message: 'Issue not found' });
+        }
+
+        // Permission check
+        if (req.user.role === 'student') {
+            const studentId = issue.student._id ? issue.student._id.toString() : issue.student.toString();
+            if (studentId !== req.user.id.toString()) {
+                return res.status(403).json({ success: false, message: 'Not authorized to view this issue' });
+            }
+        } else if (req.user.role === 'faculty') {
+            const isAssigned = issue.assignedFaculty && issue.assignedFaculty._id.toString() === req.user.id.toString();
+            const isSameDepartment = issue.department === req.user.department;
+            if (!isAssigned && !isSameDepartment) {
+                return res.status(403).json({ success: false, message: 'Not authorized to view this issue' });
+            }
         }
 
         const history = await IssueStatusHistory.find({ issue: issue._id }).sort({ createdAt: 1 });
@@ -191,25 +244,43 @@ const getIssueById = async (req, res) => {
             data: {
                 ...issue.toObject(),
                 id: issue.issueId,
+                user: issue.studentName || (issue.student ? issue.student.name : 'Student'),
                 date: formatDate(issue.createdAt),
+                fullDate: issue.createdAt.toISOString(),
                 history
             }
         });
     } catch (error) {
+        console.error('[Get Issue Error]', error);
         res.status(500).json({ success: false, message: 'Error fetching issue details', error: error.message });
     }
 };
 
-// @desc    Update issue status & response
+// @desc    Update issue status, priority, and faculty assignment
 // @route   PUT /api/issues/:id/status
 // @access  Private (Faculty / Admin)
 const updateIssueStatus = async (req, res) => {
     try {
         const { status, responseNotes, assignedFacultyId, priority } = req.body;
 
+        if (status && !ALLOWED_STATUSES.includes(status)) {
+            return res.status(400).json({
+                success: false,
+                message: `Invalid status '${status}'. Allowed statuses are: ${ALLOWED_STATUSES.join(', ')}`
+            });
+        }
+
+        if (priority && !ALLOWED_PRIORITIES.includes(priority)) {
+            return res.status(400).json({
+                success: false,
+                message: `Invalid priority '${priority}'. Allowed priorities are: ${ALLOWED_PRIORITIES.join(', ')}`
+            });
+        }
+
+        const isObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
         const issue = await Issue.findOne({
             $or: [
-                { _id: req.params.id.match(/^[0-9a-fA-F]{24}$/) ? req.params.id : null },
+                ...(isObjectId ? [{ _id: req.params.id }] : []),
                 { issueId: req.params.id }
             ]
         });
@@ -218,42 +289,120 @@ const updateIssueStatus = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Issue not found' });
         }
 
-        if (status) issue.status = status;
-        if (responseNotes !== undefined) issue.responseNotes = responseNotes;
-        if (priority) issue.priority = priority;
+        // Authorization check for Faculty
+        if (req.user.role === 'faculty') {
+            const isAssigned = issue.assignedFaculty && issue.assignedFaculty.toString() === req.user.id.toString();
+            const isSameDepartment = issue.department === req.user.department;
+            if (!isAssigned && !isSameDepartment) {
+                return res.status(403).json({ success: false, message: 'Not authorized to modify this issue' });
+            }
+        }
+
+        let statusChanged = false;
+        let assignmentChanged = false;
+
+        if (status && issue.status !== status) {
+            issue.status = status;
+            statusChanged = true;
+        }
+
+        if (responseNotes !== undefined) {
+            issue.responseNotes = responseNotes;
+        }
+
+        if (priority) {
+            issue.priority = priority;
+        }
 
         if (assignedFacultyId) {
+            if (!mongoose.Types.ObjectId.isValid(assignedFacultyId)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid faculty ID format'
+                });
+            }
+
             const facultyUser = await User.findById(assignedFacultyId);
-            if (facultyUser) {
+            if (!facultyUser || !['faculty', 'admin'].includes(facultyUser.role)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Assigned user must be a valid faculty member or admin'
+                });
+            }
+
+            if (!issue.assignedFaculty || issue.assignedFaculty.toString() !== facultyUser._id.toString()) {
                 issue.assignedFaculty = facultyUser._id;
                 issue.assignedFacultyName = facultyUser.name;
+                assignmentChanged = true;
             }
         }
 
         await issue.save();
 
-        // Audit Trail entry
-        await IssueStatusHistory.create({
-            issue: issue._id,
-            issueId: issue.issueId,
-            status: issue.status,
-            changedBy: req.user.id,
-            changedByName: req.user.name,
-            changedByRole: req.user.role,
-            notes: responseNotes || `Status updated to ${issue.status}`
-        });
+        // Create Audit History Record if status, assignment, or response notes changed
+        if (statusChanged || assignmentChanged || responseNotes) {
+            let noteText = responseNotes || `Status updated to '${issue.status}'`;
+            if (assignmentChanged) {
+                noteText += ` and assigned to ${issue.assignedFacultyName}`;
+            }
+
+            await IssueStatusHistory.create({
+                issue: issue._id,
+                issueId: issue.issueId,
+                status: issue.status,
+                changedBy: req.user.id,
+                changedByName: req.user.name,
+                changedByRole: req.user.role,
+                notes: noteText
+            });
+        }
 
         res.json({
             success: true,
-            message: 'Issue status updated successfully',
+            message: 'Issue updated successfully',
             data: {
                 ...issue.toObject(),
                 id: issue.issueId,
+                user: issue.studentName || 'Student',
                 date: formatDate(issue.createdAt)
             }
         });
     } catch (error) {
+        console.error('[Update Issue Status Error]', error);
         res.status(500).json({ success: false, message: 'Error updating issue status', error: error.message });
+    }
+};
+
+// @desc    Delete issue & its status history
+// @route   DELETE /api/issues/:id
+// @access  Private (Admin)
+const deleteIssue = async (req, res) => {
+    try {
+        const isObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
+        const issue = await Issue.findOne({
+            $or: [
+                ...(isObjectId ? [{ _id: req.params.id }] : []),
+                { issueId: req.params.id }
+            ]
+        });
+
+        if (!issue) {
+            return res.status(404).json({ success: false, message: 'Issue not found' });
+        }
+
+        // Delete associated audit history
+        await IssueStatusHistory.deleteMany({ issue: issue._id });
+
+        // Delete issue document
+        await Issue.deleteOne({ _id: issue._id });
+
+        res.json({
+            success: true,
+            message: `Issue ${issue.issueId} and its audit history deleted successfully`
+        });
+    } catch (error) {
+        console.error('[Delete Issue Error]', error);
+        res.status(500).json({ success: false, message: 'Error deleting issue', error: error.message });
     }
 };
 
@@ -263,5 +412,6 @@ module.exports = {
     getFacultyAssignedIssues,
     getAllIssues,
     getIssueById,
-    updateIssueStatus
+    updateIssueStatus,
+    deleteIssue
 };
