@@ -27,10 +27,9 @@
         }
 
         // Validate Token asynchronously via GET /api/auth/me
-        const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+        const apiUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
             ? 'http://localhost:3000/api/auth/me'
-            : '/api/auth/me';
-
+            : 'https://campus-issue-tracker-j5bp.onrender.com/api/auth/me';
         fetch(apiUrl, {
             method: 'GET',
             headers: {
@@ -38,7 +37,23 @@
                 'Content-Type': 'application/json'
             }
         })
-        .then(res => res.json())
+        .then(async res => {
+            const text = await res.text();
+
+            let data = {};
+
+            try {
+                data = text ? JSON.parse(text) : {};
+            } catch (error) {
+                throw new Error(`Authentication server returned invalid response (HTTP ${res.status})`);
+            }
+
+            if (!res.ok) {
+                throw new Error(data.message || `Authentication request failed (HTTP ${res.status})`);
+            }
+
+            return data;
+        })
         .then(data => {
             if (!data.success || !data.user) {
                 console.warn('[Auth Guard] Invalid token. Redirecting to login.');
