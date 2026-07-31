@@ -184,9 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
          const token = localStorage.getItem('token');
 
-const apiUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:3000/api/issues'
-    : 'https://campus-issue-tracker-j5bp.onrender.com/api/issues';
+const apiUrl = `${window.API_BASE_URL}/issues`;
 
 fetch(apiUrl, {
                 method: 'POST',
