@@ -89,19 +89,28 @@ document.addEventListener('DOMContentLoaded', () => {
             loginBtn.classList.add('loading');
             
             const role = currentRedirect.includes('faculty') ? 'faculty' : (currentRedirect.includes('admin') ? 'admin' : 'student');
-            const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-                ? 'http://localhost:3000/api/auth/login'
-                : '/api/auth/login';
+            const baseUrl = window.API_BASE_URL || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                ? 'http://localhost:3000/api'
+                : 'https://campus-issue-tracker-j5bp.onrender.com/api');
+            const apiUrl = `${baseUrl}/auth/login`;
 
             fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, password, role })
             })
-            .then(res => res.json())
-            .then(data => {
+            .then(async (res) => {
+                let data = {};
+                try {
+                    data = await res.json();
+                } catch (e) {
+                    console.warn('[Login Parse Warning] Non-JSON or empty response received:', e);
+                }
+                return { res, data };
+            })
+            .then(({ res, data }) => {
                 loginBtn.classList.remove('loading');
-                if (data.success && data.token) {
+                if (res.ok && data.success && data.token) {
                     showToast('Success', 'Login successful. Redirecting...', 'success');
                     sessionStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('token', data.token);
@@ -117,7 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.href = currentRedirect;
                     }, 1000);
                 } else {
-                    showToast('Authentication Failed', data.message || 'Invalid ID or Password.', 'error');
+                    const errorMsg = data.message || (res.status >= 500 ? 'Server error during login. Please try again.' : 'Invalid ID or Password.');
+                    showToast('Authentication Failed', errorMsg, 'error');
                 }
             })
             .catch(err => {
