@@ -345,13 +345,7 @@
                     </div>
                 </div>
 
-                <!-- Scroll Prompt Indicator -->
-                <div id="scrollPrompt" class="absolute bottom-10 flex flex-col items-center gap-2 z-30 transition-opacity duration-300">
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Scroll to Explore</span>
-                    <div class="w-5 h-9 rounded-full border-2 border-blue-500 flex justify-center p-1 shadow-lg shadow-blue-500/20">
-                        <div class="w-1 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                    </div>
-                </div>
+
 
             </div>
         </div>
@@ -501,11 +495,68 @@
                 duration: 0.35
             }, 0.65);
 
-            // Scroll prompt indicator fade out
-            tl.to("#scrollPrompt", {
-                opacity: 0,
-                duration: 0.25
-            }, 0);
+            // Single-Tap/Click Anywhere Automatic Landing Page Transition Engine
+            let isLandingTransitioned = false;
+            let isLandingTransitioning = false;
+
+            function triggerLandingTransition() {
+                if (isLandingTransitioned || isLandingTransitioning) return;
+
+                const scrollContainer = document.getElementById('scroll-container');
+                if (!scrollContainer) return;
+
+                if (window.scrollY > 150) {
+                    isLandingTransitioned = true;
+                    return;
+                }
+
+                isLandingTransitioning = true;
+
+                const targetY = scrollContainer.offsetTop + (scrollContainer.offsetHeight - window.innerHeight);
+                const scrollObj = { y: window.scrollY };
+
+                gsap.to(scrollObj, {
+                    y: targetY,
+                    duration: 1.4,
+                    ease: "power2.inOut",
+                    onUpdate: () => {
+                        window.scrollTo(0, scrollObj.y);
+                    },
+                    onComplete: () => {
+                        isLandingTransitioning = false;
+                        isLandingTransitioned = true;
+                    }
+                });
+            }
+
+            const stickyStage = document.getElementById('sticky-stage') || document.getElementById('scroll-container');
+            if (stickyStage) {
+                const handleLandingInteraction = (e) => {
+                    // Ignore clicks/taps on interactive controls (buttons, links, inputs, header)
+                    if (e.target.closest('a, button, input, select, textarea, [role="button"], header, #trigger-upload-btn, #reset-default-btn, #get-started-btn')) {
+                        return;
+                    }
+                    if (!isLandingTransitioned && !isLandingTransitioning && window.scrollY < 150) {
+                        triggerLandingTransition();
+                    }
+                };
+
+                stickyStage.addEventListener('click', handleLandingInteraction);
+                stickyStage.addEventListener('touchend', (e) => {
+                    if (e.target.closest('a, button, input, select, textarea, [role="button"], header, #trigger-upload-btn, #reset-default-btn, #get-started-btn')) {
+                        return;
+                    }
+                    if (!isLandingTransitioned && !isLandingTransitioning && window.scrollY < 150) {
+                        triggerLandingTransition();
+                    }
+                }, { passive: true });
+            }
+
+            window.addEventListener('scroll', () => {
+                if (!isLandingTransitioning && window.scrollY > 150) {
+                    isLandingTransitioned = true;
+                }
+            });
 
             // Initialize Video Stream Controller Engine
             initVideoStreamController();
