@@ -3,9 +3,9 @@
  * Manages Base URL, Bearer Token Authorization, JSON Headers, and Error Handling.
  */
 (function() {
-    const API_BASE_URL = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+    const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
         ? 'http://localhost:3000/api'
-        : '/api';
+        : 'https://campus-issue-tracker-j5bp.onrender.com/api';
 
     async function apiFetch(endpoint, options = {}) {
         const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
