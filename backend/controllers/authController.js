@@ -42,10 +42,12 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Please provide user ID/email and password' });
         }
 
+        const searchInput = userId.trim();
         const user = await User.findOne({
             $or: [
-                { userId: userId.trim() },
-                { email: userId.trim().toLowerCase() }
+                { userId: searchInput },
+                { email: searchInput.toLowerCase() },
+                { rollNo: searchInput }
             ]
         });
 
@@ -92,9 +94,9 @@ const loginUser = async (req, res) => {
     }
 };
 
-// @desc    Register a new student/user
+// @desc    Register a new student account
 // @route   POST /api/auth/register
-// @access  Public
+// @access  Public (Student creation only)
 const registerUser = async (req, res) => {
     if (!checkDbConnection(res)) return;
 
@@ -106,46 +108,98 @@ const registerUser = async (req, res) => {
     }
 
     try {
-        const { userId, name, email, password, role, department, phone, rollNo, employeeId, designation } = req.body;
+        let { name, email, password, rollNo, department } = req.body;
 
-        if (!userId || !name || !email || !password) {
-            return res.status(400).json({ success: false, message: 'Missing required fields' });
+        // 1. Validate required fields
+        if (!name || !email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please fill in all required fields: Name, Email, and Password.'
+            });
         }
 
-        const userExists = await User.findOne({
-            $or: [{ email: email.toLowerCase() }, { userId }]
-        });
+        name = name.trim();
+        email = email.trim().toLowerCase();
+        password = password.trim();
+        rollNo = rollNo ? rollNo.trim() : '';
+        department = department ? department.trim() : 'General';
+
+        // 2. Validate email format
+        const emailRegex = /^\S+@\S+\.\S+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please enter a valid email address.'
+            });
+        }
+
+        // 3. Enforce minimum password length
+        if (password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password must be at least 6 characters long.'
+            });
+        }
+
+        // 4. Generate unique userId automatically
+        let autoUserId = rollNo ? rollNo : `STU-${Date.now()}`;
+
+        // 5. Check for duplicate email, rollNo, or userId
+        const duplicateConditions = [
+            { email },
+            { userId: autoUserId }
+        ];
+        if (rollNo) {
+            duplicateConditions.push({ rollNo });
+        }
+
+        const userExists = await User.findOne({ $or: duplicateConditions });
 
         if (userExists) {
-            return res.status(400).json({ success: false, message: 'User with this ID or Email already exists' });
+            if (userExists.email === email) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'An account with this email address is already registered.'
+                });
+            }
+            if (rollNo && userExists.rollNo === rollNo) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'An account with this Roll Number is already registered.'
+                });
+            }
+            return res.status(400).json({
+                success: false,
+                message: 'An account with this User ID or Roll Number is already registered.'
+            });
         }
 
-        const user = await User.create({
-            userId,
+        // 6. Create new student user (Strictly role="student" and isActive=true)
+        const newUser = await User.create({
+            userId: autoUserId,
             name,
-            email: email.toLowerCase(),
+            email,
             password,
-            role: role || 'student',
-            department: department || 'General',
-            phone: phone || '',
-            rollNo: rollNo || '',
-            employeeId: employeeId || '',
-            designation: designation || ''
+            role: 'student',
+            department,
+            rollNo,
+            isActive: true
         });
 
-        const token = generateToken(user._id);
+        const token = generateToken(newUser._id);
 
         res.status(201).json({
             success: true,
-            message: 'User registered successfully',
+            message: 'Student account registered successfully',
             token,
             user: {
-                id: user._id,
-                userId: user.userId,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                department: user.department
+                id: newUser._id,
+                userId: newUser.userId,
+                name: newUser.name,
+                email: newUser.email,
+                role: 'student',
+                department: newUser.department,
+                rollNo: newUser.rollNo
             }
         });
     } catch (error) {

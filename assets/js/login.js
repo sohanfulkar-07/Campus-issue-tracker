@@ -15,6 +15,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Default redirect
     let currentRedirect = 'student/dashboard.html';
     
+    // Student Registration View Elements
+    const showRegisterViewBtn = document.getElementById('showRegisterViewBtn');
+    const showLoginViewBtn = document.getElementById('showLoginViewBtn');
+    const studentRegisterPrompt = document.getElementById('studentRegisterPrompt');
+    const studentRegisterForm = document.getElementById('studentRegisterForm');
+    const regBtn = document.getElementById('regBtn');
+
+    function showLoginFormView() {
+        if (studentRegisterForm) studentRegisterForm.classList.add('hidden');
+        if (loginForm) loginForm.classList.remove('hidden');
+        if (dynamicRoleTitle) dynamicRoleTitle.textContent = 'Student Login';
+    }
+
+    function showRegisterFormView() {
+        if (loginForm) loginForm.classList.add('hidden');
+        if (studentRegisterForm) studentRegisterForm.classList.remove('hidden');
+        if (dynamicRoleTitle) dynamicRoleTitle.textContent = 'Student Registration';
+    }
+
+    if (showRegisterViewBtn) showRegisterViewBtn.addEventListener('click', showRegisterFormView);
+    if (showLoginViewBtn) showLoginViewBtn.addEventListener('click', showLoginFormView);
+
     // Handle Role Tab Switching
     roleTabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -27,8 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const iconClass = tab.getAttribute('data-icon');
             const title = tab.getAttribute('data-title');
             const label = tab.getAttribute('data-label');
+            const role = tab.getAttribute('data-role');
             currentRedirect = tab.getAttribute('data-redirect');
             
+            // Reset to login form view when switching tabs
+            showLoginFormView();
+
+            // Toggle student register prompt visibility (Student only)
+            if (studentRegisterPrompt) {
+                studentRegisterPrompt.style.display = (role === 'student') ? 'block' : 'none';
+            }
+
             // Trigger quick fade animation
             dynamicRoleIcon.parentElement.style.animation = 'none';
             void dynamicRoleIcon.parentElement.offsetWidth; // Reflow
@@ -139,6 +170,92 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('Validation Error', 'Please check your input fields.', 'error');
         }
     });
+
+    // Handle Student Registration Submission (POST /api/auth/register)
+    if (studentRegisterForm) {
+        studentRegisterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const rollNo = document.getElementById('regRollNo').value.trim();
+            const department = document.getElementById('regDepartment').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (!name || !email || !rollNo || !password) {
+                showToast('Validation Error', 'Please fill in all required registration fields.', 'error');
+                return;
+            }
+
+            const emailRegex = /^\S+@\S+\.\S+$/;
+            if (!emailRegex.test(email)) {
+                showToast('Validation Error', 'Please enter a valid email address.', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showToast('Validation Error', 'Password must be at least 6 characters long.', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showToast('Validation Error', 'Passwords do not match.', 'error');
+                return;
+            }
+
+            if (regBtn) regBtn.disabled = true;
+
+            const baseUrl = window.API_BASE_URL || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                ? 'http://localhost:3000/api'
+                : 'https://campus-issue-tracker-j5bp.onrender.com/api');
+            const apiUrl = `${baseUrl}/auth/register`;
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    rollNo,
+                    department,
+                    password
+                })
+            })
+            .then(async (res) => {
+                let data = {};
+                try {
+                    data = await res.json();
+                } catch (e) {
+                    console.warn('[Register Parse Warning]', e);
+                }
+                return { res, data };
+            })
+            .then(({ res, data }) => {
+                if (regBtn) regBtn.disabled = false;
+
+                if (res.ok && data.success && data.token) {
+                    showToast('Registration Successful', 'Account created! Redirecting to student dashboard...', 'success');
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('currentUserRole', 'student');
+                    localStorage.setItem('currentUserId', data.user.userId || rollNo);
+
+                    setTimeout(() => {
+                        window.location.href = 'student/dashboard.html';
+                    }, 1000);
+                } else {
+                    showToast('Registration Failed', data.message || 'Error creating student account.', 'error');
+                }
+            })
+            .catch(err => {
+                if (regBtn) regBtn.disabled = false;
+                console.error('[Register Error]', err);
+                showToast('Server Error', 'Unable to connect to registration server.', 'error');
+            });
+        });
+    }
     
     function showError(inputElement, message) {
         const inputGroup = inputElement.closest('.input-group');

@@ -497,6 +497,77 @@
                     <span class="btn-text">Sign In To Dashboard</span>
                     <div class="spinner hidden" id="btnSpinner"></div>
                 </button>
+
+                <div class="text-center text-xs text-slate-400 pt-3" id="studentRegisterPrompt">
+                    New student? <button type="button" id="showRegisterViewBtn" class="text-blue-400 font-bold hover:underline">Create Student Account</button>
+                </div>
+            </form>
+
+            <!-- Student Registration Form -->
+            <form id="studentRegisterForm" class="space-y-3.5 hidden">
+                <div class="input-group text-left">
+                    <label for="regName" class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
+                    <div class="input-wrapper relative">
+                        <i class="fas fa-user absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="text" id="regName" placeholder="Enter Full Name" required class="w-full pl-10 pr-4 py-2 rounded-xl bg-white text-slate-900 placeholder:text-slate-400 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    </div>
+                </div>
+
+                <div class="input-group text-left">
+                    <label for="regEmail" class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+                    <div class="input-wrapper relative">
+                        <i class="fas fa-envelope absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="email" id="regEmail" placeholder="student@university.edu" required class="w-full pl-10 pr-4 py-2 rounded-xl bg-white text-slate-900 placeholder:text-slate-400 border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="input-group text-left">
+                        <label for="regRollNo" class="block text-xs font-medium text-slate-300 mb-1">Roll Number</label>
+                        <div class="input-wrapper relative">
+                            <i class="fas fa-id-card absolute left-3 top-3 text-slate-400 text-xs"></i>
+                            <input type="text" id="regRollNo" placeholder="e.g. 21CS045" required class="w-full pl-8 pr-2 py-2 rounded-xl bg-white text-slate-900 placeholder:text-slate-400 border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                        </div>
+                    </div>
+                    <div class="input-group text-left">
+                        <label for="regDepartment" class="block text-xs font-medium text-slate-300 mb-1">Department</label>
+                        <div class="input-wrapper relative">
+                            <select id="regDepartment" required class="w-full pl-2 pr-1 py-2 rounded-xl bg-white text-slate-900 border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                <option value="Computer Engineering">Computer Engineering</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Artificial Intelligence & Data Science">AI & Data Science</option>
+                                <option value="Artificial Intelligence & Machine Learning">AI & Machine Learning</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="input-group text-left">
+                        <label for="regPassword" class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+                        <div class="input-wrapper relative">
+                            <i class="fas fa-lock absolute left-3 top-3 text-slate-400 text-xs"></i>
+                            <input type="password" id="regPassword" placeholder="Min. 6 chars" required class="w-full pl-8 pr-2 py-2 rounded-xl bg-white text-slate-900 placeholder:text-slate-400 border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                        </div>
+                    </div>
+                    <div class="input-group text-left">
+                        <label for="regConfirmPassword" class="block text-xs font-medium text-slate-300 mb-1">Confirm</label>
+                        <div class="input-wrapper relative">
+                            <i class="fas fa-lock absolute left-3 top-3 text-slate-400 text-xs"></i>
+                            <input type="password" id="regConfirmPassword" placeholder="Re-enter" required class="w-full pl-8 pr-2 py-2 rounded-xl bg-white text-slate-900 placeholder:text-slate-400 border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full btn-gradient py-2.5 rounded-xl font-bold text-xs text-white flex items-center justify-center gap-2 mt-3" id="regBtn">
+                    <span>Create Account & Log In</span>
+                </button>
+
+                <div class="text-center text-xs text-slate-400 pt-1">
+                    Already registered? <button type="button" id="showLoginViewBtn" class="text-blue-400 font-bold hover:underline">Sign In</button>
+                </div>
             </form>
 
         </div>
