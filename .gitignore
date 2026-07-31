@@ -4,3 +4,4 @@ backend/.env
 *.log
 uploads/*
 !uploads/.gitkeep
+.agent/
