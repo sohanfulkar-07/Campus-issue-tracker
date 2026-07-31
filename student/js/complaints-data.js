@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
-    const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-        ? 'http://localhost:3000/api/issues/my-issues'
-        : '/api/issues/my-issues';
+    const baseUrl = window.API_BASE_URL || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:3000/api'
+        : 'https://campus-issue-tracker-j5bp.onrender.com/api');
+    const apiUrl = `${baseUrl}/issues/my-issues`;
 
     fetch(apiUrl, {
         method: 'GET',

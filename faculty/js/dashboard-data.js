@@ -3,9 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to render everything via GET /api/issues/assigned
     function renderDashboard() {
         const token = localStorage.getItem('token');
-        const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-            ? 'http://localhost:3000/api/issues/assigned'
-            : '/api/issues/assigned';
+        const baseUrl = window.API_BASE_URL || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000/api'
+            : 'https://campus-issue-tracker-j5bp.onrender.com/api');
+        const apiUrl = `${baseUrl}/issues/assigned`;
 
         fetch(apiUrl, {
             method: 'GET',
@@ -93,9 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to update status via PUT /api/issues/:id/status
     function updateComplaintStatus(id, newStatus) {
         const token = localStorage.getItem('token');
-        const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-            ? `http://localhost:3000/api/issues/${id}/status`
-            : `/api/issues/${id}/status`;
+        const baseUrl = window.API_BASE_URL || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000/api'
+            : 'https://campus-issue-tracker-j5bp.onrender.com/api');
+        const apiUrl = `${baseUrl}/issues/${id}/status`;
 
         fetch(apiUrl, {
             method: 'PUT',

@@ -26,10 +26,10 @@
             return;
         }
 
-        // Validate Token asynchronously via GET /api/auth/me
-        const apiUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-            ? 'http://localhost:3000/api/auth/me'
-            : 'https://campus-issue-tracker-j5bp.onrender.com/api/auth/me';
+        const baseUrl = window.API_BASE_URL || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000/api'
+            : 'https://campus-issue-tracker-j5bp.onrender.com/api');
+        const apiUrl = `${baseUrl}/auth/me`;
         fetch(apiUrl, {
             method: 'GET',
             headers: {

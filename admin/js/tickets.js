@@ -44,11 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deptVal !== 'All') queryParams.append('department', deptVal);
         if (searchVal) queryParams.append('search', searchVal);
 
-        const baseUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-            ? 'http://localhost:3000/api/issues'
-            : '/api/issues';
+        const baseUrl = window.API_BASE_URL || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000/api'
+            : 'https://campus-issue-tracker-j5bp.onrender.com/api');
 
-        const apiUrl = `${baseUrl}?${queryParams.toString()}`;
+        const apiUrl = `${baseUrl}/issues?${queryParams.toString()}`;
 
         fetch(apiUrl, {
             method: 'GET',
@@ -137,11 +137,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function openModal(id) {
         currentEditingId = id;
         const token = localStorage.getItem('token');
-        const baseUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-            ? `http://localhost:3000/api/issues/${id}`
-            : `/api/issues/${id}`;
+        const baseUrl = window.API_BASE_URL || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000/api'
+            : 'https://campus-issue-tracker-j5bp.onrender.com/api');
+        const apiUrl = `${baseUrl}/issues/${id}`;
 
-        fetch(baseUrl, {
+        fetch(apiUrl, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -199,11 +200,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
                 saveBtn.disabled = true;
 
-                const baseUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-                    ? `http://localhost:3000/api/issues/${currentEditingId}/status`
-                    : `/api/issues/${currentEditingId}/status`;
+                const baseUrl = window.API_BASE_URL || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                    ? 'http://localhost:3000/api'
+                    : 'https://campus-issue-tracker-j5bp.onrender.com/api');
+                const apiUrl = `${baseUrl}/issues/${currentEditingId}/status`;
 
-                fetch(baseUrl, {
+                fetch(apiUrl, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
