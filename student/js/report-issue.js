@@ -223,21 +223,20 @@ fetch(apiUrl, {
     return data;
 })
 .then(data => {
-                if (data.success) {
-                    window.location.href = 'dashboard.html';
-                } else {
-                    alert('Error submitting issue: ' + (data.message || 'Server error'));
-                    submitBtn.textContent = 'Submit Issue Report';
-                    submitBtn.disabled = false;
-                }
-            })
-            .catch(err => {
+    if (data.success) {
+        window.location.href = 'dashboard.html';
+    } else {
+        alert('Error submitting issue: ' + (data.message || 'Server error'));
+        submitBtn.textContent = 'Submit Issue Report';
+        submitBtn.disabled = false;
+    }
+})
+.catch(err => {
     console.error('[Submit Issue Error]', err);
     alert('Error submitting issue: ' + err.message);
     submitBtn.textContent = 'Submit Issue Report';
     submitBtn.disabled = false;
 });
-            });
         });
     }
 });
