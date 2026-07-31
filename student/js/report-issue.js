@@ -196,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     title,
                     category,
-                    department: category,
                     location,
                     description,
                     priority: 'Medium',

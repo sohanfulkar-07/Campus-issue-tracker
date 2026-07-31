@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchTickets');
     const statusFilter = document.getElementById('filterStatus');
     const priorityFilter = document.getElementById('filterPriority');
+    const categoryFilter = document.getElementById('filterCategory');
     const deptFilter = document.getElementById('filterDept');
     
     const statTotal = document.getElementById('statTotal');
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modalTicketTitle');
     const modalId = document.getElementById('modalTicketId');
     const modalUser = document.getElementById('modalTicketUser');
+    const modalCategory = document.getElementById('modalTicketCategory');
     const modalDept = document.getElementById('modalTicketDept');
     const modalDesc = document.getElementById('modalTicketDesc');
     const modalLayer = document.getElementById('modalTicketLayer');
@@ -31,12 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('token');
         const statusVal = statusFilter ? statusFilter.value : 'All';
         const priorityVal = priorityFilter ? priorityFilter.value : 'All';
+        const categoryVal = categoryFilter ? categoryFilter.value : 'All';
         const deptVal = deptFilter ? deptFilter.value : 'All';
         const searchVal = searchInput ? searchInput.value.trim() : '';
 
         const queryParams = new URLSearchParams();
         if (statusVal !== 'All') queryParams.append('status', statusVal);
         if (priorityVal !== 'All') queryParams.append('priority', priorityVal);
+        if (categoryVal !== 'All') queryParams.append('category', categoryVal);
         if (deptVal !== 'All') queryParams.append('department', deptVal);
         if (searchVal) queryParams.append('search', searchVal);
 
@@ -75,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!tableBody) return;
 
         if (tickets.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-light);">No tickets found matching your criteria.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 3rem; color: var(--text-light);">No tickets found matching your criteria.</td></tr>`;
             return;
         }
 
@@ -93,11 +97,14 @@ document.addEventListener('DOMContentLoaded', () => {
             else if(t.status === 'Resolved') statusHtml = `<span style="background: #d1fae5; color: #059669; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #a7f3d0;"><i class="fas fa-check-circle" style="margin-right:4px;"></i>Resolved</span>`;
             else statusHtml = `<span style="background: #f3f4f6; color: #374151; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">${t.status}</span>`;
 
+            const deptText = t.assignedFaculty ? (t.assignedFaculty.department || t.department) : (t.department && t.department !== t.category ? t.department : 'Unassigned');
+
             return `
                 <tr>
                     <td style="font-weight: 600; color: var(--primary-blue); padding: 1rem 1.5rem;">${t.id}</td>
                     <td style="font-weight: 500; color: var(--text-dark);">${t.title}</td>
-                    <td>${t.department || t.category}</td>
+                    <td><span style="background: rgba(99, 102, 241, 0.15); color: #818cf8; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">${t.category || 'General'}</span></td>
+                    <td>${deptText}</td>
                     <td>${t.user || 'Student'}</td>
                     <td>${priorityHtml}</td>
                     <td>${statusHtml}</td>
@@ -123,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchInput) searchInput.addEventListener('input', fetchTickets);
     if (statusFilter) statusFilter.addEventListener('change', fetchTickets);
     if (priorityFilter) priorityFilter.addEventListener('change', fetchTickets);
+    if (categoryFilter) categoryFilter.addEventListener('change', fetchTickets);
     if (deptFilter) deptFilter.addEventListener('change', fetchTickets);
 
     // 5. Modal Logic with Live Backend Fetch (GET /api/issues/:id)
@@ -151,7 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (modalTitle) modalTitle.textContent = ticket.title || 'Untitled Ticket';
             if (modalId) modalId.textContent = ticket.id || '#TKT-0000';
             if (modalUser) modalUser.textContent = ticket.user || 'Student';
-            if (modalDept) modalDept.textContent = ticket.department || ticket.category || 'General';
+            if (modalCategory) modalCategory.textContent = ticket.category || 'General';
+            if (modalDept) modalDept.textContent = ticket.assignedFaculty ? (ticket.assignedFaculty.department || ticket.department) : (ticket.department && ticket.department !== ticket.category ? ticket.department : 'Unassigned');
             if (modalDesc) modalDesc.textContent = ticket.description || 'No description provided.';
             
             const layerText = (ticket.category && ticket.location) ? `${ticket.category} -> ${ticket.location}` : (ticket.category || 'General');

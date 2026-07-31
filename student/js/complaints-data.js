@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <tr>
                 <td><strong>${c.id}</strong></td>
                 <td>${c.title}</td>
-                <td>${c.department || c.category}</td>
+                <td>${c.category || 'General'}</td>
                 <td><span class="badge ${c.priority === 'High' || c.priority === 'Critical' ? 'badge-danger' : 'badge-primary'}">${c.priority}</span></td>
                 <td><span class="status-badge ${getStatusBadgeClass(c.status)}">${c.status.toUpperCase()}</span></td>
                 <td>${c.date}</td>

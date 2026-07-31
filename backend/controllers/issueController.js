@@ -3,8 +3,19 @@ const Issue = require('../models/Issue');
 const IssueStatusHistory = require('../models/IssueStatusHistory');
 const User = require('../models/User');
 
+const { canUserAccessIssue, getFacultyQuery } = require('../utils/issueRouting');
+
 const ALLOWED_STATUSES = ['New / Unassigned', 'In Progress', 'Resolved', 'Rejected'];
 const ALLOWED_PRIORITIES = ['Low', 'Medium', 'High', 'Critical'];
+
+
+const COMPLAINT_CATEGORIES = [
+    'IT Support',
+    'Hostel Maintenance',
+    'Academic Operations',
+    'Facilities & Security',
+    'Other'
+];
 
 // Helper to format date string
 const formatDate = (date) => {
@@ -63,11 +74,17 @@ const createIssue = async (req, res) => {
             mediaFiles = req.body.media;
         }
 
+        // Determine department: default to 'General' unless a legitimate non-category department is explicitly provided
+        let issueDepartment = 'General';
+        if (department && !COMPLAINT_CATEGORIES.includes(department) && department !== category) {
+            issueDepartment = department;
+        }
+
         const newIssue = await Issue.create({
             issueId,
             title,
             category,
-            department: department || category,
+            department: issueDepartment,
             location,
             description,
             priority: priority || 'Medium',
@@ -138,12 +155,7 @@ const getFacultyAssignedIssues = async (req, res) => {
         let query = {};
 
         if (req.user.role === 'faculty') {
-            query = {
-                $or: [
-                    { assignedFaculty: req.user.id },
-                    { department: req.user.department }
-                ]
-            };
+            query = getFacultyQuery(req.user);
         }
 
         const issues = await Issue.find(query).sort({ createdAt: -1 });
@@ -170,23 +182,44 @@ const getFacultyAssignedIssues = async (req, res) => {
 // @access  Private (Admin / Faculty)
 const getAllIssues = async (req, res) => {
     try {
-        const { status, priority, department, search } = req.query;
+        const { status, priority, department, category, search } = req.query;
         let filter = {};
 
         if (status && status !== 'All') filter.status = status;
         if (priority && priority !== 'All') filter.priority = priority;
-        if (department && department !== 'All') filter.department = department;
+        if (category && category !== 'All') filter.category = category;
 
-        if (search) {
-            filter.$or = [
-                { title: { $regex: search, $options: 'i' } },
-                { issueId: { $regex: search, $options: 'i' } },
-                { studentName: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } }
-            ];
+        if (department && department !== 'All') {
+            const facultyInDept = await User.find({ department }).select('_id');
+            const facultyIds = facultyInDept.map(f => f._id);
+            filter.$and = filter.$and || [];
+            filter.$and.push({
+                $or: [
+                    { department: department },
+                    { assignedFaculty: { $in: facultyIds } }
+                ]
+            });
         }
 
-        const issues = await Issue.find(filter).sort({ createdAt: -1 });
+        if (search) {
+            const searchObj = {
+                $or: [
+                    { title: { $regex: search, $options: 'i' } },
+                    { issueId: { $regex: search, $options: 'i' } },
+                    { studentName: { $regex: search, $options: 'i' } },
+                    { description: { $regex: search, $options: 'i' } }
+                ]
+            };
+            if (filter.$and) {
+                filter.$and.push(searchObj);
+            } else {
+                filter.$or = searchObj.$or;
+            }
+        }
+
+        const issues = await Issue.find(filter)
+            .populate('assignedFaculty', 'name email department')
+            .sort({ createdAt: -1 });
 
         const formatted = issues.map(i => {
             const obj = i.toObject();
@@ -223,18 +256,9 @@ const getIssueById = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Issue not found' });
         }
 
-        // Permission check
-        if (req.user.role === 'student') {
-            const studentId = issue.student._id ? issue.student._id.toString() : issue.student.toString();
-            if (studentId !== req.user.id.toString()) {
-                return res.status(403).json({ success: false, message: 'Not authorized to view this issue' });
-            }
-        } else if (req.user.role === 'faculty') {
-            const isAssigned = issue.assignedFaculty && issue.assignedFaculty._id.toString() === req.user.id.toString();
-            const isSameDepartment = issue.department === req.user.department;
-            if (!isAssigned && !isSameDepartment) {
-                return res.status(403).json({ success: false, message: 'Not authorized to view this issue' });
-            }
+        // Permission check via central routing helper
+        if (!canUserAccessIssue(req.user, issue)) {
+            return res.status(403).json({ success: false, message: 'Not authorized to view this issue' });
         }
 
         const history = await IssueStatusHistory.find({ issue: issue._id }).sort({ createdAt: 1 });
@@ -289,13 +313,9 @@ const updateIssueStatus = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Issue not found' });
         }
 
-        // Authorization check for Faculty
-        if (req.user.role === 'faculty') {
-            const isAssigned = issue.assignedFaculty && issue.assignedFaculty.toString() === req.user.id.toString();
-            const isSameDepartment = issue.department === req.user.department;
-            if (!isAssigned && !isSameDepartment) {
-                return res.status(403).json({ success: false, message: 'Not authorized to modify this issue' });
-            }
+        // Permission check via central routing helper
+        if (!canUserAccessIssue(req.user, issue)) {
+            return res.status(403).json({ success: false, message: 'Not authorized to modify this issue' });
         }
 
         let statusChanged = false;
