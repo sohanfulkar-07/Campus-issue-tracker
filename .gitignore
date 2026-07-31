@@ -5,3 +5,4 @@ backend/.env
 uploads/*
 !uploads/.gitkeep
 .agent/
+.agents/
