@@ -1,42 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Seed a sample ticket lifecycle if missing
-    const sampleComplaintId = 'ISSUE-243428';
-    const sampleComplaint = {
-        id: sampleComplaintId,
-        title: 'Projector failure in Lecture Hall 204',
-        category: 'Room / Lab Maintenance',
-        department: 'Maintenance Department',
-        location: 'Lecture Hall 204',
-        description: 'Faculty verified the issue and forwarded it to Maintenance for repair. The complaint has been resolved successfully.',
-        status: 'Resolved',
-        priority: 'High',
-        user: 'Student',
-        assignedTo: 'Maintenance Department',
-        verifiedBy: 'Faculty',
-        date: 'Jul 29, 2026',
-        fullDate: new Date().toISOString(),
-        resolutionHours: 4,
-        media: []
-    };
+    // Function to render everything via GET /api/issues/assigned
+    function renderDashboard() {
+        const token = localStorage.getItem('token');
+        const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+            ? 'http://localhost:3000/api/issues/assigned'
+            : '/api/issues/assigned';
 
-    function ensureSampleComplaint() {
-        const complaintsStr = localStorage.getItem('campus_tickets_master');
-        const complaints = complaintsStr ? JSON.parse(complaintsStr) : [];
-        const exists = complaints.some(c => c.id === sampleComplaintId);
-        if (!exists) {
-            complaints.push(sampleComplaint);
-            localStorage.setItem('campus_tickets_master', JSON.stringify(complaints));
-        }
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            const complaints = data.success ? data.data : [];
+            updateFacultyUI(complaints);
+        })
+        .catch(err => {
+            console.error('[Faculty Dashboard Fetch Error]', err);
+            updateFacultyUI([]);
+        });
     }
 
-    ensureSampleComplaint();
-
-    // Function to render everything
-    function renderDashboard() {
-        const complaintsStr = localStorage.getItem('campus_tickets_master');
-        const complaints = complaintsStr ? JSON.parse(complaintsStr) : [];
-        
+    function updateFacultyUI(complaints) {
         // 1. Update Stats
         const statTotal = document.getElementById('statTotal');
         const statPending = document.getElementById('statPending');
@@ -45,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (statTotal) {
             statTotal.textContent = complaints.length;
-            statPending.textContent = complaints.filter(c => c.status === 'New / Unassigned').length;
-            statInProgress.textContent = complaints.filter(c => c.status === 'In Progress').length;
-            statResolved.textContent = complaints.filter(c => c.status === 'Resolved').length;
+            if (statPending) statPending.textContent = complaints.filter(c => c.status === 'New / Unassigned').length;
+            if (statInProgress) statInProgress.textContent = complaints.filter(c => c.status === 'In Progress').length;
+            if (statResolved) statResolved.textContent = complaints.filter(c => c.status === 'Resolved').length;
         }
 
         // 2. Render Table (Pending and In Progress only)
@@ -64,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <tr>
                         <td><strong>${c.id}</strong></td>
                         <td>${c.title}</td>
-                        <td>Student</td>
+                        <td>${c.user || 'Student'}</td>
                         <td><span class="badge ${c.priority === 'High' || c.priority === 'Critical' ? 'badge-danger' : 'badge-primary'}">${c.priority}</span></td>
                         <td>
                             <span class="status-badge ${c.status === 'New / Unassigned' ? 'status-pending' : 'status-progress'}">
@@ -101,18 +90,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to update status in localStorage
+    // Function to update status via PUT /api/issues/:id/status
     function updateComplaintStatus(id, newStatus) {
-        let complaints = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
-        const index = complaints.findIndex(c => c.id === id);
-        
-        if (index !== -1) {
-            complaints[index].status = newStatus;
-            localStorage.setItem('campus_tickets_master', JSON.stringify(complaints));
-            
-            // Re-render dashboard to reflect changes instantly
-            renderDashboard();
-        }
+        const token = localStorage.getItem('token');
+        const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+            ? `http://localhost:3000/api/issues/${id}/status`
+            : `/api/issues/${id}/status`;
+
+        fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ status: newStatus })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                renderDashboard();
+            } else {
+                alert('Error updating issue status: ' + (data.message || 'Server error'));
+            }
+        })
+        .catch(err => {
+            console.error('[Update Status Error]', err);
+            alert('Network error updating issue status.');
+        });
     }
 
     // Initial render

@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Unified Master Data Array
-    let tickets = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
-
-    // 2. DOM Elements
+    // 1. DOM Elements
     const tableBody = document.getElementById('ticketsTableBody');
     const searchInput = document.getElementById('searchTickets');
     const statusFilter = document.getElementById('filterStatus');
@@ -29,40 +26,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentEditingId = null;
 
-    // 3. Render Function
-    function renderTable() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const statusVal = statusFilter.value;
-        const priorityVal = priorityFilter.value;
-        const deptVal = deptFilter.value;
+    // 2. Fetch Tickets from Backend API (GET /api/issues)
+    function fetchTickets() {
+        const token = localStorage.getItem('token');
+        const statusVal = statusFilter ? statusFilter.value : 'All';
+        const priorityVal = priorityFilter ? priorityFilter.value : 'All';
+        const deptVal = deptFilter ? deptFilter.value : 'All';
+        const searchVal = searchInput ? searchInput.value.trim() : '';
 
-        // Filter data
-        const filtered = tickets.filter(t => {
-            const matchesSearch = t.title.toLowerCase().includes(searchTerm) || 
-                                  t.id.toLowerCase().includes(searchTerm) || 
-                                  t.user.toLowerCase().includes(searchTerm);
-            const matchesStatus = statusVal === 'All' || t.status === statusVal;
-            const matchesPriority = priorityVal === 'All' || t.priority === priorityVal;
-            const matchesDept = deptVal === 'All' || t.department === deptVal;
-            
-            return matchesSearch && matchesStatus && matchesPriority && matchesDept;
+        const queryParams = new URLSearchParams();
+        if (statusVal !== 'All') queryParams.append('status', statusVal);
+        if (priorityVal !== 'All') queryParams.append('priority', priorityVal);
+        if (deptVal !== 'All') queryParams.append('department', deptVal);
+        if (searchVal) queryParams.append('search', searchVal);
+
+        const baseUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+            ? 'http://localhost:3000/api/issues'
+            : '/api/issues';
+
+        const apiUrl = `${baseUrl}?${queryParams.toString()}`;
+
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            const tickets = data.success ? data.data : [];
+            renderTable(tickets);
+        })
+        .catch(err => {
+            console.error('[Admin Tickets Fetch Error]', err);
+            renderTable([]);
         });
+    }
 
+    // 3. Render Table
+    function renderTable(tickets) {
         // Update Stats
-        statTotal.textContent = filtered.length;
-        statOpen.textContent = filtered.filter(t => t.status === 'New / Unassigned').length;
-        statResolved.textContent = filtered.filter(t => t.status === 'Resolved').length;
+        if (statTotal) statTotal.textContent = tickets.length;
+        if (statOpen) statOpen.textContent = tickets.filter(t => t.status === 'New / Unassigned').length;
+        if (statResolved) statResolved.textContent = tickets.filter(t => t.status === 'Resolved').length;
 
         // Render HTML
-        if (filtered.length === 0) {
+        if (!tableBody) return;
+
+        if (tickets.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-light);">No tickets found matching your criteria.</td></tr>`;
             return;
         }
 
-        tableBody.innerHTML = filtered.map(t => {
+        tableBody.innerHTML = tickets.map(t => {
             // Priority Badge
             let priorityHtml = '';
-            if(t.priority === 'High') priorityHtml = `<span style="background: #fee2e2; color: #ef4444; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">High</span>`;
+            if(t.priority === 'High' || t.priority === 'Critical') priorityHtml = `<span style="background: #fee2e2; color: #ef4444; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">${t.priority}</span>`;
             else if(t.priority === 'Medium') priorityHtml = `<span style="background: #fef3c7; color: #d97706; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Medium</span>`;
             else priorityHtml = `<span style="background: #e0f2fe; color: #0284c7; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Low</span>`;
 
@@ -70,14 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
             let statusHtml = '';
             if(t.status === 'New / Unassigned') statusHtml = `<span style="background: #fee2e2; color: #ef4444; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #fecaca;"><i class="fas fa-exclamation-circle" style="margin-right:4px;"></i>New</span>`;
             else if(t.status === 'In Progress') statusHtml = `<span style="background: #fffbeb; color: #d97706; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #fde68a;"><i class="fas fa-spinner fa-spin" style="margin-right:4px;"></i>In Progress</span>`;
-            else statusHtml = `<span style="background: #d1fae5; color: #059669; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #a7f3d0;"><i class="fas fa-check-circle" style="margin-right:4px;"></i>Resolved</span>`;
+            else if(t.status === 'Resolved') statusHtml = `<span style="background: #d1fae5; color: #059669; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; border: 1px solid #a7f3d0;"><i class="fas fa-check-circle" style="margin-right:4px;"></i>Resolved</span>`;
+            else statusHtml = `<span style="background: #f3f4f6; color: #374151; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">${t.status}</span>`;
 
             return `
                 <tr>
                     <td style="font-weight: 600; color: var(--primary-blue); padding: 1rem 1.5rem;">${t.id}</td>
                     <td style="font-weight: 500; color: var(--text-dark);">${t.title}</td>
-                    <td>${t.department}</td>
-                    <td>${t.user}</td>
+                    <td>${t.department || t.category}</td>
+                    <td>${t.user || 'Student'}</td>
                     <td>${priorityHtml}</td>
                     <td>${statusHtml}</td>
                     <td style="color: var(--text-muted); font-size: 0.8rem;">${t.date}</td>
@@ -95,79 +116,115 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', (e) => {
                 openModal(e.currentTarget.getAttribute('data-id'));
             });
-            
-            btn.addEventListener('mouseover', function() { this.style.background = 'rgba(59, 130, 246, 0.3)'; this.style.borderColor = 'rgba(59, 130, 246, 0.5)'; });
-            btn.addEventListener('mouseout', function() { this.style.background = 'rgba(59, 130, 246, 0.15)'; this.style.borderColor = 'rgba(59, 130, 246, 0.35)'; });
         });
     }
 
     // 4. Filtering Event Listeners
-    searchInput.addEventListener('input', renderTable);
-    statusFilter.addEventListener('change', renderTable);
-    priorityFilter.addEventListener('change', renderTable);
-    deptFilter.addEventListener('change', renderTable);
+    if (searchInput) searchInput.addEventListener('input', fetchTickets);
+    if (statusFilter) statusFilter.addEventListener('change', fetchTickets);
+    if (priorityFilter) priorityFilter.addEventListener('change', fetchTickets);
+    if (deptFilter) deptFilter.addEventListener('change', fetchTickets);
 
-    // 5. Modal Logic
+    // 5. Modal Logic with Live Backend Fetch (GET /api/issues/:id)
     function openModal(id) {
-        const ticket = tickets.find(t => t.id === id);
-        if(!ticket) return;
-
         currentEditingId = id;
-        
-        modalTitle.textContent = ticket.title || 'Untitled Ticket';
-        modalId.textContent = ticket.id || '#TKT-0000';
-        modalUser.textContent = ticket.user || 'Student';
-        modalDept.textContent = ticket.department || ticket.category || 'General';
-        modalDesc.textContent = ticket.description || 'No description provided.';
-        
-        const layerText = ticket.layer || 
-            (ticket.category && ticket.location ? `${ticket.category} -> ${ticket.location}` : null) || 
-            ticket.category || 
-            (ticket.location ? `Physical Assets -> ${ticket.location}` : 'Physical Assets -> General Campus');
-        modalLayer.textContent = layerText;
+        const token = localStorage.getItem('token');
+        const baseUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+            ? `http://localhost:3000/api/issues/${id}`
+            : `/api/issues/${id}`;
 
-        modalStatus.value = ticket.status || 'New / Unassigned';
+        fetch(baseUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(resData => {
+            if (!resData.success || !resData.data) {
+                alert('Issue details not found');
+                return;
+            }
 
-        modal.style.display = 'flex';
+            const ticket = resData.data;
+            if (modalTitle) modalTitle.textContent = ticket.title || 'Untitled Ticket';
+            if (modalId) modalId.textContent = ticket.id || '#TKT-0000';
+            if (modalUser) modalUser.textContent = ticket.user || 'Student';
+            if (modalDept) modalDept.textContent = ticket.department || ticket.category || 'General';
+            if (modalDesc) modalDesc.textContent = ticket.description || 'No description provided.';
+            
+            const layerText = (ticket.category && ticket.location) ? `${ticket.category} -> ${ticket.location}` : (ticket.category || 'General');
+            if (modalLayer) modalLayer.textContent = layerText;
+
+            if (modalStatus) modalStatus.value = ticket.status || 'New / Unassigned';
+
+            if (modal) modal.style.display = 'flex';
+        })
+        .catch(err => {
+            console.error('[Fetch Issue Details Error]', err);
+            alert('Error loading issue details.');
+        });
     }
 
     function closeModal() {
-        modal.style.display = 'none';
+        if (modal) modal.style.display = 'none';
         currentEditingId = null;
     }
 
-    closeBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
     
-    // Close on overlay click
-    modal.addEventListener('click', (e) => {
-        if(e.target === modal) closeModal();
-    });
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) closeModal();
+        });
+    }
 
-    saveBtn.addEventListener('click', () => {
-        if(currentEditingId) {
-            const ticketIndex = tickets.findIndex(t => t.id === currentEditingId);
-            if(ticketIndex !== -1) {
-                // Add some visual feedback
+    // Save Changes via PUT /api/issues/:id/status
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            if(currentEditingId) {
+                const token = localStorage.getItem('token');
                 const originalText = saveBtn.innerHTML;
                 saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
                 saveBtn.disabled = true;
 
-                setTimeout(() => {
-                    tickets[ticketIndex].status = modalStatus.value;
-                    // Save back to master
-                    localStorage.setItem('campus_tickets_master', JSON.stringify(tickets));
-                    
-                    renderTable();
-                    closeModal();
-                    
+                const baseUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+                    ? `http://localhost:3000/api/issues/${currentEditingId}/status`
+                    : `/api/issues/${currentEditingId}/status`;
+
+                fetch(baseUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        status: modalStatus ? modalStatus.value : 'New / Unassigned'
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
                     saveBtn.innerHTML = originalText;
                     saveBtn.disabled = false;
-                }, 400); // simulate network delay for better UX
+                    if (data.success) {
+                        closeModal();
+                        fetchTickets();
+                    } else {
+                        alert('Error updating status: ' + (data.message || 'Server error'));
+                    }
+                })
+                .catch(err => {
+                    console.error('[Save Status Error]', err);
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                    alert('Network error saving status update.');
+                });
             }
-        }
-    });
+        });
+    }
 
-    // Initial render
-    renderTable();
+    // Initial fetch
+    fetchTickets();
 });

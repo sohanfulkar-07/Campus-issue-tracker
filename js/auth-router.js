@@ -1,6 +1,6 @@
 /**
  * Global Authentication & Role-Based Routing
- * Ensures users can only access their authorized dashboard.
+ * Ensures users can only access their authorized dashboard using live JWT backend verification.
  */
 (function () {
     const path = window.location.pathname.toLowerCase();
@@ -17,48 +17,52 @@
     }
 
     if (requiredRole) {
+        const token = localStorage.getItem('token');
         const currentUserRole = localStorage.getItem('currentUserRole');
-        const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-        if (!isLoggedIn || !currentUserRole || currentUserRole !== requiredRole) {
-            console.warn(`Unauthorized access or inactive session. Redirecting to login.`);
-            window.location.href = loginRedirectPath;
-            return; // Stop execution
-        }
-    }
 
-    // Data Migration: Ensure old mock data doesn't crash the new unified dashboard logic
-    try {
-        let master = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
-        let updated = false;
-        master = master.map(ticket => {
-            if (ticket.status && typeof ticket.status === 'object') {
-                let state = ticket.status.state || 'New / Unassigned';
-                if (state === 'Open') state = 'New / Unassigned';
-                ticket.status = state;
-                updated = true;
-            }
-            if (ticket.priority && typeof ticket.priority === 'object') {
-                ticket.priority = ticket.priority.level || 'Medium';
-                updated = true;
-            }
-            if (ticket.category && typeof ticket.category === 'object') {
-                ticket.category = ticket.category.name || 'Other';
-                updated = true;
-            }
-            return ticket;
-        });
-        if (updated) {
-            localStorage.setItem('campus_tickets_master', JSON.stringify(master));
+        if (!token || !currentUserRole || currentUserRole !== requiredRole) {
+            console.warn(`Unauthorized access or missing token. Redirecting to login.`);
+            window.location.href = loginRedirectPath;
+            return;
         }
-    } catch (e) {
-        console.error("Data migration failed", e);
+
+        // Validate Token asynchronously via GET /api/auth/me
+        const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+            ? 'http://localhost:3000/api/auth/me'
+            : '/api/auth/me';
+
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success || !data.user) {
+                console.warn('[Auth Guard] Invalid token. Redirecting to login.');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('currentUserRole');
+                sessionStorage.clear();
+                window.location.href = loginRedirectPath;
+            } else {
+                localStorage.setItem('user', JSON.stringify(data.user));
+            }
+        })
+        .catch(err => {
+            console.error('[Auth Guard Error]', err);
+        });
     }
 
     // Expose global logout function
     window.unifiedLogout = function (e) {
         if (e) e.preventDefault();
-        // Keep master tickets, but clear session identity
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         localStorage.removeItem('currentUserRole');
+        localStorage.removeItem('currentUserId');
         sessionStorage.clear();
         window.location.href = loginRedirectPath;
     };
@@ -67,10 +71,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const logoutLinks = document.querySelectorAll('.logout, [href="../index.html"], [href="index.html"]');
         logoutLinks.forEach(link => {
-            // Only attach to actual logout buttons, not brand logos (using simple heuristic)
             if (link.textContent.toLowerCase().includes('logout') || link.classList.contains('logout')) {
-                // If there's an existing click listener, we might need to override it or use capture
-                // Using an inline click to override
                 link.onclick = window.unifiedLogout;
             }
         });

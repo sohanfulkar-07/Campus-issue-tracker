@@ -54,30 +54,67 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        cancelBtn.addEventListener('click', () => {
-            logoutModal.style.display = 'none';
-        });
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                logoutModal.style.display = 'none';
+            });
+        }
 
-        proceedBtn.addEventListener('click', () => {
-            // Use unified logout that preserves master tickets
-            if (window.unifiedLogout) {
-                window.unifiedLogout();
-            } else {
-                localStorage.removeItem('currentUserRole');
-                sessionStorage.clear();
-                window.location.href = logoutTarget;
-            }
-        });
+        if (proceedBtn) {
+            proceedBtn.addEventListener('click', () => {
+                if (window.unifiedLogout) {
+                    window.unifiedLogout();
+                } else {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('currentUserRole');
+                    sessionStorage.clear();
+                    window.location.href = logoutTarget;
+                }
+            });
+        }
         
-        logoutModal.addEventListener('click', (e) => {
-            if(e.target === logoutModal) logoutModal.style.display = 'none';
-        });
+        if (logoutModal) {
+            logoutModal.addEventListener('click', (e) => {
+                if(e.target === logoutModal) logoutModal.style.display = 'none';
+            });
+        }
     }
 
-    // --- 2. Operational Dataset (Live from Storage) ---
-    const rawDataset = JSON.parse(localStorage.getItem('campus_tickets_master') || '[]');
+    // --- 2. Operational Dataset (Live from Backend API: GET /api/issues) ---
+    let rawDataset = [];
+    let currentDataset = [];
 
-    let currentDataset = [...rawDataset];
+    function fetchAdminDashboardData() {
+        const token = localStorage.getItem('token');
+        const baseUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+            ? 'http://localhost:3000/api/issues'
+            : '/api/issues';
+
+        fetch(baseUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            rawDataset = data.success ? data.data : [];
+            currentDataset = [...rawDataset];
+            recalculateKPIs();
+            renderCharts();
+            renderScorecard();
+        })
+        .catch(err => {
+            console.error('[Admin Dashboard Fetch Error]', err);
+            rawDataset = [];
+            currentDataset = [];
+            recalculateKPIs();
+            renderCharts();
+            renderScorecard();
+        });
+    }
 
     // --- 3. Dynamic KPI Calculator ---
     const SLA_TARGET_HOURS = 24;
@@ -90,10 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let slaComplianceRate = 0;
 
         if(resolvedTickets.length > 0) {
-            const totalHours = resolvedTickets.reduce((sum, t) => sum + t.resolutionHours, 0);
+            const totalHours = resolvedTickets.reduce((sum, t) => sum + (t.resolutionHours || 0), 0);
             avgResolution = (totalHours / resolvedTickets.length).toFixed(1);
 
-            const compliantTickets = resolvedTickets.filter(t => t.resolutionHours <= SLA_TARGET_HOURS).length;
+            const compliantTickets = resolvedTickets.filter(t => (t.resolutionHours || 0) <= SLA_TARGET_HOURS).length;
             slaComplianceRate = ((compliantTickets / resolvedTickets.length) * 100).toFixed(1);
         }
 
@@ -124,15 +161,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const resolvedTickets = currentDataset.filter(t => t.status === 'Resolved');
         
         resolvedTickets.forEach(t => {
-            if(!deptMap[t.department]) deptMap[t.department] = { sum: 0, count: 0 };
-            deptMap[t.department].sum += t.resolutionHours;
-            deptMap[t.department].count += 1;
+            const deptKey = t.department || t.category || 'General';
+            if(!deptMap[deptKey]) deptMap[deptKey] = { sum: 0, count: 0 };
+            deptMap[deptKey].sum += (t.resolutionHours || 0);
+            deptMap[deptKey].count += 1;
         });
 
         const barLabels = Object.keys(deptMap);
         const barData = barLabels.map(dept => (deptMap[dept].sum / deptMap[dept].count).toFixed(1));
 
-        if(barCtx) {
+        if(barCtx && typeof Chart !== 'undefined') {
             const barCtx2d = barCtx.getContext('2d');
             const barGradient = barCtx2d.createLinearGradient(0, 0, 0, 400);
             barGradient.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
@@ -188,22 +226,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const catMap = {};
         const activeTickets = currentDataset.filter(t => t.status !== 'Resolved');
         activeTickets.forEach(t => {
-            catMap[t.category] = (catMap[t.category] || 0) + 1;
+            const catKey = t.category || t.department || 'General';
+            catMap[catKey] = (catMap[catKey] || 0) + 1;
         });
 
         const donutLabels = Object.keys(catMap);
         const dData = donutLabels.map(cat => catMap[cat]);
         const dColors = ['#3b82f6', '#1d4ed8', '#10b981', '#ef4444', '#f59e0b'];
 
-        if(donutCtx) {
+        if(donutCtx && typeof Chart !== 'undefined') {
             if(donutChartInst) donutChartInst.destroy();
             donutChartInst = new Chart(donutCtx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: donutLabels.length > 0 ? donutLabels : ['Empty', 'Empty', 'Empty'],
+                    labels: donutLabels.length > 0 ? donutLabels : ['Empty'],
                     datasets: [{
-                        data: dData.length > 0 ? dData : [1, 1, 1],
-                        backgroundColor: dData.length > 0 ? dColors.slice(0, donutLabels.length) : ['#1e293b', '#334155', '#475569'],
+                        data: dData.length > 0 ? dData : [1],
+                        backgroundColor: dData.length > 0 ? dColors.slice(0, donutLabels.length) : ['#1e293b'],
                         borderWidth: dData.length > 0 ? 2 : 1,
                         borderColor: dData.length > 0 ? '#0B0F19' : 'rgba(255,255,255,0.05)',
                         hoverOffset: 4
@@ -237,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     donutLabels.forEach((label, index) => {
                         legendHtml += `
                             <div class="legend-item" style="display: flex; align-items: center; margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
-                                <div class="legend-color" style="width: 12px; height: 12px; border-radius: 50%; background-color: ${dColors[index]}; margin-right: 0.5rem;"></div>
+                                <div class="legend-color" style="width: 12px; height: 12px; border-radius: 50%; background-color: ${dColors[index % dColors.length]}; margin-right: 0.5rem;"></div>
                                 <span>${label}</span>
                             </div>
                         `;
@@ -253,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tableBody = document.getElementById('scorecardTableBody');
         if(!tableBody) return;
 
-        const depts = [...new Set(currentDataset.map(t => t.department))];
+        const depts = [...new Set(currentDataset.map(t => t.department || t.category || 'General'))];
         
         if(depts.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-light);">No scorecard data available.</td></tr>`;
@@ -262,16 +301,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let rowsHtml = '';
         depts.forEach(dept => {
-            const deptTickets = currentDataset.filter(t => t.department === dept);
+            const deptTickets = currentDataset.filter(t => (t.department || t.category || 'General') === dept);
             const openLoad = deptTickets.filter(t => t.status !== 'Resolved').length;
             
-            const ackTimes = deptTickets.map(t => t.ackHours).filter(h => h !== null);
+            const ackTimes = deptTickets.map(t => t.ackHours).filter(h => h !== null && h !== undefined);
             const avgAck = ackTimes.length > 0 ? (ackTimes.reduce((a,b)=>a+b, 0) / ackTimes.length).toFixed(1) : 0;
             
-            const satisfactions = deptTickets.map(t => t.satisfaction).filter(s => s !== null);
-            const avgSat = satisfactions.length > 0 ? (satisfactions.reduce((a,b)=>a+b, 0) / satisfactions.length).toFixed(0) : 0;
+            const satisfactions = deptTickets.map(t => t.satisfaction).filter(s => s !== null && s !== undefined);
+            const avgSat = satisfactions.length > 0 ? (satisfactions.reduce((a,b)=>a+b, 0) / satisfactions.length).toFixed(0) : 100;
             
-            // Map satisfaction to color
             let barColor = '#10b981'; // Green
             if(avgSat < 75) barColor = '#ef4444'; // Red
             else if(avgSat < 90) barColor = '#f59e0b'; // Yellow
@@ -312,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let match = true;
             if(valZone !== 'All Zones (Global View)' && t.zone !== valZone && t.zone !== 'All Zones (Global View)') match = false;
             if(valBranch !== 'All Institutional Branches' && t.branch !== valBranch && t.branch !== 'All Institutional Branches') match = false;
-            if(valLayer !== 'All Infrastructure Layers' && t.category !== valLayer) match = false;
+            if(valLayer !== 'All Infrastructure Layers' && t.category !== valLayer && t.department !== valLayer) match = false;
             if(valSemester !== 'Full Year' && t.semester !== valSemester) match = false;
             return match;
         });
@@ -326,10 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if(el) el.addEventListener('change', applyFilters);
     });
 
-    // Initial Render
-    recalculateKPIs();
-    renderCharts();
-    renderScorecard();
+    // Initial Fetch & Render
+    fetchAdminDashboardData();
 
     // --- 7. PDF Export Functionality ---
     const exportBtn = document.querySelector('.export-btn');
@@ -356,20 +392,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
             };
             
-            html2pdf().set(opt).from(mainWrapper).save().then(() => {
+            if (typeof html2pdf !== 'undefined') {
+                html2pdf().set(opt).from(mainWrapper).save().then(() => {
+                    if(sidebar) sidebar.style.display = '';
+                    mainWrapper.style.marginLeft = originalMargin;
+                    mainWrapper.style.width = originalWidth;
+                    exportBtn.innerHTML = originalBtnHtml;
+                    exportBtn.disabled = false;
+                }).catch(err => {
+                    console.error('PDF generation failed', err);
+                    if(sidebar) sidebar.style.display = '';
+                    mainWrapper.style.marginLeft = originalMargin;
+                    mainWrapper.style.width = originalWidth;
+                    exportBtn.innerHTML = originalBtnHtml;
+                    exportBtn.disabled = false;
+                });
+            } else {
+                alert('PDF export plugin not loaded');
                 if(sidebar) sidebar.style.display = '';
                 mainWrapper.style.marginLeft = originalMargin;
                 mainWrapper.style.width = originalWidth;
                 exportBtn.innerHTML = originalBtnHtml;
                 exportBtn.disabled = false;
-            }).catch(err => {
-                console.error('PDF generation failed', err);
-                if(sidebar) sidebar.style.display = '';
-                mainWrapper.style.marginLeft = originalMargin;
-                mainWrapper.style.width = originalWidth;
-                exportBtn.innerHTML = originalBtnHtml;
-                exportBtn.disabled = false;
-            });
+            }
         });
     }
 

@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     userIdInput.addEventListener('input', () => clearError(userIdInput));
     passwordInput.addEventListener('input', () => clearError(passwordInput));
     
-    // Handle Form Submission
+    // Handle Form Submission with Real Backend API (POST /api/auth/login)
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
@@ -88,33 +88,43 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isValid) {
             loginBtn.classList.add('loading');
             
-            setTimeout(() => {
+            const role = currentRedirect.includes('faculty') ? 'faculty' : (currentRedirect.includes('admin') ? 'admin' : 'student');
+            const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
+                ? 'http://localhost:3000/api/auth/login'
+                : '/api/auth/login';
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, password, role })
+            })
+            .then(res => res.json())
+            .then(data => {
                 loginBtn.classList.remove('loading');
-                
-                if (userId && password.length >= 6) {
+                if (data.success && data.token) {
                     showToast('Success', 'Login successful. Redirecting...', 'success');
-                    
-                    let role = 'student';
-                    if (currentRedirect.includes('faculty')) role = 'faculty';
-                    if (currentRedirect.includes('admin')) role = 'admin';
-                    
                     sessionStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('currentUserRole', role);
-                    localStorage.setItem('currentUserId', userId);
-                    localStorage.setItem('currentUserPassword', password);
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('currentUserRole', data.user.role || role);
+                    localStorage.setItem('currentUserId', data.user.userId || userId);
                     
-                    // Save password for faculty edit profile feature
                     if (currentRedirect.includes('faculty')) {
                         localStorage.setItem('facultyPassword', password);
                     }
                     
                     setTimeout(() => {
                         window.location.href = currentRedirect;
-                    }, 1500);
+                    }, 1000);
                 } else {
-                    showToast('Authentication Failed', 'Invalid ID or Password.', 'error');
+                    showToast('Authentication Failed', data.message || 'Invalid ID or Password.', 'error');
                 }
-            }, 1500);
+            })
+            .catch(err => {
+                loginBtn.classList.remove('loading');
+                console.error('[Login Error]', err);
+                showToast('Server Error', 'Unable to connect to authentication server.', 'error');
+            });
         } else {
             showToast('Validation Error', 'Please check your input fields.', 'error');
         }
@@ -143,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function showToast(title, message, type = 'error') {
         const toastContainer = document.getElementById('toastContainer');
+        if (!toastContainer) return;
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         
