@@ -182,12 +182,13 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Saving...';
             submitBtn.disabled = true;
 
-            const token = localStorage.getItem('token');
-            const apiUrl = (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-                ? 'http://localhost:3000/api/issues'
-                : '/api/issues';
+         const token = localStorage.getItem('token');
 
-            fetch(apiUrl, {
+const apiUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:3000/api/issues'
+    : 'https://campus-issue-tracker-j5bp.onrender.com/api/issues';
+
+fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -202,8 +203,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     media: mediaAttachments.map(m => m.url)
                 })
             })
-            .then(res => res.json())
-            .then(data => {
+            .then(async res => {
+    const text = await res.text();
+
+    let data = {};
+
+    try {
+        data = text ? JSON.parse(text) : {};
+    } catch (parseError) {
+        console.error('[Submit Issue] Invalid JSON response:', text);
+        throw new Error(`Server returned an invalid response (HTTP ${res.status})`);
+    }
+
+    if (!res.ok) {
+        throw new Error(data.message || `Server returned HTTP ${res.status}`);
+    }
+
+    return data;
+})
+.then(data => {
                 if (data.success) {
                     window.location.href = 'dashboard.html';
                 } else {
@@ -213,10 +231,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(err => {
-                console.error('[Submit Issue Error]', err);
-                alert('Network error while submitting issue.');
-                submitBtn.textContent = 'Submit Issue Report';
-                submitBtn.disabled = false;
+    console.error('[Submit Issue Error]', err);
+    alert('Error submitting issue: ' + err.message);
+    submitBtn.textContent = 'Submit Issue Report';
+    submitBtn.disabled = false;
+});
             });
         });
     }
