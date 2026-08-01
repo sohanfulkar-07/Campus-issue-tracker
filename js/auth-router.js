@@ -72,23 +72,17 @@
     }
 
     // Expose global logout function
-    window.unifiedLogout = function (e) {
-        if (e) e.preventDefault();
+    window.unifiedLogout = function (targetPath) {
+        if (targetPath && typeof targetPath === 'object' && typeof targetPath.preventDefault === 'function') {
+            targetPath.preventDefault();
+            targetPath = null;
+        }
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('currentUserRole');
         localStorage.removeItem('currentUserId');
         sessionStorage.clear();
-        window.location.href = loginRedirectPath;
+        const destPath = (typeof targetPath === 'string' && targetPath) ? targetPath : loginRedirectPath;
+        window.location.href = destPath;
     };
-
-    // Attach to logout links once DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
-        const logoutLinks = document.querySelectorAll('.logout, [href="../index.html"], [href="index.html"]');
-        logoutLinks.forEach(link => {
-            if (link.textContent.toLowerCase().includes('logout') || link.classList.contains('logout')) {
-                link.onclick = window.unifiedLogout;
-            }
-        });
-    });
 })();
